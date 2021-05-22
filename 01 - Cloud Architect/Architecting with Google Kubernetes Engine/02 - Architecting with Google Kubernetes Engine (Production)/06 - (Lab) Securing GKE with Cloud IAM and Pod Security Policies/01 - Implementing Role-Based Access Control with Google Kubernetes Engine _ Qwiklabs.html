@@ -1,0 +1,899 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title>Implementing Role-Based Access Control with Google Kubernetes Engine | Qwiklabs</title>
+<script>
+//<![CDATA[
+window.gon={};gon.current_user={"firstname":"DANIEL","lastname":"ENRIQUE SANDOVAL SANCHEZ","fullname":"DANIEL ENRIQUE SANDOVAL SANCHEZ","company":"Coursera","email":"desandovals@liverpool.com.mx","origin":"googlecoursera-run, lti-coursera","subscriptions":0,"id":"40414ff5fc280f833d9acca966912f93","qlCreatedAt":"2020-11-17 20:45:59 UTC","optIn":null,"current_organization_id":null,"current_organization_role":null};gon.segment="j4Im8pqIko0Lxq4wVVZWMPMM0EroHUvb";gon.deployment="googlecoursera-run";gon.content={"type":"Lab","id":2306,"name":"Implementing Role-Based Access Control with Google Kubernetes Engine"};
+//]]>
+</script>
+<script>
+  dataLayer = [
+    {user: gon.current_user},
+    {content: gon.content}
+  ];
+</script>
+<script>
+  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer',"GTM-TQR88QK");
+</script>
+<script>
+  EVENT_SOURCE_BASE_URL = "https://googlecoursera-run.qwiklabs.com/nchan-sub?id=";
+</script>
+<script src="https://cdn.qwiklabs.com/assets/hallofmirrors/polyfills/webcomponents-loader-408088dc333247a761de5f2b2a4ba1cabd2bc36579f83ba92a559eb3682a9b77.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/vendor-45d462772c30000424907184f70c7157e95fb6227698d1671c5051818a6f60d8.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/application-6874b164d8346f46605fc772a6f7375a39626ffc9f6d168e23a3a8c40bb6fd28.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/hallofmirrors/hallofmirrors-b7ff781d00ceebdf75589f58475cea695bafd8d5cc1f3eb4baf6122ed4a4b736.js"></script>
+<!--[if lt IE 9]>
+<script src='http://html5shim.googlecode.com/svn/trunk/html5.js' type='text/javascript'></script>
+<![endif]-->
+<!--[endif]>  <![endif]-->
+<script type='application/ld+json'>
+{
+  "@context": "http://schema.org",
+  "@type": "WebSite",
+  "url": "https://www.qwiklabs.com/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://www.qwiklabs.com/catalog?keywords={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script id='ze-snippet' src='https://static.zdassets.com/ekr/snippet.js?key=511e4158-0aec-4e3c-b2e6-4daa1769f51e'></script>
+
+
+<meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="IcccpoJaX8AslOPBVHOuTvo5QYYhvROVRdqOjbbBkqJ4mR9Zm/S1N0Anxnl21dLIIY/70ewUQag1uIA5QPeRYg==" />
+<meta content='width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0' name='viewport'>
+<meta content='1rRsY0INj8RvwB5EF5pwdxt2A2P9aDgAlsICaJ0d5w0' name='google-site-verification'>
+<meta content='#3681E4' property='msapplication-TileColor'>
+<meta content='/favicon-144.png' property='msapplication-TileImage'>
+<meta content='[{&quot;id&quot;:&quot;recaptcha_experiment&quot;,&quot;optimize_id&quot;:&quot;dpViOcLkT3qS4TvL2mRojA&quot;,&quot;title&quot;:&quot;No Recaptcha shown for trusted users&quot;,&quot;variant_index&quot;:0,&quot;variant&quot;:&quot;original&quot;}]' name='active-experiments'>
+<meta content='{&quot;userId&quot;:3894861}' name='help-api-product-data'>
+<meta content='Architecting with Google Kubernetes Engine: Implementing Role-Based Access Control With Kubernetes Engine' name='description'>
+<meta content='Qwiklabs' name='author'>
+<meta content='Implementing Role-Based Access Control with Google Kubernetes Engine | Qwiklabs' property='og:title'>
+<meta content='website' property='og:type'>
+<meta content='/favicon-144.png' property='og:image'>
+<meta content='Qwiklabs' property='og:site_name'>
+<meta content='Architecting with Google Kubernetes Engine: Implementing Role-Based Access Control With Kubernetes Engine' property='og:description'>
+<meta content='/qwiklabs_logo_900x887.png' property='og:logo' size='900x887'>
+<meta content='/qwiklabs_logo_994x187.png' property='og:logo' size='994x187'>
+
+
+<link href='/favicon-32.png' rel='shortcut icon'>
+<link color='#3681E4' href='/favicon-svg.svg' rel='mask-icon'>
+<link href='/favicon-180.png' rel='apple-touch-icon-precomposed'>
+
+
+
+<link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css?family=Oswald:400|Roboto+Mono:400,700|Roboto:300,400,500,700|Google+Sans:300,400,500,700|Google+Sans+Display:400|Material+Icons|Google+Material+Icons" />
+
+
+<link rel="stylesheet" media="all" href="https://cdn.qwiklabs.com/assets/application-cf67fd00dd904ecce1e24779d7504aefc7fbd5d00696246fa80212743a81bf07.css" />
+
+
+
+</head>
+<body class='lab-show l-full no-nav application-new focuses focuses-show lab-show l-full no-nav '>
+<noscript>
+<iframe height='0' src='https://www.googletagmanager.com/ns.html?id=GTM-TQR88QK' style='display:none;visibility:hidden;' width='0'></iframe>
+</noscript>
+<span class='hidden' id='flash-sibling-before'></span>
+
+<div class='header-container'>
+<div class='header'>
+<ql-icon-button class='js-nav-toggle header__nav-panel-button l-mrm'>menu</ql-icon-button>
+<div class='header__title'>
+<ql-icon-button label="Back" href="https://www.coursera.org/" id="cbd7f889e03e8158" target="_self">arrow_back</ql-icon-button><div class="mdl-tooltip" data-mdl-for="cbd7f889e03e8158">Back</div>
+
+<h1 class='headline-5'>
+Implementing Role-Based Access Control with Google Kubernetes Engine
+</h1>
+</div>
+<div class='header__actions'>
+<ql-icon-button class='header__button--search js-header-search-bar-button'>search</ql-icon-button>
+<ql-icon-button id='control-panel-target' style='display: none;'>
+dashboard
+</ql-icon-button>
+<ql-menu for='control-panel-target' id='control-panel-menu'></ql-menu>
+
+<ql-icon-button id='help-menu-button'>help</ql-icon-button>
+<div class='mdl-tooltip js-tooltip' data-mdl-for='help-menu-button'>
+Help
+</div>
+<ql-menu for='help-menu-button' id='help-menu'>
+<ql-menu-item>
+<ql-help context='lab' data-analytics-action='opened_help' data-analytics-label='lab' productdata='{&quot;userId&quot;:3894861}'>
+Help Center
+</ql-help>
+</ql-menu-item>
+<ql-menu-item>
+<a target="_blank" class="ql-body-1" href="https://support.google.com/qwiklabs/contact/contact_us">Email support</a>
+</ql-menu-item>
+<ql-menu-item>
+<a class='ql-body-1' onClick='ql.chat.open()'>Chat support</a>
+</ql-menu-item>
+</ql-menu>
+
+<ql-icon-button id='language'>language</ql-icon-button>
+<div class='mdl-menu mdl-menu__bottom-right mdl-js-menu elevation-3' for='language'>
+<a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ar" href="/focuses/15531656?locale=ar&amp;parent=lti_session">العربية‬‎
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="de" href="/focuses/15531656?locale=de&amp;parent=lti_session">Deutsch
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="en" href="/focuses/15531656?locale=en&amp;parent=lti_session">English
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="es" href="/focuses/15531656?locale=es&amp;parent=lti_session">español (Latinoamérica)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="fr" href="/focuses/15531656?locale=fr&amp;parent=lti_session">français
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="id" href="/focuses/15531656?locale=id&amp;parent=lti_session">bahasa Indonesia
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="it" href="/focuses/15531656?locale=it&amp;parent=lti_session">Italiano
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ja" href="/focuses/15531656?locale=ja&amp;parent=lti_session">日本語
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ko" href="/focuses/15531656?locale=ko&amp;parent=lti_session">한국어
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pl" href="/focuses/15531656?locale=pl&amp;parent=lti_session">Polski
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pt_BR" href="/focuses/15531656?locale=pt_BR&amp;parent=lti_session">português (Brasil)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pt_PT" href="/focuses/15531656?locale=pt_PT&amp;parent=lti_session">português (Portugal)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ru" href="/focuses/15531656?locale=ru&amp;parent=lti_session">русский
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="tr" href="/focuses/15531656?locale=tr&amp;parent=lti_session">Türkçe
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="zh" href="/focuses/15531656?locale=zh&amp;parent=lti_session">简体中文
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="zh_TW" href="/focuses/15531656?locale=zh_TW&amp;parent=lti_session">繁體中文
+</a></div>
+<button class='icon-button' id='my_account'>
+<ql-avatar></ql-avatar>
+</button>
+<ql-menu for='my_account' open>
+<div class='my-account-menu'>
+<ql-avatar class='l-mtl l-mbl' size='120'></ql-avatar>
+<div class='my-account-menu__user-info l-mbl'>
+<h4 class='ql-subhead-1'>DANIEL ENRIQUE SANDOVAL SANCHEZ</h4>
+<p class='ql-body-2 text--light'>desandovals@liverpool.com.mx</p>
+<p class='ql-body-2 text--light'>
+</p>
+<a class="text--green ql-subhead-2" href="/my_account/payments"><ql-chip positive>
+0 Credits
+</ql-chip>
+</a></div>
+<div class='buttons l-mbl'>
+<a class="button button--hairline" id="settings" href="/my_account/profile">Settings</a>
+</div>
+<hr>
+<ql-button data-analytics-action='clicked_sign_out' href='/users/sign_out' method='delete'>
+Sign Out
+</ql-button>
+<div class='privacy l-mtl'>
+<a class="ql-caption text--light" href="/privacy_policy">Privacy</a>
+<span class='ql-caption text--light l-mls l-mrs'>&middot;</span>
+<a class="ql-caption text--light" href="/terms_of_service">Terms</a>
+</div>
+</div>
+</ql-menu>
+
+</div>
+</div>
+<div class='header__search-bar js-header-search-bar'>
+<form class="js-search-form-mobile" onsubmit="ql.searchFilter(); return false;" action="/searches/elasticsearch" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="ABgbKnfh+4UTiP6jrmGE5eRf2zq/Whyf7qir89DTdmFZRhjVbk8Rcn872xuMx/hjP+lhbXLzTqKeyqVHJuV1oQ==" />
+<input type="text" name="keywords" id="keywords" placeholder="Search" maxlength="255" aria-label="catalog search bar" />
+</form>
+
+<ql-icon-button class='js-close-search-bar'>close</ql-icon-button>
+</div>
+</div>
+
+<nav class='nav-bar'>
+<a class="nav-bar__item js-navigation-button" href="/"><ql-icon class='nav-bar__item__icon'>
+home
+</ql-icon>
+<span class='nav-bar__item__label'>
+Home
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="/catalog"><ql-icon class='nav-bar__item__icon'>
+school
+</ql-icon>
+<span class='nav-bar__item__label'>
+Catalog
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="/my_learning"><ql-icon class='nav-bar__item__icon'>
+event_note
+</ql-icon>
+<span class='nav-bar__item__label'>
+My Learning
+</span>
+</a>
+</nav>
+
+<nav class='nav-panel js-nav-panel'>
+<div class='nav-panel__logo'>
+<div class='logo logo--blue'></div>
+</div>
+<a title="Home" tabindex="-1" class="nav-panel__item js-navigation-button" href="/"><ql-icon class='nav-panel__item__icon'>
+home
+</ql-icon>
+<div class='nav-panel__item__label'>
+Home
+</div>
+</a>
+<a title="Catalog" tabindex="-1" class="nav-panel__item js-navigation-button" href="/catalog"><ql-icon class='nav-panel__item__icon'>
+school
+</ql-icon>
+<div class='nav-panel__item__label'>
+Catalog
+</div>
+</a>
+<a title="My Learning" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_learning"><ql-icon class='nav-panel__item__icon'>
+event_note
+</ql-icon>
+<div class='nav-panel__item__label'>
+My Learning
+</div>
+</a>
+<div class='nav-panel__spacer'></div>
+<a title="Profile" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/profile"><ql-icon class='nav-panel__item__icon'>
+account_circle
+</ql-icon>
+<div class='nav-panel__item__label'>
+Profile
+</div>
+</a>
+<a title="Credits &amp; Subscriptions" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/credits"><ql-icon class='nav-panel__item__icon'>
+money
+</ql-icon>
+<div class='nav-panel__item__label'>
+Credits &amp; Subscriptions
+</div>
+</a>
+<a title="Security" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/security"><ql-icon class='nav-panel__item__icon'>
+security
+</ql-icon>
+<div class='nav-panel__item__label'>
+Security
+</div>
+</a>
+<div class='nav-panel__spacer'></div>
+<a class="nav-panel__item" tabindex="-1" href="#"><ql-help>
+<div class='nav-panel__help-item'>
+<ql-icon class='nav-panel__item__icon'>help</ql-icon>
+<div class='nav-panel__item__label'>
+Help
+</div>
+</div>
+</ql-help>
+</a><div class='nav-panel__small-links'>
+<a tabindex="-1" href="/privacy_policy">Privacy</a>
+<a tabindex="-1" href="/terms_of_service">Terms</a>
+</div>
+</nav>
+<div class='nav-panel__overlay js-nav-toggle'></div>
+
+<main class='js-main'>
+<div class='l-main-wrapper' id='main-wrapper'>
+
+
+
+
+
+
+
+<div class='lab-assessment__tab js-open-lab-assessment-panel'>
+<h6 class='js-lab-assessment-total-score'>
+&mdash;/20
+</h6>
+</div>
+<div class='lab-assessment__panel js-lab-assessment-panel'>
+<div class='lab-assessment__panel__header'>
+<h4>Checkpoints</h4>
+<ql-icon-button class='js-close-lab-assessment-panel'>arrow_forward</ql-icon-button>
+</div>
+<div class='lab-assessment__step'>
+<p class='lab-assessment__step__title'>
+Create namespace and pod.
+</p>
+<div class='lab-assessment__step__action'>
+<a class='button js-show-run-step-button' step_no='1'>
+Check my progress
+</a>
+<p class='lab-assessment__step__score'>
+<span class='js-assessment-step-score-1'>
+</span>
+/ 10
+</p>
+</div>
+</div>
+
+<div class='lab-assessment__step'>
+<p class='lab-assessment__step__title'>
+Roles and RoleBindings
+</p>
+<div class='lab-assessment__step__action'>
+<a class='button js-show-run-step-button' step_no='2'>
+Check my progress
+</a>
+<p class='lab-assessment__step__score'>
+<span class='js-assessment-step-score-2'>
+</span>
+/ 10
+</p>
+</div>
+</div>
+
+</div>
+<ql-drawer-container class='js-lab-state' data-analytics-payload='{&quot;label&quot;:&quot;Implementing Role-Based Access Control with Google Kubernetes Engine&quot;,&quot;lab_name&quot;:&quot;Implementing Role-Based Access Control with Google Kubernetes Engine&quot;,&quot;classroom_name&quot;:null,&quot;deployment&quot;:&quot;googlecoursera-run&quot;}' data-focus-id='15531656' data-lab-billing-limit='0.0' data-lab-duration='3600' data-parent='lti_session' data-recaptcha-enabled id='lab-container'>
+<ql-drawer id='terminal-drawer' slot='drawer' style='width: calc(100% - 480px)'>
+<iframe allow='clipboard-read' class='terminal' id='embedded-resource'></iframe>
+</ql-drawer>
+<ql-drawer-content class='js-lab-wrapper' id='lab-content' slot='drawer-content'>
+<ql-drawer-container id='lab-content-container'>
+<ql-drawer id='control-panel-drawer' open slot='drawer' width='320'>
+<ql-lab-control-panel class='ql-lab-control-panel__max-height control-panel js-lab-control-panel' connectionFiles='[]' labControlButton='{&quot;disabled&quot;:false,&quot;pending&quot;:false,&quot;running&quot;:false}' labDetails='[]' labTimer='{&quot;ticking&quot;:false,&quot;secondsRemaining&quot;:3600}' studentResources='[]'>
+<script src="https://www.recaptcha.net/recaptcha/api.js?render=6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr"   ></script>
+        <script>
+          // Define function so that we can call it again later if we need to reset it
+          // This executes reCAPTCHA and then calls our callback.
+          function executeRecaptchaForStartLab() {
+            grecaptcha.ready(function() {
+              grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}).then(function(token) {
+                setInputWithRecaptchaResponseTokenForStartLab('g-recaptcha-response-data-start-lab', token)
+              });
+            });
+          };
+          // Invoke immediately
+          executeRecaptchaForStartLab()
+
+          // Async variant so you can await this function from another async function (no need for
+          // an explicit callback function then!)
+          // Returns a Promise that resolves with the response token.
+          async function executeRecaptchaForStartLabAsync() {
+            return new Promise((resolve, reject) => {
+              grecaptcha.ready(async function() {
+                resolve(await grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}))
+              });
+            })
+          };
+
+                    var setInputWithRecaptchaResponseTokenForStartLab = function(id, token) {
+            var element = document.getElementById(id);
+            element.value = token;
+          }
+
+        </script>
+<input type="hidden" name="g-recaptcha-response-data[start_lab]" id="g-recaptcha-response-data-start-lab" data-sitekey="6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr" class="g-recaptcha g-recaptcha-response "/>
+
+<div class='hidden' id='recaptcha-v2-start-lab' slot='recaptcha'>
+<script src="https://www.recaptcha.net/recaptcha/api.js" async defer ></script>
+<div data-sitekey="6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV" data-callback="recaptchaComplete" data-expired-callback="expireV2Token" class="g-recaptcha "></div>
+          <noscript>
+            <div>
+              <div style="width: 302px; height: 422px; position: relative;">
+                <div style="width: 302px; height: 422px; position: absolute;">
+                  <iframe
+                    src="https://www.recaptcha.net/recaptcha/api/fallback?k=6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV"
+                    name="ReCAPTCHA"
+                    style="width: 302px; height: 422px; border-style: none; border: 0; overflow: hidden;">
+                  </iframe>
+                </div>
+              </div>
+              <div style="width: 300px; height: 60px; border-style: none;
+                bottom: 12px; left: 25px; margin: 0px; padding: 0px; right: 25px;
+                background: #f9f9f9; border: 1px solid #c1c1c1; border-radius: 3px;">
+                <textarea id="g-recaptcha-response" name="g-recaptcha-response"
+                  class="g-recaptcha-response"
+                  style="width: 250px; height: 40px; border: 1px solid #c1c1c1;
+                  margin: 10px 25px; padding: 0px; resize: none;">
+                </textarea>
+              </div>
+            </div>
+          </noscript>
+
+</div>
+</ql-lab-control-panel>
+</ql-drawer>
+<ql-drawer-content id='lab-instructions' slot='drawer-content'>
+<div class='alert alert--fake js-alert'>
+<p class='alert__message js-alert-message'></p>
+<a class='alert__close js-alert-close'>
+<i class='fa fa-times'></i>
+</a>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='js-lab-content lab-content__renderable-instructions'>
+<div class='lab-preamble'>
+<h1 class='lab-preamble__title'>
+Implementing Role-Based Access Control with Google Kubernetes Engine
+</h1>
+<div class='lab-preamble__details subtitle-headline-1'>
+<span>1 hour </span>
+<span>Free</span>
+<div class='lab__rating'>
+<a href="/focuses/15531656/reviews?parent=lti_session"><div class='rateit' data-rateit-readonly='true' data-rateit-value='4.3955'></div>
+
+</a><a data-target='#lab-review-modal' data-toggle='modal'>
+Rate Lab
+</a>
+</div>
+</div>
+</div>
+
+<div class='js-markdown-instructions markdown-lab-instructions' id='markdown-lab-instructions'>
+
+
+
+<h2 id="step1">Overview</h2>
+<p>In this lab, you will create namespaces within a GKE cluster, and then use role-based access control to permit a non-admin user to work with Pods in a specific namespace.</p>
+<h2 id="step2">Objectives</h2>
+<p>In this lab, you learn how to perform the following tasks:</p>
+<ul>
+<li>Create namespaces for users to control access to cluster resources</li>
+<li>Create roles and rolebindings to control access within a namespace</li>
+</ul>
+<aside class="special"><p><strong>IMPORTANT: </strong></p>
+<p>For this lab, Qwiklabs has provisioned you with two user names available in the <strong>Connection Details</strong> dialog. In this lab we will refer to these accounts as <strong>Username 1</strong> and <strong>Username 2</strong>.</p>
+</aside>
+<h2 id="step3">Task 1: Create namespaces for users to access cluster resources</h2>
+<h3><strong>Sign in to the Google Cloud Console as the first user</strong></h3>
+<ol>
+<li>Sign in to the Google Cloud Console in an Incognito window as usual with the <strong>Username 1</strong> provided in Qwiklabs. Note that both user names use the same password.</li>
+<li>On the Google Cloud Console title bar, click <strong>Activate Cloud Shell (</strong> <img alt="wsSmyOSMC3TcvR3ILzaJvaBbKZdwzGl1AR8xzubfcW0qSxLmIuZM-JgvZnTwItURll1AwZ3nldhIDyrnqGGUKJAz0GUBIbAuhbsOtdgO2OPwC5vKBUYfN0-F3VV5Dqbc5Mm3Q2GY" src="https://cdn.qwiklabs.com/T1zXYiix%2BpD0cUU5S17R0mZ46qtPhev6JMOxnFaLKsE%3D"><strong>)</strong>.</li>
+<li>When prompted, click <strong>Continue</strong>.</li>
+</ol>
+<p>You don't need to wait for the Cloud Shell to start you can proceed to the next task immediately.</p>
+<aside class="special"><p><strong>Username 2</strong> currently has access to the project, but only possesses the <strong>Viewer</strong> role, which makes all resources in the project visible, but read-only.</p>
+</aside>
+<h3>Sign in to the Google Cloud Console as the second user</h3>
+<ol>
+<li>Open another tab in your incognito window.</li>
+<li>Browse to  <a href="http://console.cloud.google.com/" target="_blank">console.cloud.google.com</a>.</li>
+<li>Click on the user icon in the top-right corner of the screen, and then click <strong>Add account</strong>.</li>
+<li>Sign in to the Google Cloud Console with the <strong>Username 2</strong> provided in Qwiklabs. Again, note that both user names use the same password.</li>
+<li>On the Google Cloud Console title bar, click <strong>Activate Cloud Shell (</strong> <img alt="wsSmyOSMC3TcvR3ILzaJvaBbKZdwzGl1AR8xzubfcW0qSxLmIuZM-JgvZnTwItURll1AwZ3nldhIDyrnqGGUKJAz0GUBIbAuhbsOtdgO2OPwC5vKBUYfN0-F3VV5Dqbc5Mm3Q2GY" src="https://cdn.qwiklabs.com/T1zXYiix%2BpD0cUU5S17R0mZ46qtPhev6JMOxnFaLKsE%3D"><strong>)</strong>.</li>
+<li>When prompted, click <strong>Continue</strong>.</li>
+</ol>
+<p>You don't need to wait for the Cloud Shell to start you can proceed to the next task immediately.</p>
+<h3>Connect to the lab GKE cluster</h3>
+<ol>
+<li>Switch back to the <strong>Username 1</strong> Google Cloud Console tab.</li>
+</ol>
+<aside class="warning"><p>Make sure you are on the <strong>Username 1</strong> Google Cloud Console tab.</p>
+</aside>
+<ol start="2">
+<li>
+<p>In Cloud Shell, type the following command to set the environment variable for the zone and cluster name.</p>
+</li>
+</ol>
+<pre><code>export my_zone=us-central1-a&#x000A;export my_cluster=standard-cluster-1&#x000A;</code></pre>
+<ol start="3">
+<li>
+<p>Configure tab completion for the  kubectl command-line tool.</p>
+</li>
+</ol>
+<pre><code>source &lt;(kubectl completion bash)&#x000A;</code></pre>
+<ol start="4">
+<li>
+<p>Configure access to your cluster for kubectl:</p>
+</li>
+</ol>
+<pre><code>gcloud container clusters get-credentials $my_cluster --zone $my_zone&#x000A;</code></pre>
+<ol start="5">
+<li>
+<p>In Cloud Shell enter the following command  to clone the lab repository to the lab Cloud Shell.</p>
+</li>
+</ol>
+<pre><code>git clone https://github.com/GoogleCloudPlatform/training-data-analyst&#x000A;</code></pre>
+<ol start="6">
+<li>
+<p>Create a soft link as a shortcut to the working directory.</p>
+</li>
+</ol>
+<pre><code>ln -s ~/training-data-analyst/courses/ak8s/v1.1 ~/ak8s&#x000A;</code></pre>
+<ol start="7">
+<li>
+<p>Change to the directory that contains the sample files for this lab.</p>
+</li>
+</ol>
+<pre><code>cd ~/ak8s/RBAC/&#x000A;</code></pre>
+<h3><strong>Create a Namespace</strong></h3>
+<p>A manifest file called <code>my-namespace.yaml</code> has been created for you that creates a new namespace called <code>production</code>.</p>
+<pre><code>apiVersion: v1&#x000A;kind: Namespace&#x000A;metadata:&#x000A;  name: production&#x000A;</code></pre>
+<ol>
+<li>
+<p>List the current namespaces in the cluster using the following command:</p>
+</li>
+</ol>
+<pre><code>kubectl get namespaces&#x000A;</code></pre>
+<p><strong>Output (Do not copy):</strong></p>
+<pre><code>NAME             STATUS    AGE&#x000A;default          Active    17m&#x000A;kube-node-lease  Active    17m&#x000A;kube-public      Active    17m&#x000A;kube-system      Active    17m&#x000A;</code></pre>
+<ol start="2">
+<li>
+<p>In the Cloud Shell, execute the following command to create the new namespace:</p>
+</li>
+</ol>
+<pre><code>kubectl create -f ./my-namespace.yaml&#x000A;</code></pre>
+<ol start="3">
+<li>
+<p>Check if your namespace is there with the following command:</p>
+</li>
+</ol>
+<pre><code>kubectl get namespaces&#x000A;</code></pre>
+<p><strong>Output (Do not copy):</strong></p>
+<pre><code>NAME             STATUS    AGE&#x000A;default          Active    6m&#x000A;kube-node-lease  Active    6m&#x000A;kube-public      Active    6m&#x000A;kube-system      Active    6m&#x000A;production       Active    4s&#x000A;</code></pre>
+<p>Your new namespace appears at the bottom of the list.</p>
+<ol start="4">
+<li>
+<p>You can view details of an existing namespaces by executing:</p>
+</li>
+</ol>
+<pre><code>kubectl describe namespaces production&#x000A;</code></pre>
+<p><strong>Output (Do not copy):</strong></p>
+<pre><code>Name:         production&#x000A;Labels:       &lt;none&gt;&#x000A;Annotations:  &lt;none&gt;&#x000A;Status:       Active&#x000A;&#x000A;Resource Quotas&#x000A; Name:                       gke-resource-quotas&#x000A; Resource                    Used  Hard&#x000A; --------                    ---   ---&#x000A; count/ingresses.extensions  0     100&#x000A; count/jobs.batch            0     5k&#x000A; pods                        0     1500&#x000A; services                    0     500&#x000A;&#x000A;No LimitRange resource.&#x000A;</code></pre>
+<h3><strong>Create a Resource in a Namespace</strong></h3>
+<p>If you do not specify the namespace of a Pod it will use the namespace ‘default'. In this task you  specify the location of our newly created namespace when creating a new Pod. A simple manifest file called <code>my-pod.yaml</code> that creates a Pod that contains an nginx container has been created for you.</p>
+<pre><code>apiVersion: v1&#x000A;kind: Pod&#x000A;metadata:&#x000A;  name: nginx&#x000A;  labels:&#x000A;    name: nginx&#x000A;spec:&#x000A;  containers:&#x000A;  - name: nginx&#x000A;    image: nginx&#x000A;    ports:&#x000A;    - containerPort: 80&#x000A;</code></pre>
+<ol>
+<li>
+<p>In the Cloud Shell, execute the following command to create the resource in the namespace called <code>production</code>:</p>
+</li>
+</ol>
+<pre><code>kubectl apply -f ./my-pod.yaml --namespace=production&#x000A;</code></pre>
+<p>Alternatively you could have specified the namespace in the yaml file. This requires the  <code>namespace: production</code> field in the metadata: section.</p>
+<p><strong>For example:</strong></p>
+<pre><code>apiVersion: v1&#x000A;kind: Pod&#x000A;metadata:&#x000A;  name: nginx&#x000A;  labels:&#x000A;    name: nginx&#x000A;  namespace: production&#x000A;spec:&#x000A;  containers:&#x000A;  - name: nginx&#x000A;    image: nginx&#x000A;    ports:&#x000A;    - containerPort: 80&#x000A;</code></pre>
+<ol start="2">
+<li>
+<p>Try using the following command to view your Pod:</p>
+</li>
+</ol>
+<pre><code>kubectl get pods&#x000A;</code></pre>
+<p><strong>Output (Do not copy):</strong></p>
+<pre><code>No resources found in default namespace.&#x000A;</code></pre>
+<p>You will not see your Pod because kubectl checked the default namespace instead of your new namespace.</p>
+<ol start="3">
+<li>
+<p>Run the command again, but this time specify the new namespace:</p>
+</li>
+</ol>
+<pre><code>kubectl get pods --namespace=production&#x000A;</code></pre>
+<p><strong>Output (Do not copy):</strong></p>
+<pre><code>NAME      READY     STATUS    RESTARTS   AGE&#x000A;nginx     1/1       Running   0          20s&#x000A;</code></pre>
+<p>Now you should see your newly created Pod.</p>
+<p>Click Check my progress to verify the objective.</p>
+<ql-activity-tracking step="1">
+      Create namespace and pod
+  </ql-activity-tracking>
+<h2 id="step4">Task 2. About Roles and RoleBindings</h2>
+<p>In this task you will create a sample custom role, and then create a RoleBinding that grants <strong>Username 2</strong> the editor role in the production namespace.</p>
+<p>The role is defined in the <code>pod-reader-role.yaml</code> file that is provided for you. This manifest  defines a role called <code>pod-reader</code> that provides create, get, list &amp; watch permission for Pod objects in the <code>production</code> namespace. Note that this role cannot delete Pods.</p>
+<pre><code>kind: Role&#x000A;apiVersion: rbac.authorization.k8s.io/v1&#x000A;metadata:&#x000A;  namespace: production&#x000A;  name: pod-reader&#x000A;rules:&#x000A;- apiGroups: [""]&#x000A;  resources: ["pods"]&#x000A;  verbs: ["create", "get", "list", "watch"]&#x000A;</code></pre>
+<h3><strong>Create a custom Role</strong></h3>
+<p>Before you can create a Role, your account must have the permissions granted in the role being assigned. For cluster administrators this can be easily accomplished by creating the following RoleBinding to grant your own user account the cluster-admin role.</p>
+<ol>
+<li>
+<p>To grant the <strong>Username 1</strong> account cluster-admin privileges, run the following command, replacing <code>[USERNAME_1_EMAIL]</code> with the email address of the <strong>Username 1</strong> account:</p>
+</li>
+</ol>
+<pre><code>kubectl create clusterrolebinding cluster-admin-binding --clusterrole cluster-admin --user [USERNAME_1_EMAIL]&#x000A;</code></pre>
+<p><strong>Example (Do not copy):</strong></p>
+<pre><code>kubectl create clusterrolebinding cluster-admin-binding --clusterrole cluster-admin --user  gcpstaging28307_student@qwiklabs.net&#x000A;</code></pre>
+<ol start="2">
+<li>
+<p>In the Cloud Shell, execute the following command to create the role:</p>
+</li>
+</ol>
+<pre><code>kubectl apply -f pod-reader-role.yaml&#x000A;</code></pre>
+<ol start="3">
+<li>
+<p>To list the roles to verify it was created, execute the following command:</p>
+</li>
+</ol>
+<pre><code>kubectl get roles --namespace production&#x000A;</code></pre>
+<p><strong>Output (Do not copy):</strong></p>
+<pre><code>NAME          AGE&#x000A;pod-reader    3m&#x000A;</code></pre>
+<h3>Create a RoleBinding</h3>
+<p>The role is used to assign privileges, but by itself it does nothing. The role must be bound to a user and an object, which is done in the RoleBinding.</p>
+<p>The <code>username2-editor-binding.yaml</code> manifest file creates a RoleBinding called <code>username2-editor</code> for the second lab user to the <code>pod-reader</code> role you created earlier. That role can create and view Pods but cannot delete them.</p>
+<pre><code>kind: RoleBinding&#x000A;apiVersion: rbac.authorization.k8s.io/v1&#x000A;metadata:&#x000A;  name: username2-editor&#x000A;  namespace: production&#x000A;subjects:&#x000A;- kind: User&#x000A;  name: [USERNAME_2_EMAIL]&#x000A;  apiGroup: rbac.authorization.k8s.io&#x000A;roleRef:&#x000A;  kind: Role&#x000A;  name: pod-reader&#x000A;  apiGroup: rbac.authorization.k8s.io&#x000A;</code></pre>
+<p>This file contains a placeholder,  <code>[USERNAME_2_EMAIL]</code>, that you must replace with  the email address of <strong>Username 2</strong> before your use apply it.</p>
+<ol>
+<li>
+<p>In the Cloud Shell create an environment variable that contains the full email address of <strong>Username 2</strong>.</p>
+</li>
+</ol>
+<pre><code>export USER2=[USERNAME_2_EMAIL]&#x000A;</code></pre>
+<p><strong>Example (Do not copy):</strong></p>
+<pre><code>export USER2=gcpstaginguser68_student@qwiklabs.net&#x000A;</code></pre>
+<ol start="2">
+<li>
+<p>In the Cloud Shell use <code>sed</code> to replace the placeholder in the file with the value of the environment variable.</p>
+</li>
+</ol>
+<pre><code>sed -i "s/\[USERNAME_2_EMAIL\]/${USER2}/" username2-editor-binding.yaml&#x000A;</code></pre>
+<ol start="3">
+<li>
+<p>In the Cloud Shell, execute the following command to confirm that the correct change has been made:</p>
+</li>
+</ol>
+<pre><code>cat username2-editor-binding.yaml&#x000A;</code></pre>
+<p>The subjects section should now look similar to the following.</p>
+<p><strong>Example (Do not copy):</strong></p>
+<pre><code>subjects:&#x000A;- kind: User&#x000A;  name: gcpstaginguser68_student@qwiklabs.net&#x000A;  apiGroup: rbac.authorization.k8s.io&#x000A;</code></pre>
+<p>You will apply this RoleBinding later.</p>
+<h3><strong>Test Access</strong></h3>
+<p>Now you will test whether Username 2 can create a Pod in the production namespace by using Username 2 to create a Pod using the manifest file <code>production-pod.yaml</code>. This manifest deploys a simple Pod with a single nginx container.</p>
+<pre><code>apiVersion: v1&#x000A;kind: Pod&#x000A;metadata:&#x000A;  name: production-pod&#x000A;  labels:&#x000A;    name: production-pod&#x000A;  namespace: production&#x000A;spec:&#x000A;  containers:&#x000A;  - name: production-pod&#x000A;    image: nginx&#x000A;    ports:&#x000A;    - containerPort: 8080&#x000A;</code></pre>
+<p>Because this is a separate user account you need to prepare the Cloud Shell environment a second time so that you have access to the Cluster and the sample files from the lab repository.</p>
+<ol>
+<li>Switch back to the <strong>Username 2</strong> Google Cloud Console tab.</li>
+</ol>
+<aside class="warning"><p>Make sure you are on the <strong>Username 2</strong> Google Cloud Console tab.</p>
+</aside>
+<ol start="2">
+<li>
+<p>In Cloud Shell for <strong>Username 2</strong>, type the following command to set the environment variable for the zone and cluster name.</p>
+</li>
+</ol>
+<pre><code>export my_zone=us-central1-a&#x000A;export my_cluster=standard-cluster-1&#x000A;</code></pre>
+<ol start="3">
+<li>
+<p>Configure tab completion for the  kubectl command-line tool.</p>
+</li>
+</ol>
+<pre><code>source &lt;(kubectl completion bash)&#x000A;</code></pre>
+<ol start="4">
+<li>
+<p>Configure access to your cluster for kubectl:</p>
+</li>
+</ol>
+<pre><code>gcloud container clusters get-credentials $my_cluster --zone $my_zone&#x000A;</code></pre>
+<ol start="5">
+<li>
+<p>In Cloud Shell enter the following command  to clone the lab repository to the lab Cloud Shell.</p>
+</li>
+</ol>
+<pre><code>git clone https://github.com/GoogleCloudPlatform/training-data-analyst&#x000A;</code></pre>
+<ol start="6">
+<li>
+<p>Create a soft link as a shortcut to the working directory.</p>
+</li>
+</ol>
+<pre><code>ln -s ~/training-data-analyst/courses/ak8s/v1.1 ~/ak8s&#x000A;</code></pre>
+<ol start="7">
+<li>
+<p>Change to the directory that contains the sample files for this lab.</p>
+</li>
+</ol>
+<pre><code>cd ~/ak8s/RBAC/&#x000A;</code></pre>
+<ol start="8">
+<li>
+<p>Check if <strong>Username 2</strong> can see the production namespace by using the following command:</p>
+</li>
+</ol>
+<pre><code>kubectl get namespaces&#x000A;</code></pre>
+<p><strong>Output (Do not copy):</strong></p>
+<pre><code>NAME             STATUS    AGE&#x000A;default          Active    29m&#x000A;kube-node-lease  Active    29m&#x000A;kube-public      Active    29m&#x000A;kube-system      Active    29m&#x000A;production       Active    23m&#x000A;</code></pre>
+<p>The production namespace appears at the bottom of the list, so we can continue.</p>
+<ol start="9">
+<li>
+<p>In the Cloud Shell, execute the following command to create the resource in the namespace called production:</p>
+</li>
+</ol>
+<pre><code>kubectl apply -f ./production-pod.yaml&#x000A;</code></pre>
+<p>This will fail indicating that <strong>Username 2</strong> does not have the correct permission to create Pods. <strong>Username 2</strong> only has the viewer permissions it started the lab with at this point because you have not bound any other role to that account yet. You will now change that.</p>
+<ol start="10">
+<li>Switch back to the <strong>Username 1</strong> Google Cloud Console tab.</li>
+</ol>
+<aside class="warning"><p>Make sure you are on the <strong>Username 1</strong> Google Cloud Console tab.</p>
+</aside>
+<ol start="11">
+<li>
+<p>In the Cloud Shell for <strong>Username 1</strong>, execute the following command to create the RoleBinding that grants Username 2 the <code>pod-reader</code> role that includes the permission to create Pods in the <code>production</code> namespace:</p>
+</li>
+</ol>
+<pre><code>kubectl apply -f username2-editor-binding.yaml&#x000A;</code></pre>
+<ol start="12">
+<li>
+<p>In the Cloud Shell for <strong>Username 1</strong>, execute the following command to look for the new role binding:</p>
+</li>
+</ol>
+<pre><code>kubectl get rolebinding&#x000A;</code></pre>
+<p><strong>Output (Do not copy):</strong></p>
+<pre><code>No resources found in default namespace.&#x000A;</code></pre>
+<p>The rolebinding doesn't appear because kubectl is showing the default namespace.</p>
+<ol start="13">
+<li>
+<p>In the Cloud Shell for <strong>Username 1</strong>, execute the following command with the production namespace specified:</p>
+</li>
+</ol>
+<pre><code>kubectl get rolebinding --namespace production&#x000A;</code></pre>
+<p><strong>Output (Do not copy):</strong></p>
+<pre><code>NAME               AGE&#x000A;username2-editor   23s&#x000A;</code></pre>
+<ol start="14">
+<li>Switch back to the <strong>Username 2</strong> Google Cloud Console tab.</li>
+</ol>
+<aside class="warning"><p>Make sure you are on the <strong>Username 2</strong> Google Cloud Console tab.</p>
+</aside>
+<ol start="15">
+<li>
+<p>In the Cloud Shell for <strong>Username 2</strong>, execute the following command to create the resource in the namespace called production:</p>
+</li>
+</ol>
+<pre><code>kubectl apply -f ./production-pod.yaml&#x000A;</code></pre>
+<p>This should now succeed as Username 2 now has the Create permission for Pods in the <strong>production</strong> namespace.</p>
+<ol start="16">
+<li>
+<p>Verify the Pod deployed properly in the production namespace by using the following command:</p>
+</li>
+</ol>
+<pre><code>kubectl get pods --namespace production&#x000A;</code></pre>
+<p><strong>Output (Do not copy):</strong></p>
+<pre><code>NAME               READY     STATUS    RESTARTS   AGE&#x000A;nginx              1/1       Running   0          16m&#x000A;production-pod     1/1       Running   0          20s&#x000A;</code></pre>
+<p>You should see your newly created Pod.</p>
+<ol start="17">
+<li>
+<p>Verify that only the specific RBAC permissions granted by the pod-reader role are in effect for <strong>Username 2</strong> by attempting to delete the production-pod.</p>
+</li>
+</ol>
+<pre><code>kubectl delete pod production-pod --namespace production&#x000A;</code></pre>
+<p>This fails because <strong>Username 2</strong> does not have the delete permission for Pods.</p>
+<p>Click Check my progress to verify the objective.</p>
+<ql-activity-tracking step="2">
+      Roles and RoleBindings
+  </ql-activity-tracking>
+<h2 id="step5">End your lab</h2>
+<p>When you have completed your lab, click <strong>End Lab</strong>. Qwiklabs removes the resources you’ve used and cleans the account for you.</p>
+<p>You will be given an opportunity to rate the lab experience. Select the applicable number of stars, type a comment, and then click <strong>Submit</strong>.</p>
+<p>The number of stars indicates the following:</p>
+<ul>
+<li>1 star = Very dissatisfied</li>
+<li>2 stars = Dissatisfied</li>
+<li>3 stars = Neutral</li>
+<li>4 stars = Satisfied</li>
+<li>5 stars = Very satisfied</li>
+</ul>
+<p>You can close the dialog box if you don't want to provide feedback.</p>
+<p>For feedback, suggestions, or corrections, please use the <strong>Support</strong> tab.</p>
+
+<p>Copyright 2021 Google LLC All rights reserved. Google and the Google logo are trademarks of Google LLC. All other company and product names may be trademarks of the respective companies with which they are associated.</p>
+
+
+
+</div>
+</div>
+
+
+<div class='hidden js-end-lab-button-container lab-content__end-lab-button'>
+<ql-lab-control-button class='js-end-lab-button' running></ql-lab-control-button>
+</div>
+<!-- / TODO: Move recommendations into the end lab modal -->
+</ql-drawer-content>
+<ql-drawer end id='outline-drawer' open slot='drawer' width='320'>
+<div class='js-lab-content-outline lab-content__outline'>
+<a href='#step1'>Overview</a><a href='#step2'>Objectives</a><a href='#step3'>Task 1: Create namespaces for users to access cluster resources</a><a href='#step4'>Task 2. About Roles and RoleBindings</a><a href='#step5'>End your lab</a>
+</div>
+</ql-drawer>
+</ql-drawer-container>
+</ql-drawer-content>
+</ql-drawer-container>
+<div class='lab-introduction js-lab-introduction is-hidden'>
+<div class='lab-introduction__inner'>
+<h1 class='headline-1'>Welcome to Your First Lab!</h1>
+<ql-icon-button class='js-skip-button'>close</ql-icon-button>
+<div class='lab-introduction__video'>
+<iframe allow='autoplay; encrypted-media' allowfullscreen frameborder='0' id='lab-introduction' src='https://www.youtube.com/embed/yF7EDXKTmoQ?enablejsapi=1&amp;rel=0&amp;showinfo=0'></iframe>
+</div>
+<a class='js-skip-button button button--outline'>Skip this video</a>
+</div>
+</div>
+
+
+
+</div>
+</main>
+
+
+<div class='modal fade' id='lab-details-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<div class='modal-body'>
+<p class='l-mbm'>
+Architecting with Google Kubernetes Engine: Implementing Role-Based Access Control With Kubernetes Engine
+</p>
+<p class='small-label l-mbs'>
+<strong>
+Duration:
+</strong>
+3m setup
+&middot;
+60m access
+&middot;
+60m completion
+</p>
+<p class='small-label l-mbs'>
+<span><strong>Levels: </strong>fundamental</span>
+</p>
+<p class='small-label'>
+<strong>
+Permalink:
+</strong>
+<a href="https://googlecoursera.qwiklabs.com/catalog_lab/2306">https://googlecoursera.qwiklabs.com/catalog_lab/2306</a>
+</p>
+</div>
+<div class='modal-actions'>
+<a class='button button--text' data-dismiss='modal'>
+Got It
+</a>
+</div>
+
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='modal fade' id='lab-review-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<form class="simple_form js-lab-review-form" id="edit_lab_review_12003986" action="/lab_reviews/12003986" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="_method" value="patch" /><div class='modal-body'>
+<p class='label'>
+How satisfied are you with this lab?*
+</p>
+<div class='rateit js-rateit' data-rateit-max='5' data-rateit-min='0' data-rateit-resetable='false' data-rateit-step='1' data-rateit-value='4'></div>
+<div class='l-mtm'>
+
+<div class="control-group hidden lab_review_user_id"><div class="controls"><input class="hidden" type="hidden" value="3894861" name="lab_review[user_id]" id="lab_review_user_id" /></div></div>
+<div class="control-group hidden lab_review_classroom_id"><div class="controls"><input class="hidden" type="hidden" name="lab_review[classroom_id]" id="lab_review_classroom_id" /></div></div>
+<div class="control-group hidden lab_review_lab_id"><div class="controls"><input class="hidden" type="hidden" value="2306" name="lab_review[lab_id]" id="lab_review_lab_id" /></div></div>
+<div class="control-group hidden lab_review_focus_id"><div class="controls"><input class="hidden" type="hidden" name="lab_review[focus_id]" id="lab_review_focus_id" /></div></div>
+<div class="control-group hidden lab_review_rating"><div class="controls"><input class="hidden js-rating-input" type="hidden" value="1" name="lab_review[rating]" id="lab_review_rating" /></div></div>
+<div class="control-group text optional lab_review_comment"><label class="text optional control-label" for="lab_review_comment">Comment</label><div class="controls"><textarea class="text optional" name="lab_review[comment]" id="lab_review_comment">
+</textarea></div></div>
+</div>
+</div>
+<div class='modal-actions'>
+<a class='button button--text' data-dismiss='modal'>
+Cancel
+</a>
+<input type="submit" name="commit" value="Submit" disabled="disabled" id="submit" data-disabled="false" class="button" data-disable-with="Submit" />
+</div>
+</form>
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+
+
+<script>
+  $( function() {
+    ql.initMaterialInputs();
+    initChosen();
+    initSearch();
+    initTabs();
+    ql.list.init();
+    ql.favoriting.init();
+    ql.header.myAccount.init();
+    initTooltips();
+    ql.autocomplete.init();
+    ql.modals.init();
+    ql.toggleButtons.init();
+    ql.analytics.init();
+    ql.labControlPanel.addRecaptchaErrorHandler();
+  initLabContent();
+  ql.labOutline.links.init();
+  initLabReviewModal();
+  ql.labAssessment.init();
+  ql.labIntroduction.init( true );
+  ql.labData.init();
+  initLabTranslations( {"are_you_sure":"All done? If you end this lab, you will lose all your work. You may not be able to restart the lab if there is a quota limit. Are you sure you want to end this lab?\n","in_progress":"*In Progress*","ending":"*Ending*","starting":"*Starting, please wait*","end_concurrent_labs":"Sorry, you can only run one lab at a time. To start this lab, please confirm that you want all of your existing labs to end.\n","copied":"Copied","no_resource":"Error retrieving resource.","no_support":"No Support","mac_press":"Press ⌘-C to copy","thanks_review":"Thanks for reviewing this lab.","windows_press":"Press Ctrl-C to copy","days":"days"} );
+  ql.labRun.init();
+  ql.chat.init();
+  ql.initHeader();
+  ql.navigation.init();
+  ql.navPanel.init();
+  ql.navigation.init();
+  
+  });
+</script>
+
+</body>
+</html>
+

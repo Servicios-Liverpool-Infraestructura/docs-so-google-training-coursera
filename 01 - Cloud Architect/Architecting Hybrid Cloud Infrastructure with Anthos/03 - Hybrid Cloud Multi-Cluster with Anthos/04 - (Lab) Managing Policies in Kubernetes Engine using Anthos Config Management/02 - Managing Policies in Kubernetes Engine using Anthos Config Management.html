@@ -1,0 +1,1397 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title>AHYBRID080 Managing Policies Across Clusters with Anthos Config Management | Qwiklabs</title>
+<script>
+//<![CDATA[
+window.gon={};gon.current_user={"firstname":"DANIEL","lastname":"ENRIQUE SANDOVAL SANCHEZ","fullname":"DANIEL ENRIQUE SANDOVAL SANCHEZ","company":"Coursera","email":"desandovals@liverpool.com.mx","origin":"googlecoursera-run, lti-coursera","subscriptions":0,"id":"40414ff5fc280f833d9acca966912f93","qlCreatedAt":"2020-11-17 20:45:59 UTC","optIn":null,"current_organization_id":null,"current_organization_role":null};gon.segment="j4Im8pqIko0Lxq4wVVZWMPMM0EroHUvb";gon.deployment="googlecoursera-run";gon.content={"type":"Lab","id":2078,"name":"AHYBRID080 Managing Policies Across Clusters with Anthos Config Management"};
+//]]>
+</script>
+<script>
+  dataLayer = [
+    {user: gon.current_user},
+    {content: gon.content}
+  ];
+</script>
+<script>
+  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer',"GTM-TQR88QK");
+</script>
+<script>
+  EVENT_SOURCE_BASE_URL = "https://googlecoursera-run.qwiklabs.com/nchan-sub?id=";
+</script>
+<script src="https://cdn.qwiklabs.com/assets/hallofmirrors/polyfills/webcomponents-loader-408088dc333247a761de5f2b2a4ba1cabd2bc36579f83ba92a559eb3682a9b77.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/vendor-45d462772c30000424907184f70c7157e95fb6227698d1671c5051818a6f60d8.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/application-6874b164d8346f46605fc772a6f7375a39626ffc9f6d168e23a3a8c40bb6fd28.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/hallofmirrors/hallofmirrors-b7ff781d00ceebdf75589f58475cea695bafd8d5cc1f3eb4baf6122ed4a4b736.js"></script>
+<!--[if lt IE 9]>
+<script src='http://html5shim.googlecode.com/svn/trunk/html5.js' type='text/javascript'></script>
+<![endif]-->
+<!--[endif]>  <![endif]-->
+<script type='application/ld+json'>
+{
+  "@context": "http://schema.org",
+  "@type": "WebSite",
+  "url": "https://www.qwiklabs.com/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://www.qwiklabs.com/catalog?keywords={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script id='ze-snippet' src='https://static.zdassets.com/ekr/snippet.js?key=511e4158-0aec-4e3c-b2e6-4daa1769f51e'></script>
+
+
+<meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="4ish6j2zbqpsWoBqrMOD0wdhcf8ok8WjDbPtnohBeamFNgbxC93scVk4ZMFcixFLUByeF3o1qFkzpORvGp9YBQ==" />
+<meta content='width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0' name='viewport'>
+<meta content='1rRsY0INj8RvwB5EF5pwdxt2A2P9aDgAlsICaJ0d5w0' name='google-site-verification'>
+<meta content='#3681E4' property='msapplication-TileColor'>
+<meta content='/favicon-144.png' property='msapplication-TileImage'>
+<meta content='[{&quot;id&quot;:&quot;recaptcha_experiment&quot;,&quot;optimize_id&quot;:&quot;dpViOcLkT3qS4TvL2mRojA&quot;,&quot;title&quot;:&quot;No Recaptcha shown for trusted users&quot;,&quot;variant_index&quot;:0,&quot;variant&quot;:&quot;original&quot;}]' name='active-experiments'>
+<meta content='{&quot;userId&quot;:3894861}' name='help-api-product-data'>
+<meta content='Architecting Hybrid Infrastructure with Anthos: Install and configure Anthos Config Management for unified policy management of multi-service applications across multiple clusters.' name='description'>
+<meta content='Qwiklabs' name='author'>
+<meta content='AHYBRID080 Managing Policies Across Clusters with Anthos Config Management | Qwiklabs' property='og:title'>
+<meta content='website' property='og:type'>
+<meta content='/favicon-144.png' property='og:image'>
+<meta content='Qwiklabs' property='og:site_name'>
+<meta content='Architecting Hybrid Infrastructure with Anthos: Install and configure Anthos Config Management for unified policy management of multi-service applications across multiple clusters.' property='og:description'>
+<meta content='/qwiklabs_logo_900x887.png' property='og:logo' size='900x887'>
+<meta content='/qwiklabs_logo_994x187.png' property='og:logo' size='994x187'>
+
+
+<link href='/favicon-32.png' rel='shortcut icon'>
+<link color='#3681E4' href='/favicon-svg.svg' rel='mask-icon'>
+<link href='/favicon-180.png' rel='apple-touch-icon-precomposed'>
+
+
+
+<link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css?family=Oswald:400|Roboto+Mono:400,700|Roboto:300,400,500,700|Google+Sans:300,400,500,700|Google+Sans+Display:400|Material+Icons|Google+Material+Icons" />
+
+
+<link rel="stylesheet" media="all" href="https://cdn.qwiklabs.com/assets/application-cf67fd00dd904ecce1e24779d7504aefc7fbd5d00696246fa80212743a81bf07.css" />
+
+
+
+</head>
+<body class='lab-show l-full no-nav application-new focuses focuses-show lab-show l-full no-nav '>
+<noscript>
+<iframe height='0' src='https://www.googletagmanager.com/ns.html?id=GTM-TQR88QK' style='display:none;visibility:hidden;' width='0'></iframe>
+</noscript>
+<span class='hidden' id='flash-sibling-before'></span>
+
+<div class='header-container'>
+<div class='header'>
+<ql-icon-button class='js-nav-toggle header__nav-panel-button l-mrm'>menu</ql-icon-button>
+<div class='header__title'>
+<ql-icon-button label="Back" href="https://www.coursera.org/" id="810d68b8275c8bbc" target="_self">arrow_back</ql-icon-button><div class="mdl-tooltip" data-mdl-for="810d68b8275c8bbc">Back</div>
+
+<h1 class='headline-5'>
+AHYBRID080 Managing Policies Across Clusters with Anthos Config Management
+</h1>
+</div>
+<div class='header__actions'>
+<ql-icon-button class='header__button--search js-header-search-bar-button'>search</ql-icon-button>
+<ql-icon-button id='control-panel-target' style='display: none;'>
+dashboard
+</ql-icon-button>
+<ql-menu for='control-panel-target' id='control-panel-menu'></ql-menu>
+
+<ql-icon-button id='help-menu-button'>help</ql-icon-button>
+<div class='mdl-tooltip js-tooltip' data-mdl-for='help-menu-button'>
+Help
+</div>
+<ql-menu for='help-menu-button' id='help-menu'>
+<ql-menu-item>
+<ql-help context='lab' data-analytics-action='opened_help' data-analytics-label='lab' productdata='{&quot;userId&quot;:3894861}'>
+Help Center
+</ql-help>
+</ql-menu-item>
+<ql-menu-item>
+<a target="_blank" class="ql-body-1" href="https://support.google.com/qwiklabs/contact/contact_us">Email support</a>
+</ql-menu-item>
+<ql-menu-item>
+<a class='ql-body-1' onClick='ql.chat.open()'>Chat support</a>
+</ql-menu-item>
+</ql-menu>
+
+<ql-icon-button id='language'>language</ql-icon-button>
+<div class='mdl-menu mdl-menu__bottom-right mdl-js-menu elevation-3' for='language'>
+<a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ar" href="/focuses/15531230?locale=ar&amp;parent=lti_session">العربية‬‎
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="de" href="/focuses/15531230?locale=de&amp;parent=lti_session">Deutsch
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="en" href="/focuses/15531230?locale=en&amp;parent=lti_session">English
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="es" href="/focuses/15531230?locale=es&amp;parent=lti_session">español (Latinoamérica)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="fr" href="/focuses/15531230?locale=fr&amp;parent=lti_session">français
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="id" href="/focuses/15531230?locale=id&amp;parent=lti_session">bahasa Indonesia
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="it" href="/focuses/15531230?locale=it&amp;parent=lti_session">Italiano
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ja" href="/focuses/15531230?locale=ja&amp;parent=lti_session">日本語
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ko" href="/focuses/15531230?locale=ko&amp;parent=lti_session">한국어
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pl" href="/focuses/15531230?locale=pl&amp;parent=lti_session">Polski
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pt_BR" href="/focuses/15531230?locale=pt_BR&amp;parent=lti_session">português (Brasil)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pt_PT" href="/focuses/15531230?locale=pt_PT&amp;parent=lti_session">português (Portugal)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ru" href="/focuses/15531230?locale=ru&amp;parent=lti_session">русский
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="tr" href="/focuses/15531230?locale=tr&amp;parent=lti_session">Türkçe
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="zh" href="/focuses/15531230?locale=zh&amp;parent=lti_session">简体中文
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="zh_TW" href="/focuses/15531230?locale=zh_TW&amp;parent=lti_session">繁體中文
+</a></div>
+<button class='icon-button' id='my_account'>
+<ql-avatar></ql-avatar>
+</button>
+<ql-menu for='my_account' open>
+<div class='my-account-menu'>
+<ql-avatar class='l-mtl l-mbl' size='120'></ql-avatar>
+<div class='my-account-menu__user-info l-mbl'>
+<h4 class='ql-subhead-1'>DANIEL ENRIQUE SANDOVAL SANCHEZ</h4>
+<p class='ql-body-2 text--light'>desandovals@liverpool.com.mx</p>
+<p class='ql-body-2 text--light'>
+</p>
+<a class="text--green ql-subhead-2" href="/my_account/payments"><ql-chip positive>
+0 Credits
+</ql-chip>
+</a></div>
+<div class='buttons l-mbl'>
+<a class="button button--hairline" id="settings" href="/my_account/profile">Settings</a>
+</div>
+<hr>
+<ql-button data-analytics-action='clicked_sign_out' href='/users/sign_out' method='delete'>
+Sign Out
+</ql-button>
+<div class='privacy l-mtl'>
+<a class="ql-caption text--light" href="/privacy_policy">Privacy</a>
+<span class='ql-caption text--light l-mls l-mrs'>&middot;</span>
+<a class="ql-caption text--light" href="/terms_of_service">Terms</a>
+</div>
+</div>
+</ql-menu>
+
+</div>
+</div>
+<div class='header__search-bar js-header-search-bar'>
+<form class="js-search-form-mobile" onsubmit="ql.searchFilter(); return false;" action="/searches/elasticsearch" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="oSzsB0sIPYBOydzsO4LAK7GuOCXEhF1nkL5hSWACh1bGMcscfWa/W3urOEfLylKz5tPXzZYiMJ2uqWi48tym+g==" />
+<input type="text" name="keywords" id="keywords" placeholder="Search" maxlength="255" aria-label="catalog search bar" />
+</form>
+
+<ql-icon-button class='js-close-search-bar'>close</ql-icon-button>
+</div>
+</div>
+
+<nav class='nav-bar'>
+<a class="nav-bar__item js-navigation-button" href="/"><ql-icon class='nav-bar__item__icon'>
+home
+</ql-icon>
+<span class='nav-bar__item__label'>
+Home
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="/catalog"><ql-icon class='nav-bar__item__icon'>
+school
+</ql-icon>
+<span class='nav-bar__item__label'>
+Catalog
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="/my_learning"><ql-icon class='nav-bar__item__icon'>
+event_note
+</ql-icon>
+<span class='nav-bar__item__label'>
+My Learning
+</span>
+</a>
+</nav>
+
+<nav class='nav-panel js-nav-panel'>
+<div class='nav-panel__logo'>
+<div class='logo logo--blue'></div>
+</div>
+<a title="Home" tabindex="-1" class="nav-panel__item js-navigation-button" href="/"><ql-icon class='nav-panel__item__icon'>
+home
+</ql-icon>
+<div class='nav-panel__item__label'>
+Home
+</div>
+</a>
+<a title="Catalog" tabindex="-1" class="nav-panel__item js-navigation-button" href="/catalog"><ql-icon class='nav-panel__item__icon'>
+school
+</ql-icon>
+<div class='nav-panel__item__label'>
+Catalog
+</div>
+</a>
+<a title="My Learning" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_learning"><ql-icon class='nav-panel__item__icon'>
+event_note
+</ql-icon>
+<div class='nav-panel__item__label'>
+My Learning
+</div>
+</a>
+<div class='nav-panel__spacer'></div>
+<a title="Profile" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/profile"><ql-icon class='nav-panel__item__icon'>
+account_circle
+</ql-icon>
+<div class='nav-panel__item__label'>
+Profile
+</div>
+</a>
+<a title="Credits &amp; Subscriptions" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/credits"><ql-icon class='nav-panel__item__icon'>
+money
+</ql-icon>
+<div class='nav-panel__item__label'>
+Credits &amp; Subscriptions
+</div>
+</a>
+<a title="Security" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/security"><ql-icon class='nav-panel__item__icon'>
+security
+</ql-icon>
+<div class='nav-panel__item__label'>
+Security
+</div>
+</a>
+<div class='nav-panel__spacer'></div>
+<a class="nav-panel__item" tabindex="-1" href="#"><ql-help>
+<div class='nav-panel__help-item'>
+<ql-icon class='nav-panel__item__icon'>help</ql-icon>
+<div class='nav-panel__item__label'>
+Help
+</div>
+</div>
+</ql-help>
+</a><div class='nav-panel__small-links'>
+<a tabindex="-1" href="/privacy_policy">Privacy</a>
+<a tabindex="-1" href="/terms_of_service">Terms</a>
+</div>
+</nav>
+<div class='nav-panel__overlay js-nav-toggle'></div>
+
+<main class='js-main'>
+<div class='l-main-wrapper' id='main-wrapper'>
+
+
+
+
+
+
+
+<ql-drawer-container class='js-lab-state' data-analytics-payload='{&quot;label&quot;:&quot;AHYBRID080 Managing Policies Across Clusters with Anthos Config Management&quot;,&quot;lab_name&quot;:&quot;AHYBRID080 Managing Policies Across Clusters with Anthos Config Management&quot;,&quot;classroom_name&quot;:null,&quot;deployment&quot;:&quot;googlecoursera-run&quot;}' data-focus-id='15531230' data-lab-billing-limit='0.0' data-lab-duration='10800' data-parent='lti_session' data-recaptcha-enabled id='lab-container'>
+<ql-drawer id='terminal-drawer' slot='drawer' style='width: calc(100% - 480px)'>
+<iframe allow='clipboard-read' class='terminal' id='embedded-resource'></iframe>
+</ql-drawer>
+<ql-drawer-content class='js-lab-wrapper' id='lab-content' slot='drawer-content'>
+<ql-drawer-container id='lab-content-container'>
+<ql-drawer id='control-panel-drawer' open slot='drawer' width='320'>
+<ql-lab-control-panel class='ql-lab-control-panel__max-height control-panel js-lab-control-panel' connectionFiles='[]' labControlButton='{&quot;disabled&quot;:false,&quot;pending&quot;:false,&quot;running&quot;:false}' labDetails='[]' labTimer='{&quot;ticking&quot;:false,&quot;secondsRemaining&quot;:10800}' studentResources='[]'>
+<script src="https://www.recaptcha.net/recaptcha/api.js?render=6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr"   ></script>
+        <script>
+          // Define function so that we can call it again later if we need to reset it
+          // This executes reCAPTCHA and then calls our callback.
+          function executeRecaptchaForStartLab() {
+            grecaptcha.ready(function() {
+              grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}).then(function(token) {
+                setInputWithRecaptchaResponseTokenForStartLab('g-recaptcha-response-data-start-lab', token)
+              });
+            });
+          };
+          // Invoke immediately
+          executeRecaptchaForStartLab()
+
+          // Async variant so you can await this function from another async function (no need for
+          // an explicit callback function then!)
+          // Returns a Promise that resolves with the response token.
+          async function executeRecaptchaForStartLabAsync() {
+            return new Promise((resolve, reject) => {
+              grecaptcha.ready(async function() {
+                resolve(await grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}))
+              });
+            })
+          };
+
+                    var setInputWithRecaptchaResponseTokenForStartLab = function(id, token) {
+            var element = document.getElementById(id);
+            element.value = token;
+          }
+
+        </script>
+<input type="hidden" name="g-recaptcha-response-data[start_lab]" id="g-recaptcha-response-data-start-lab" data-sitekey="6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr" class="g-recaptcha g-recaptcha-response "/>
+
+<div class='hidden' id='recaptcha-v2-start-lab' slot='recaptcha'>
+<script src="https://www.recaptcha.net/recaptcha/api.js" async defer ></script>
+<div data-sitekey="6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV" data-callback="recaptchaComplete" data-expired-callback="expireV2Token" class="g-recaptcha "></div>
+          <noscript>
+            <div>
+              <div style="width: 302px; height: 422px; position: relative;">
+                <div style="width: 302px; height: 422px; position: absolute;">
+                  <iframe
+                    src="https://www.recaptcha.net/recaptcha/api/fallback?k=6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV"
+                    name="ReCAPTCHA"
+                    style="width: 302px; height: 422px; border-style: none; border: 0; overflow: hidden;">
+                  </iframe>
+                </div>
+              </div>
+              <div style="width: 300px; height: 60px; border-style: none;
+                bottom: 12px; left: 25px; margin: 0px; padding: 0px; right: 25px;
+                background: #f9f9f9; border: 1px solid #c1c1c1; border-radius: 3px;">
+                <textarea id="g-recaptcha-response" name="g-recaptcha-response"
+                  class="g-recaptcha-response"
+                  style="width: 250px; height: 40px; border: 1px solid #c1c1c1;
+                  margin: 10px 25px; padding: 0px; resize: none;">
+                </textarea>
+              </div>
+            </div>
+          </noscript>
+
+</div>
+</ql-lab-control-panel>
+</ql-drawer>
+<ql-drawer-content id='lab-instructions' slot='drawer-content'>
+<div class='alert alert--fake js-alert'>
+<p class='alert__message js-alert-message'></p>
+<a class='alert__close js-alert-close'>
+<i class='fa fa-times'></i>
+</a>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='js-lab-content lab-content__renderable-instructions'>
+<div class='lab-preamble'>
+<h1 class='lab-preamble__title'>
+AHYBRID080 Managing Policies Across Clusters with Anthos Config Management
+</h1>
+<div class='lab-preamble__details subtitle-headline-1'>
+<span>3 hours </span>
+<span>Free</span>
+<div class='lab__rating'>
+<a href="/focuses/15531230/reviews?parent=lti_session"><div class='rateit' data-rateit-readonly='true' data-rateit-value='4.3025'></div>
+
+</a><a data-target='#lab-review-modal' data-toggle='modal'>
+Rate Lab
+</a>
+</div>
+</div>
+</div>
+
+<div class='js-markdown-instructions markdown-lab-instructions' id='markdown-lab-instructions'>
+
+
+
+<h2 id="step1">Overview</h2>
+<p>Kubernetes clusters are configured using manifests, or <strong>configs</strong>, written in
+YAML or JSON. These configurations include important Kubernetes objects such as
+Namespaces, ClusterRoles, ClusterRoleBindings, Roles, RoleBindings,
+PodSecurityPolicy, NetworkPolicy, and ResourceQuotas, etc.</p>
+<p>These declarative configs can be applied by hand or with automated tooling.  The
+preferred method is to use an automated process to establish and maintain a
+consistently managed environment from the beginning.</p>
+<p><strong>Anthos Config Management</strong> is a solution to help manage these resources in
+a <em>configuration-as-code</em> like manner. Anthos Config Management utilizes a
+version-controlled <strong>Git repository</strong> (repo) for configuration storage along
+with <strong>configuration operators</strong> which apply configs to selected clusters.</p>
+<p>Anthos Config Management allows you to easily manage the configuration of many
+clusters. At the heart of this process are the Git repositories that store the
+configurations to be applied on the clusters.</p>
+<p><img alt="Lab Architecture" src="https://cdn.qwiklabs.com/OI0zAIXVYzu0hK4OXDfH6Ug%2FbcbU%2FN3YogrYLtSX65A%3D"></p>
+<h3>Objectives</h3>
+<p>In this lab, you learn how to perform the following tasks:</p>
+<ul>
+<li>
+<p>Install the Config Management Operator and the nomos command-line tool</p>
+</li>
+<li>
+<p>Set up your config repo in Cloud Source Repositories</p>
+</li>
+<li>
+<p>Connect your GKE clusters to the config repo</p>
+</li>
+<li>
+<p>Examine the configs in your clusters and repo</p>
+</li>
+<li>
+<p>Filter application of configs by Namespace</p>
+</li>
+<li>
+<p>Review automated drift management</p>
+</li>
+<li>
+<p>Update a config in the repo</p>
+</li>
+</ul>
+<h2 id="step2">Task 0. Lab Setup</h2>
+<p>In this task, you use Qwiklabs and perform initialization steps for your lab.</p>
+<h3>Access Qwiklabs</h3>
+<p>For each lab, you get a new GCP project and set of resources for a fixed time at no cost.</p>
+<ol>
+<li>
+<p>Make sure you signed into Qwiklabs using an <strong>incognito window</strong>.</p>
+</li>
+<li>
+<p>Note the lab's access time (for example, <img alt="img/time.png" src="https://cdn.qwiklabs.com/aZQJ4BT7uCmM9XR6BTXgTRP1Hfu1T7q6V%2BcnbdEsbpU%3D"> and make sure you can finish in that time block.</p>
+</li>
+</ol>
+<aside> <p>
+  There is no pause feature. You can restart if needed, but you have to start at the beginning.
+  </p>
+
+</aside>
+<ol start="3">
+<li>
+<p>When ready, click <img alt="img/start_lab.png" src="https://cdn.qwiklabs.com/XE8x7uvQokyubNwnYKKc%2BvBBNrMlo5iNZiDDzQQ3Ddo%3D">.</p>
+</li>
+<li>
+<p>Note your lab credentials. You will use them to sign in to Cloud Platform Console.
+<img alt="img/open_google_console.png" src="https://cdn.qwiklabs.com/0d78dhX6IVMVWmixCPPSBbmi5O2GPokCXf1Ps1AkTgI%3D"></p>
+</li>
+<li>
+<p>Click <strong>Open Google Console</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Use another account</strong> and copy/paste credentials for <strong>this</strong> lab into the prompts.</p>
+</li>
+</ol>
+<aside class="warning"><p>
+  If you use other credentials, you'll get errors or <strong>incur charges</strong>.
+  </p>
+</aside>
+<ol start="7">
+<li>Accept the terms and skip the recovery resource page.</li>
+</ol>
+<aside class="warning"><p>
+  Do not click <strong>End Lab</strong> unless you are finished with the lab or want to restart it. This clears your work and removes the project.
+  </p>
+</aside>
+
+<p>After you complete the initial sign-in steps, the project dashboard appears.</p>
+<p><img alt="GCP Project Dashboard" src="https://cdn.qwiklabs.com/dxfeoOcn1ObyC0BYyoqqqSi4rO%2FeMdbWPFjoK6C0YYk%3D"></p>
+<p>Click <strong>Select a project</strong>, highlight your <em>GCP Project ID</em>, and click
+<strong>OPEN</strong> to select your project.</p>
+<h3>Activate Google Cloud Shell</h3>
+<p>Google Cloud Shell is a virtual machine that is loaded with development tools. It offers a persistent 5GB home directory and runs on the Google Cloud.
+Google Cloud Shell provides command-line access to your GCP resources.</p>
+<ol>
+<li>
+<p>In GCP console, on the top right toolbar, click the Open Cloud Shell button.</p>
+<p><img alt="Cloud Shell icon" src="https://cdn.qwiklabs.com/vdY5e%2Fan9ZGXw5a%2FZMb1agpXhRGozsOadHURcR8thAQ%3D"></p>
+</li>
+<li>
+<p>Click <strong>Continue</strong>.
+<img alt="cloudshell_continue.png" src="https://cdn.qwiklabs.com/lr3PBRjWIrJ%2BMQnE8kCkOnRQQVgJnWSg4UWk16f0s%2FA%3D"></p>
+</li>
+</ol>
+<p>It takes a few moments to provision and connect to the environment. When you are connected, you are already authenticated, and the project is set to your <em>PROJECT_ID</em>. For example:</p>
+<p><img alt="Cloud Shell Terminal" src="https://cdn.qwiklabs.com/hmMK0W41Txk%2B20bQyuDP9g60vCdBajIS%2B52iI2f4bYk%3D"></p>
+<p><strong>gcloud</strong> is the command-line tool for Google Cloud Platform. It comes pre-installed on Cloud Shell and supports tab-completion.</p>
+<p>You can list the active account name with this command:</p>
+<pre><code>gcloud auth list&#x000A;</code></pre>
+<p>Output:</p>
+<pre><code class="language-output prettyprint">Credentialed accounts:&#x000A; - &lt;myaccount&gt;@&lt;mydomain&gt;.com (active)&#x000A;</code></pre>
+<p>Example output:</p>
+<pre><code class="language-Output prettyprint">Credentialed accounts:&#x000A; - google1623327_student@qwiklabs.net&#x000A;</code></pre>
+<p>You can list the project ID with this command:</p>
+<pre><code>gcloud config list project&#x000A;</code></pre>
+<p>Output:</p>
+<pre><code class="language-output prettyprint">[core]&#x000A;project = &lt;project_ID&gt;&#x000A;</code></pre>
+<p>Example output:</p>
+<pre><code class="language-Output prettyprint">[core]&#x000A;project = qwiklabs-gcp-44776a13dea667a6&#x000A;</code></pre>
+<ql-infobox>
+  Full documentation of <strong>gcloud</strong> is available on
+  <a href="https://cloud.google.com/sdk/gcloud" target="_blank">
+    Google Cloud gcloud Overview
+  </a>.
+</ql-infobox>
+
+<h2 id="step3">Task 1: Complete and verify the lab setup</h2>
+<ql-infobox>
+<p>The lab environment has already been partially configured:</p>
+<p>
+</p>
+<ul>
+<li>A GKE cluster named <strong>gke</strong> has been created and
+  registered. Anthos Service Mesh has been installed, as has the
+  <a href="https://github.com/GoogleCloudPlatform/microservices-demo" target="_blank">
+  Online Boutique demo application.</a>
+</li>
+<li>An open source Kubernetes cluster named <strong>onprem-connect</strong>
+   has been created. Istio has been installed, as has the Online Boutique
+   application.</li>
+</ul>
+
+</ql-infobox>
+<ol>
+<li>
+<p>Set up the Cloud Shell environment for command-line access to your clusters:</p>
+<pre><code class="language-bash prettyprint">export PROJECT_ID=$(gcloud config get-value project)&#x000A;export SHELL_IP=$(curl -s api.ipify.org)&#x000A;export KUBECONFIG=~/.kube/config&#x000A;export PROJECT_NUMBER=$(gcloud projects describe ${PROJECT_ID} \&#x000A;    --format="value(projectNumber)")&#x000A;&#x000A;gcloud compute firewall-rules create shell-to-onprem \&#x000A;    --allow tcp \&#x000A;    --source-ranges $SHELL_IP&#x000A;&#x000A;gsutil cp gs://$PROJECT_ID-kops-onprem/config \&#x000A;    ~/.kube/config&#x000A;</code></pre>
+</li>
+<li>
+<p>Set <code>kubectl</code> to use the context for the <strong>onprem</strong> cluster:</p>
+<pre><code class="language-bash prettyprint">kubectx onprem.k8s.local&#x000A;</code></pre>
+</li>
+<li>
+<p>Extract the token from the secret that represents the Kubernetes Service
+Account that will be used for GKE Connect:</p>
+<pre><code class="language-bash prettyprint">printf "\n$(kubectl describe secret remote-admin-sa| sed -ne 's/^token: *//p')\n\n"&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code class="language-bash prettyprint">aSB3aWxsIG5vdCB0cnkgdG8gc3RlYWwgc29tZW9uZSBlbHNlcyB0b2tlbiBhZ2FpbgppIHdpbGwgbm90IHRyeSB0byBzdGVhbCBzb21lb25lIGVsc2VzIHRva2VuIGFnYWluCmkgd2lsbCBub3QgdHJ5IHRvIHN0ZWFsIHNvbWVvbmUgZWxzZXMgdG9rZW4gYWdhaW4KaSB3aWxsIG5vdCB0cnkgdG8gc3RlYWwgc29tZW9uZSBlbHNlcyB0b2tlbiBhZ2FpbgppIHdpbGwgbm90IHRyeSB0byBzdGVhbCBzb21lb25lIGVsc2VzIHRva2VuIGFnYWluCmkgd2lsbCBub3QgdHJ5IHRvIHN0ZWFsIHNvbWVvbmUgZWxzZXMgdG9rZW4gYWdhaW4KaSB3aWxsIG5vdCB0cnkgdG8gc3RlYWwgc29tZW9uZSBlbHNlcyB0b2tlbiBhZ2FpbgppIHdpbGwgbm90IHRyeSB0byBzdGVhbCBzb21lb25lIGVsc2VzIHRva2VuIGFnYWluCmkgd2lsbCBub3QgdHJ5IHRvIHN0ZWFsIHNvbWVvbmUgZWxzZXMgdG9rZW4gYWdhaW4K&#x000A;</code></pre>
+</li>
+<li>
+<p>Select the token contents in the Cloud Shell (this will automatically copy
+the contents).</p>
+<ql-warningbox>
+<p><strong>Important:</strong> Don't use <code>Ctrl+c</code> or
+ <code>Command+c</code> to copy to the clipboard. Those keystrokes will
+ copy over new line breaks from the display,instead of treating the token
+ as a single line of text.</p>
+<p> Simply selecting text in Cloud Shell will put the contents in your
+ clipboard buffer.</p>
+</ql-warningbox>
+</li>
+<li>
+<p>Go to <strong>Navigation &gt; Kubernetes Engine &gt; Clusters</strong> and
+click on the <strong>Login</strong> button displayed in <strong>the onprem-connect</strong> cluster
+row.</p>
+<p><img alt="Login button" src="https://cdn.qwiklabs.com/x2Zd%2BjjW45TKlOx%2Fr%2FBehvfu%2BLiogsFY6F%2BBZCXgRBk%3D"></p>
+</li>
+<li>
+<p>When prompted, select <strong>Token</strong> as the authentication type, and paste the
+previously copied token, then click <strong>Login</strong>.</p>
+<p><img alt="Entering token" src="https://cdn.qwiklabs.com/P6dmBtsirup0jx8YnK9JdBYz6MCk%2F6HZht1leLJ2PV8%3D"></p>
+<p>You should now see two clusters listed with green checkmarks which
+indicates both clusters are registered successfully.</p>
+<p><img alt="Two registered clusters" src="https://cdn.qwiklabs.com/q2IS3hoh%2F1vZMgeXE0eja%2F0PeN1lwMpaorB47N40FYY%3D"></p>
+</li>
+<li>
+<p>Visit the <strong>Services &amp; Ingress</strong> page and find the <strong>frontend-external</strong>
+service address for each cluster.</p>
+<p>Visit those address in new browser tabs and verify that separate,
+independent applications are up and running in each cluster.</p>
+<p><img alt="Frontend services" src="https://cdn.qwiklabs.com/9aDGPW7%2F26CWBjgLTE1kM2yCbHH9pPyEggON3skhlSc%3D">
+<img alt="Online Boutique Application" src="https://cdn.qwiklabs.com/%2BRD1AZBF03xwOuhrCwf1QRpZ0%2F7cUkGnTNFIZCxUKYE%3D"></p>
+</li>
+</ol>
+<h2 id="step4">Task 2. Install the Config Management Operator and the nomos command-line tool</h2>
+<p>The Config Management <strong>Operator</strong> is a Kubernetes controller that manages
+Anthos Config Management in a Kubernetes cluster. In this task, you install
+the Operator as a system workload on both clusters. You also install the
+<code>nomos</code> command-line tool which helps you to understand the state of Anthos
+Config Management in your clusters.</p>
+<h3>Install the Config Management Operator on the gke cluster</h3>
+<ol>
+<li>
+<p>In Cloud Shell, switch your context to the <strong>gke</strong> cluster:</p>
+<pre><code class="language-bash prettyprint">kubectx gke=gke_${PROJECT_ID}_us-central1-b_gke&#x000A;kubectx gke&#x000A;</code></pre>
+</li>
+<li>
+<p>Download the configuration file for Config Management resources.</p>
+<pre><code class="language-bash prettyprint">export LAB_DIR=$HOME/acm-lab&#x000A;mkdir $LAB_DIR&#x000A;cd $LAB_DIR&#x000A;gsutil cp gs://config-management-release/released/latest/config-management-operator.yaml config-management-operator.yaml&#x000A;</code></pre>
+</li>
+<li>
+<p>Review the file in the Cloud Shell editor to get a sense of what is being
+created on your cluster.</p>
+<p>The file is <code>acm-lab/config-management-operator.yaml</code>.</p>
+<pre><code class="language-bash prettyprint">edit config-management-operator.yaml&#x000A;</code></pre>
+<p><img alt="Config Management Operator" src="https://cdn.qwiklabs.com/0R6h0AbdvP2UlaP53OvLdrU8bqTKEs2zCQ4ivLs%2BMyA%3D"></p>
+<ql-warningbox>
+You may need to load the code editor in a new window when running the lab
+in an incognito window.
+</ql-warningbox>
+</li>
+<li>
+<p>Exit the editor and apply the configuration to the <strong>gke</strong> cluster:</p>
+<p>You may need to click <strong>Open Terminal</strong> in Cloud Shell.</p>
+<pre><code class="language-bash prettyprint">kubectl apply -f config-management-operator.yaml&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code class="language-bash prettyprint">customresourcedefinition.apiextensions.k8s.io/configmanagements.addons.sigs.k8s.io created&#x000A;clusterrolebinding.rbac.authorization.k8s.io/config-management-operator created&#x000A;clusterrole.rbac.authorization.k8s.io/config-management-operator created&#x000A;serviceaccount/config-management-operator created&#x000A;deployment.apps/config-management-operator created&#x000A;namespace/config-management-system created&#x000A;</code></pre>
+</li>
+<li>
+<p>Use the GCP Console to verify that a system workload called
+<strong>config-management-operator</strong> has been created. Visit <strong>Navigation &gt;
+Kubernetes Engine &gt; Workloads</strong>.</p>
+<p>Remove the filter to show system objects, and you should see the
+deployment.</p>
+<p><img alt="Config Management Operator" src="https://cdn.qwiklabs.com/%2FuhjA5eIxMbAic55%2BnviCb8MlqVeLAuuKBDf%2FyjwnMs%3D"></p>
+</li>
+</ol>
+<h3>Install the Config Management Operator on the onprem cluster</h3>
+<ol start="6">
+<li>
+<p>Switch contexts, and apply the configuration file to the <strong>onprem</strong> cluster:</p>
+<pre><code class="language-bash prettyprint">kubectx onprem.k8s.local&#x000A;kubectl apply -f config-management-operator.yaml&#x000A;</code></pre>
+</li>
+<li>
+<p>Using the console, or the <code>kubectl</code> command, verify that the Config Management
+Operator has been deployed to the <strong>onprem</strong> cluster.</p>
+</li>
+</ol>
+<h3>Install the nomos command-line tool in Cloud Shell</h3>
+<ol start="8">
+<li>
+<p>In Cloud Shell, download the <code>nomos</code> command-line tool:</p>
+<pre><code class="language-bash prettyprint">cd $LAB_DIR&#x000A;gsutil cp gs://config-management-release/released/latest/linux_amd64/nomos nomos&#x000A;chmod +x ./nomos&#x000A;</code></pre>
+</li>
+<li>
+<p>Use <code>nomos status</code> to check if Anthos Config Management is properly
+installed and configured.</p>
+<pre><code class="language-bash prettyprint">./nomos status&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code class="language-bash prettyprint">Connecting to clusters...&#x000A;Failed to retrieve syncBranch for "onprem.k8s.local": configmanagements.configmanagement.gke.io "config-management" not found&#x000A;Failed to retrieve repos for "onprem.k8s.local": the server could not find the requested resource (get repos.configmanagement.gke.io)&#x000A;Failed to retrieve syncBranch for "gke": configmanagements.configmanagement.gke.io "config-management" not found&#x000A;Failed to retrieve repos for "gke": the server could not find the requested resource (get repos.configmanagement.gke.io)&#x000A;Current   Context            Sync Status      Last Synced Token   Sync Branch   Resource Status&#x000A;-------   -------            -----------      -----------------   -----------   ---------------&#x000A;          gke                NOT CONFIGURED&#x000A;*         onprem.k8s.local   NOT CONFIGURED&#x000A;Config Management Errors:&#x000A;gke   ConfigManagement resource is missing&#x000A;onprem.k8s.local   ConfigManagement resource is missing&#x000A;</code></pre>
+<p>In this case, config management is installed but not yet configured
+for your clusters. The <code>Status</code> is reported as <code>NOT CONFIGURED</code> for
+both clusters.</p>
+<p>Other statuses include: <code>NOT INSTALLED</code>, and <code>SYNCED</code>.</p>
+<p>When <code>nomos status</code> reports an error, it also shows any additional error
+text available to help diagnose the problem under
+<code>Config Management Errors</code>.</p>
+<p>You will correct the issues you see here in later steps.</p>
+</li>
+</ol>
+<h2 id="step5">Task 3. Set up your Anthos Config Management repository</h2>
+<p>Anthos Config Management requires you to store your configurations in a
+Git repository. In this task, you set up that repository.</p>
+<p>Anthos Config Management supports any Git repo including GitHub and Google
+Cloud Source Repositories. In this lab, you will use
+<strong>Cloud Source Repositories</strong>.</p>
+<h3>Create a new local config repo</h3>
+<ol>
+<li>
+<p>Set the username and email address for your Git activities.</p>
+<pre><code class="language-bash prettyprint">export GCLOUD_EMAIL=$(gcloud config get-value account)&#x000A;echo $GCLOUD_EMAIL&#x000A;echo $USER&#x000A;&#x000A;git config --global user.email "$GCLOUD_EMAIL"&#x000A;git config --global user.name "$USER"&#x000A;</code></pre>
+</li>
+<li>
+<p>Get sample config files for the lab:</p>
+<pre><code class="language-bash prettyprint">git clone https://github.com/GoogleCloudPlatform/training-data-analyst&#x000A;cd ./training-data-analyst/courses/ahybrid/v1.0/AHYBRID071/config&#x000A;</code></pre>
+</li>
+<li>
+<p>Take a moment to review the structure of the <strong>config</strong> directory. Click the
+<strong>Open Editor</strong> button in Cloud Shell, then in the explorer section of
+the editor, drill down into
+<strong>acm-lab/training-data-analyst/courses/ahybrid/v1.0/AHYBRID071/config</strong>.</p>
+<p>Take a minute to review the subdirectories and the contents of the config
+files you find.</p>
+</li>
+<li>
+<p>Click <strong>Open Terminal</strong> to return to the Cloud Shell command line, and
+initialize the config directory as a new local Git repo:</p>
+<pre><code class="language-bash prettyprint">git init&#x000A;git add .&#x000A;git commit -m "Initial config repo commit"&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code class="language-bash prettyprint">9 files changed, 67 insertions(+)&#x000A;create mode 100644 README.md&#x000A;create mode 100644 cluster/clusterrole-namespace-readers.yaml&#x000A;create mode 100644 cluster/clusterrolebinding-namespace-readers.yaml&#x000A;create mode 100644 namespaces/dev/namespace.yaml&#x000A;create mode 100644 namespaces/prod/namespace.yaml&#x000A;create mode 100644 namespaces/rolebinding-sre.yaml&#x000A;create mode 100644 namespaces/selector-sre-support.yaml&#x000A;create mode 100644 system/README.md&#x000A;create mode 100644 system/repo.yaml&#x000A;</code></pre>
+</li>
+</ol>
+<h3>Create a Cloud Source Repositories repo and configure it as a remote for the local repo</h3>
+<ol start="5">
+<li>
+<p>Create a Cloud Source Repositories repo named <code>anthos_config</code> to host
+your code:</p>
+<pre><code class="language-bash prettyprint">gcloud source repos create anthos_config&#x000A;</code></pre>
+</li>
+<li>
+<p>Set <code>gcloud.sh</code> to supply credentials for Git access:</p>
+<pre><code class="language-bash prettyprint">git config credential.helper gcloud.sh&#x000A;</code></pre>
+</li>
+<li>
+<p>Add your newly created config repository as a Git remote:</p>
+<pre><code class="language-bash prettyprint">git remote add origin https://source.developers.google.com/p/$PROJECT_ID/r/anthos_config&#x000A;</code></pre>
+</li>
+<li>
+<p>Push your code to the new repository's master branch:</p>
+<pre><code class="language-bash prettyprint">git push origin master&#x000A;</code></pre>
+</li>
+<li>
+<p>Verify your repo and source code were created in
+<strong>Cloud Source Repositories</strong>. Select <strong>Navigation &gt; Source Repositories</strong>.
+Then select the <strong>anthos_config</strong>
+repository.</p>
+</li>
+</ol>
+<h3>Generate keys, and create secrets on your clusters</h3>
+<p>The Anthos Config Management Config Operator, when running on your clusters,
+needs read-only access to your Git repo, so it can read the latest committed
+configs, then check and/or apply them to your clusters. The credentials for
+this read-only access to your Git repo are stored in the <code>git-creds</code> secret
+on each enrolled cluster.</p>
+<p>When using Cloud Source Repositories, an SSH keypair is the recommended
+approach to authorize access to your repo.</p>
+<ol start="10">
+<li>
+<p>Using Cloud Shell, generate an SSH keypair.</p>
+<pre><code class="language-bash prettyprint">export GCLOUD_EMAIL=$(gcloud config get-value account)&#x000A;cd $LAB_DIR&#x000A;ssh-keygen -t rsa -b 4096 \&#x000A;  -C "$GCLOUD_EMAIL" \&#x000A;  -N '' \&#x000A;  -f $HOME/.ssh/id_rsa.acm&#x000A;</code></pre>
+</li>
+<li>
+<p>Save the private key to a secret on each cluster</p>
+<pre><code class="language-bash prettyprint">kubectx gke&#x000A;kubectl create secret generic git-creds \&#x000A;    --namespace=config-management-system \&#x000A;    --from-file=ssh=$HOME/.ssh/id_rsa.acm&#x000A;kubectx onprem.k8s.local&#x000A;kubectl create secret generic git-creds \&#x000A;    --namespace=config-management-system \&#x000A;    --from-file=ssh=$HOME/.ssh/id_rsa.acm&#x000A;</code></pre>
+<aside class="warning">
+<p><strong>Warning:</strong> this private key should be carefully protected!
+</p>
+</aside>
+</li>
+</ol>
+<h3>Manage keys in Cloud Source Repositories</h3>
+<p>The SSH public key portion of your generated SSH keypair needs to be registered
+with Cloud Source Repositories. The Config Operators on your clusters can then
+use the SSH private key, just stored as a cluster secret, to access your config
+repository.</p>
+<ol start="12">
+<li>
+<p>In the Cloud Source Repositories console, click the
+<img alt="Three-dot menu icon" src="https://cdn.qwiklabs.com/5OEwfJEfsSg8zDSsYjmqhsK7fRiAcDrW50FJ0Axw%2Fk8%3D">
+three dot menu icon in the top-right toolbar,
+then click <a href="https://source.cloud.google.com/user/ssh_keys" target="_blank">Manage SSH Keys</a>.</p>
+</li>
+<li>
+<p>Click <strong>Register SSH Key</strong>.</p>
+</li>
+<li>
+<p>You may be prompted to enter your Qwiklabs user <code>password</code>.</p>
+</li>
+<li>
+<p>Enter <code>config demo key</code> in the <strong>Key Name</strong> field.
+You can choose a different key name if needed.</p>
+</li>
+<li>
+<p>From Cloud Shell, copy the key value from the output of this command:</p>
+<pre><code class="language-bash prettyprint">cat $HOME/.ssh/id_rsa.acm.pub&#x000A;</code></pre>
+<aside>
+<p>The key begins with <code>ssh-</code> or <code>ecdsa-</code>,
+and ends with an email address.</p>
+</aside>
+<ql-warningbox>
+<p><strong>Important:</strong> Don't use <code>Ctrl+c</code> or
+<code>Command+c</code> to copy to the clipboard. Those keystrokes will
+copy over new line breaks from the display,instead of treating the key
+value as it should.</p>
+<p> Simply selecting text in Cloud Shell will put the contents in your
+clipboard buffer.</p>
+</ql-warningbox>
+</li>
+<li>
+<p>Return to <strong>Cloud Source Repositories</strong>, and paste the copied key from your
+public key file into the <strong>Key</strong> field.</p>
+</li>
+<li>
+<p>Click <strong>Register</strong>.</p>
+<p>You will now see your registered key.</p>
+<p><img alt="Config Demo Key" src="https://cdn.qwiklabs.com/VRq2XaVb0DJzPh%2BaKxJKXtLLFkNgQ5TyAuMA0QbeQ9Q%3D"></p>
+</li>
+</ol>
+<h2 id="step6">Task 4: Define and deploy Config Management Operators</h2>
+<h3>Create your ConfigManagement YAML files</h3>
+<p>To configure the Config Management Operators to read from your repo, you will
+create configuration files for the ConfigManagement CustomResources and apply
+them to your clusters.</p>
+<p>You have been provided configuration files for your two clusters. You will
+need to modify each to point to your hosted repo.</p>
+<ol>
+<li>
+<p>Using the Cloud Shell Code Editor, open the <strong>gke</strong> configuration file
+for editing:</p>
+<pre><code class="language-bash prettyprint">edit ~/acm-lab/training-data-analyst/courses/ahybrid/v1.0/AHYBRID071/config-management/gke-config-management.yaml&#x000A;</code></pre>
+</li>
+<li>
+<p>Replace the <code>[qwiklabs-user-email]</code> placeholder with email address for your
+Qwiklabs user, as shown in the upper left corner of the Qwiklabs window.</p>
+</li>
+<li>
+<p>Replace the <code>[qwiklabs-project]</code> placeholder with GCP Project ID for your
+project shown in the upper left corner of the Qwiklabs window.</p>
+<p><img alt="Edited config file" src="https://cdn.qwiklabs.com/4eTVZdQPpPBXDHd8a1wNqpXYQB9a4gpqjclo%2BnfUbk8%3D"></p>
+<p>Notice also that a variety of options can be included to configure
+how the resource interacts with your repo. For example, <code>secretType</code>
+is set to <strong>ssh</strong> indicating ConfigManagement should use the keys
+stored previously.</p>
+<p>Check the <a href="https://cloud.google.com/anthos-config-management/docs/how-to/installing#configuring-git-repo" target="_blank">installation
+instructions</a>
+for more details about the fields.</p>
+</li>
+<li>
+<p>Save the changes to your file.</p>
+</li>
+<li>
+<p>Repeat the process for the <strong>onprem</strong> configuration file.</p>
+<pre><code class="language-bash prettyprint">edit ~/acm-lab/training-data-analyst/courses/ahybrid/v1.0/AHYBRID071/config-management/onprem-config-management.yaml&#x000A;</code></pre>
+<p>You can copy the line from <code>gke-config-management.yaml</code>.</p>
+</li>
+</ol>
+<h3>Check the current state of your clusters</h3>
+<ol start="6">
+<li>
+<p>Back in Cloud Shell, switch contexts to your <strong>gke</strong> cluster and list
+Namespaces:</p>
+<pre><code class="language-bash prettyprint">kubectx gke&#x000A;kubectl get namespace&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code class="language-bash prettyprint">NAME                       STATUS   AGE&#x000A;config-management-system   Active   6m31s&#x000A;default                    Active   26m&#x000A;gke-connect                Active   25m&#x000A;istio-system               Active   25m&#x000A;kube-node-lease            Active   27m&#x000A;kube-public                Active   27m&#x000A;kube-system                Active   27m&#x000A;prod                       Active   24m&#x000A;</code></pre>
+<ul>
+<li>Do you see a <strong>prod</strong> Namespace?</li>
+<li>What about a <strong>dev</strong> Namespace?</li>
+</ul>
+</li>
+<li>
+<p>Describe the <strong>prod</strong> Namespace and note the <strong>labels</strong> you see:</p>
+<pre><code class="language-bash prettyprint">kubectl describe namespace prod&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code class="language-bash prettyprint">Name:         prod&#x000A;Labels:       istio.io/rev=asm-173-6&#x000A;Annotations:  &lt;none&gt;&#x000A;Status:       Active&#x000A;Resource Quotas&#x000A;Name:                       gke-resource-quotas&#x000A;Resource                    Used  Hard&#x000A;--------                    ---   ---&#x000A;count/ingresses.extensions  0     100&#x000A;count/jobs.batch            0     5k&#x000A;pods                        12    1500&#x000A;services                    12    500&#x000A;No LimitRange resource.&#x000A;</code></pre>
+</li>
+<li>
+<p>List the ClusterRoles and the ClusterRoleBindings on the <strong>gke</strong>
+cluster.</p>
+<pre><code class="language-bash prettyprint">kubectl get clusterroles&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code class="language-bash prettyprint">NAME&#x000A;...&#x000A;system:node-bootstrapper&#x000A;system:node-problem-detector&#x000A;system:node-proxier&#x000A;system:persistent-volume-provisioner&#x000A;system:public-info-viewer&#x000A;system:volume-scheduler&#x000A;view&#x000A;</code></pre>
+<p>and</p>
+<pre><code class="language-bash prettyprint">kubectl get clusterrolebindings&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code class="language-bash prettyprint">NAME&#x000A;...&#x000A;system:metrics-server&#x000A;system:node&#x000A;system:node-proxier&#x000A;system:public-info-viewer&#x000A;system:volume-scheduler&#x000A;</code></pre>
+<ul>
+<li>Do you see any references to <strong>namespace-readers</strong>?</li>
+</ul>
+</li>
+<li>
+<p>List the RoleBindings for the <strong>prod</strong> service.</p>
+<pre><code class="language-bash prettyprint">kubectl get rolebindings -n prod&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code class="language-bash prettyprint">No resources found in prod namespace.&#x000A;</code></pre>
+<ul>
+<li>Do you see any reference to <strong>sre@foo-corp.com</strong>?</li>
+</ul>
+</li>
+</ol>
+<ql-infobox>
+<p>
+    At this point, both your clusters have a <strong>prod</strong> Namespace,
+    but no <strong>dev</strong> Namespace. There are no
+    <strong>namespace-readers</strong> ClusterRoles or bindings, nor are there
+    any RoleBindings in the <strong>prod</strong> Namespace for the
+    <strong>sre</strong> group. This will all change when config management is
+    enabled.
+    </p>
+</ql-infobox>
+<h3>Review the configurations stored in your repo</h3>
+<ol start="10">
+<li>
+<p>In the Cloud Shell editor, navigate to
+<strong>acm-lab/training-data-analyst/courses/ahybrid/v1.0/AHYBRID071/config</strong>.
+Note the folder structure.</p>
+<ul>
+<li>The <strong>cluster</strong> folder has configurations that apply to clusters being
+managed</li>
+<li>The <strong>namespaces</strong> folder has configurations that apply to namespaces on
+clusters being managed.</li>
+</ul>
+</li>
+<li>
+<p>In the <strong>cluster</strong> folder, open and review the configuration files you find.
+One defines a ClusterRole you wish to add to each cluster, and the second
+defines a ClusterRoleBinding you wish to add to each cluster.</p>
+</li>
+</ol>
+<p><img alt="ClusterRole config" src="https://cdn.qwiklabs.com/9Yx6tPabDZLj6G%2F%2BRXBwI0glpHVu1beGdLsZr5O90ok%3D">
+<img alt="ClusterRoleBinding config" src="https://cdn.qwiklabs.com/wOdx73hinbFNYlvttIdk1fgdDPakh%2FXHogCdv%2BvdIYM%3D"></p>
+<ol start="12">
+<li>In the <strong>namespaces</strong> folder, open the <strong>dev</strong> folder and then the
+<strong>namespace.yaml</strong> file inside. This file defines a Namespace you wish to
+have created on every cluster.</li>
+</ol>
+<p><img alt="Dev Namespace config" src="https://cdn.qwiklabs.com/dqQ%2B9YanCub4sVg%2BaiDxa94AwdtTOrTEiDwiPL65b%2Fo%3D"></p>
+<ol start="13">
+<li>In the <strong>namespaces</strong> folder, open the <strong>prod</strong> folder and then the
+<strong>namespace.yaml</strong> file inside. This file defines a Namespace you wish to
+have created on every cluster. Note the <strong>env</strong> label.</li>
+</ol>
+<p><img alt="Prod Namespace config" src="https://cdn.qwiklabs.com/tgRW8IQJth1rg76VZLi1KhOKJcR4myvL1WDGDA9zxUY%3D"></p>
+<ol start="14">
+<li>In the <strong>namespaces</strong> folder, open the <strong>selector-sre-support.yaml</strong> file.
+Note that the NamespaceSelector will select only Namespaces that have a
+given label. In this case, the label is <strong>env:prod</strong> - so only the <strong>prod</strong>
+Namespace will be affected by configurations that use this selector.</li>
+</ol>
+<p><img alt="NamespaceSelector config" src="https://cdn.qwiklabs.com/RkVqv%2BN5ZdcBRibOJaq8%2FKFEQYj23BIwqzH9IHlu6hM%3D"></p>
+<ol start="15">
+<li>
+<p>In the <strong>namespaces</strong> folder, open the <strong>rolebinding-sre.yaml</strong> file.
+Note the annotations which indicate that this config should be applied
+using a selector.</p>
+<p><img alt="RoleBinding config" src="https://cdn.qwiklabs.com/mlTKDw2i%2FSqmCk2%2Fid61M5%2FR28%2Bstt1xxqSqNGusF7E%3D"></p>
+<ql-infobox>
+<p>
+    When these configurations are applied, you should end up with the
+    following in place:
+</p>
+<ul>
+<li>
+        A ClusterRole named <strong>namespace-readers</strong>
+</li>
+<li>
+        A ClusterRoleBinding for <strong>Cheryl</strong>
+</li>
+<li>
+        A <strong>dev</strong> Namespace
+    </li>
+<li>
+        A <strong>prod</strong> Namespace with <strong>env</strong> and
+        <strong>istio-injection</strong> labels
+    </li>
+<li>
+        A RoleBinding in the <strong>prod</strong> Namespace for
+        <strong>sre@foo-corp.com</strong>
+</li>
+</ul>
+</ql-infobox>
+</li>
+</ol>
+<h3>Deploy the Config Management Operator</h3>
+<ol start="16">
+<li>
+<p>In Cloud Shell, apply the configuration to the <strong>gke</strong> cluster.</p>
+<pre><code class="language-bash prettyprint">kubectx gke&#x000A;kubectl apply -f ~/acm-lab/training-data-analyst/courses/ahybrid/v1.0/AHYBRID071/config-management/gke-config-management.yaml&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code class="language-bash prettyprint">configmanagement.configmanagement.gke.io/config-management created&#x000A;</code></pre>
+</li>
+<li>
+<p>Apply the configuration to the <strong>onprem</strong> cluster.</p>
+<pre><code class="language-bash prettyprint">kubectx onprem.k8s.local&#x000A;kubectl apply -f ~/acm-lab/training-data-analyst/courses/ahybrid/v1.0/AHYBRID071/config-management/onprem-config-management.yaml&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code class="language-bash prettyprint">configmanagement.configmanagement.gke.io/config-management created&#x000A;</code></pre>
+</li>
+<li>
+<p>Wait 30 seconds, then use <code>nomos status</code> to see if Anthos Config Management
+is properly installed and configured. If the clusters aren't both synched
+wait another 30 seconds and try again. They should be synched at this point.</p>
+<pre><code class="language-bash prettyprint">./nomos status&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code class="language-bash prettyprint">Connecting to clusters...&#x000A;Current   Context            Sync Status ... Sync Branch ...&#x000A;-------   -------            -----------     -----------&#x000A;          gke                SYNCED          master&#x000A;*         onprem.k8s.local   SYNCED          master&#x000A;</code></pre>
+</li>
+</ol>
+<h2 id="step7">Task 5. Verify that the clusters are in sync from the Anthos Config Management UI</h2>
+<ol>
+<li>
+<p>In the <strong>Google Cloud Console</strong>, go to <strong>Navigation &gt; Anthos &gt; Features</strong></p>
+</li>
+<li>
+<p>In the Config Management feature click on <strong>Enable</strong>, and then again when
+the popup appears, click on <strong>Enable Config Management</strong></p>
+<p><img alt="Enable Config Management" src="https://cdn.qwiklabs.com/6I2%2FdDMlnF6kEyeJ38ReclhR2xwui0p3icE4boNulgk%3D"></p>
+</li>
+<li>
+<p>In the sidebar panel, go to <strong>Config Management</strong> to see that the two
+clusters are synced. Note, that it might take 1 or 2 minutes for the
+clusters to show up.</p>
+<p><img alt="Synced clusters in ACM" src="https://cdn.qwiklabs.com/%2BjH7ZugxdAM2XpR%2B%2B7gevKcrIfJ9j0r6ge1movsuL0c%3D"></p>
+</li>
+<li>
+<p>Select on one of the cluster agents, and click on configure. There you can
+see the git information that we configured in the previous tasks.</p>
+</li>
+</ol>
+<h2 id="step8">Task 6. Verify that the configurations have been applied to your clusters</h2>
+<ol>
+<li>
+<p>Set your <code>kubectl</code> context and list the Namespaces on the <strong>gke</strong> cluster:</p>
+<pre><code class="language-base prettyprint">kubectx gke&#x000A;kubectl get namespaces&#x000A;</code></pre>
+<ul>
+<li>Do you see both <strong>dev</strong> and <strong>prod</strong> Namespaces?</li>
+</ul>
+</li>
+<li>
+<p>List the ClusterRoles the <strong>gke</strong> cluster:</p>
+<pre><code class="language-bash prettyprint">kubectl get clusterroles&#x000A;</code></pre>
+<ul>
+<li>Do you see an entry for <strong>namespace-readers</strong>?</li>
+</ul>
+</li>
+<li>
+<p>List the ClusterRolesBindings the <strong>gke</strong> cluster:</p>
+<pre><code class="language-bash prettyprint">kubectl get clusterrolebindings&#x000A;</code></pre>
+<ul>
+<li>Do you see an entry for <strong>namespace-readers</strong>?</li>
+</ul>
+</li>
+<li>
+<p>Describe the ClusterRoleBinding for <strong>namespace-readers</strong>:</p>
+<pre><code class="language-bash prettyprint">kubectl describe clusterrolebinding namespace-readers&#x000A;</code></pre>
+<ul>
+<li>Has <strong>Cheryl</strong> been assigned the role?</li>
+</ul>
+</li>
+<li>
+<p>Check the RoleBindings for the <strong>dev</strong> Namespace:</p>
+<pre><code class="language-bash prettyprint">kubectl get rolebindings -n dev&#x000A;</code></pre>
+<ul>
+<li>Are there any bindings for the <strong>dev</strong> Namespace?</li>
+</ul>
+</li>
+<li>
+<p>Check the RoleBindings for the <strong>prod</strong> Namespace:</p>
+<pre><code class="language-bash prettyprint">kubectl get rolebindings -n prod&#x000A;</code></pre>
+<ul>
+<li>Are there any bindings for the <strong>prod</strong> Namespace? Note that the
+Namespace selector limited application of this configuration to only
+the <strong>prod</strong> Namespace.</li>
+</ul>
+<p>Your configurations, stored in your Cloud Source Repository, have been
+applied to the <strong>gke</strong> cluster. Now, check to see if they have been applied
+to the <strong>onprem</strong> cluster.</p>
+</li>
+<li>
+<p>Set your <code>kubectl</code> context:</p>
+<pre><code class="language-bash prettyprint">kubectx onprem.k8s.local&#x000A;</code></pre>
+</li>
+<li>
+<p>Repeat the steps that you performed against the <strong>gke</strong> cluster. Verify
+that the changes have applied to the <strong>onprem</strong> cluster as well.</p>
+</li>
+</ol>
+<h2 id="step9">Task 7. Review automated drift management</h2>
+<p>In this task, you verify that Anthos Config Management keeps objects in sync
+with the configs in your repo, even if someone makes manual changes.</p>
+<h3>Set up tmux panes in Cloud Shell</h3>
+<p>You are going to configure three Cloud Shell panes so that you can issue
+commands in one pane and watch the effects on the two clusters in the other
+panes.</p>
+<ol>
+<li>
+<p>Split the session screen with the <code>tmux</code> utility built-into Cloud Shell by
+typing <code>&lt;Ctrl&gt;+b</code>, then <code>%</code>. You should see 2 panes in the Cloud Shell.</p>
+<p><img alt="Dual tmux panes" src="https://cdn.qwiklabs.com/oU0Vz02IbKdJsVn7pmakbSEi%2BhOIKfMhfNPqnAHaBDM%3D"></p>
+<p>Any time you interact with <code>tmux</code>, you'll start with the <code>&lt;Ctrl&gt;+b</code>
+combination, which signals a command to <code>tmux</code>.</p>
+</li>
+<li>
+<p>Switch to the left-hand pane by typing:</p>
+<ul>
+<li><code>&lt;Ctrl&gt;+b</code></li>
+<li><code>&lt;left-arrow&gt;</code></li>
+</ul>
+</li>
+<li>
+<p>Resize the left-hand pane by doing the following:</p>
+<ul>
+<li>Type <code>&lt;Ctrl&gt;+b</code> to begin interaction with tmux</li>
+<li>Type <code>:</code> to get a tmux command prompt</li>
+<li>Type <code>resize-pane -L 35</code> to make the left-hand pane narrower</li>
+</ul>
+<p><img alt="Resize tmux panes" src="https://cdn.qwiklabs.com/Q%2BPbbPXfa6gTcKLLKFYYkV76jCNLD%2F3E0BbVaw7ZLkQ%3D"></p>
+<p>Your panes should look like this:</p>
+<p><img alt="Smaller left tmux pane" src="https://cdn.qwiklabs.com/j7ziUXcS96Js8ecRzQryYSzD1ixC9UCkOjJXFzdt3qM%3D"></p>
+</li>
+<li>
+<p>Switch to the right-hand pane by typing:</p>
+<ul>
+<li><code>&lt;Ctrl&gt;+b</code></li>
+<li><code>&lt;right-arrow&gt;</code></li>
+</ul>
+</li>
+<li>
+<p>In the right-hand pane, split the pane by typing:</p>
+<ul>
+<li><code>&lt;Ctrl&gt;+b</code></li>
+<li><code>%</code></li>
+</ul>
+<p>You should now have 3 panes that are roughly the same width.</p>
+<p><img alt="Three tmux panes" src="https://cdn.qwiklabs.com/HiOD1%2BddWwDMD92H7SwJYZuHXMbCLCKQWhym1SqkXvs%3D"></p>
+</li>
+</ol>
+<h3>Try deleting an object managed by Anthos Config Management</h3>
+<ol start="6">
+<li>
+<p>Switch the the left-hand pane (<code>&lt;Ctrl&gt;+b</code>, <code>&lt;right-arrow&gt;</code>), set the
+<code>kubectl</code> context, and have <code>kubectl</code> watch for changes to the
+ClusterRoleBinding for <strong>namespace-readers</strong> on the <strong>gke</strong> cluster.</p>
+<pre><code class="language-bash prettyprint">clear&#x000A;kubectx gke&#x000A;kubectl get clusterrolebinding namespace-readers --watch-only&#x000A;</code></pre>
+</li>
+<li>
+<p>Switch the the middle pane (<code>&lt;Ctrl&gt;+b</code>, <code>&lt;right-arrow&gt;</code>), set the
+<code>kubectl</code> context and have <code>kubectl</code> watch for changes to the
+ClusterRoleBinding for <strong>namespace-readers</strong> on the <strong>onprem</strong>
+cluster.</p>
+<pre><code class="language-bash prettyprint">clear&#x000A;kubectx onprem.k8s.local&#x000A;kubectl get clusterrolebinding namespace-readers --watch-only&#x000A;</code></pre>
+</li>
+<li>
+<p>Switch the the right-hand pane (<code>&lt;Ctrl&gt;+b</code>, <code>&lt;right-arrow&gt;</code>), and delete the
+ClusterRoleBinding on both clusters</p>
+<pre><code class="language-bash prettyprint">clear&#x000A;kubectx gke&#x000A;kubectl delete clusterrolebinding namespace-readers&#x000A;&#x000A;kubectx onprem.k8s.local&#x000A;kubectl delete clusterrolebinding namespace-readers&#x000A;</code></pre>
+<p>You should see two updates display in the each of panes where you are
+watching for object changes. One indicating the deletion of the object,
+and one showing the creation of the object to have the cluster comply with
+the defined config.</p>
+<p><img alt="Config management replacing deleted objects" src="https://cdn.qwiklabs.com/JT9YOuYyrdrvSRuQufZ7fXeqWQ3R1eocOWhxgVn%2FhVk%3D"></p>
+</li>
+<li>
+<p>In the right-hand pane, confirm that the ClusterRoleBinding has been
+recreated on the <strong>gke</strong> cluster:</p>
+<pre><code class="language-bash prettyprint">kubectx gke&#x000A;kubectl describe ClusterRoleBinding namespace-readers&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code class="language-bash prettyprint">Name:         namespace-readers&#x000A;Labels:       app.kubernetes.io/managed-by=configmanagement.gke.io&#x000A;Annotations:  configmanagement.gke.io/cluster-name: gke&#x000A;            configmanagement.gke.io/managed: enabled&#x000A;            configmanagement.gke.io/source-path: cluster/clusterrolebinding-namespace-reader.yaml&#x000A;            configmanagement.gke.io/token: 7275a22cd4315133d180139e0ee6a444ced1b86e&#x000A;Role:&#x000A;Kind:  ClusterRole&#x000A;Name:  namespace-reader&#x000A;Subjects:&#x000A;Kind  Name                    Namespace&#x000A;----  ----                    ---------&#x000A;User  cheryl@anthos-labs.com&#x000A;</code></pre>
+<p>Repeat the process for the <strong>onprem</strong> cluster.</p>
+</li>
+</ol>
+<h3>Try updating an object managed by Anthos Config Management</h3>
+<ol start="10">
+<li>
+<p>Switch to the left-hand pane  (<code>&lt;Ctrl&gt;+b</code>, <code>&lt;right-arrow&gt;</code>), and cancel
+the <code>kubectl</code> watch command by typing <code>&lt;Ctrl&gt;+c</code>.</p>
+</li>
+<li>
+<p>Start a new watch command, this time observing changes to the <strong>prod</strong>
+Namespace labels on the <strong>gke</strong> cluster, and display the Namespace config
+in detail:</p>
+<pre><code class="language-bash prettyprint">clear&#x000A;kubectx gke&#x000A;kubectl get namespace prod -o custom-columns=NAME:.metadata.labels \&#x000A;    --watch-only&#x000A;</code></pre>
+</li>
+<li>
+<p>Switch to the middle pane (<code>&lt;Ctrl&gt;+b</code>, <code>&lt;right-arrow&gt;</code>), and
+cancel the <code>kubectl</code> watch command by typing <code>&lt;Ctrl&gt;+c</code>.</p>
+</li>
+<li>
+<p>Start a new watch command, this time observing changes to the <strong>prod</strong>
+Namespace labels on the <strong>onprem</strong> cluster, and display the Namespace config
+in detail:</p>
+<pre><code class="language-bash prettyprint">clear&#x000A;kubectx onprem.k8s.local&#x000A;kubectl get namespace prod -o custom-columns=NAME:.metadata.labels \&#x000A;    --watch-only&#x000A;</code></pre>
+</li>
+<li>
+<p>Switch to the right-hand pane (<code>&lt;Ctrl&gt;+b</code>, <code>&lt;right-arrow&gt;</code>), and remove the
+<strong>env: prod</strong> label from the prod Namespaces on both clusters.</p>
+<pre><code class="language-bash prettyprint">clear&#x000A;kubectx gke&#x000A;kubectl label namespace prod env-&#x000A;&#x000A;kubectx onprem.k8s.local&#x000A;kubectl label namespace prod env-&#x000A;</code></pre>
+<p>You should see two messages in each of the panes where you are watching
+for object changes. The first shows the labels on the namespace after
+the <strong>env:prod</strong> label is removed. The second shows the labels after it's
+been re-added.</p>
+<p><img alt="Labels added by config management" src="https://cdn.qwiklabs.com/JdnyjoyzAZ2XX56o9alELb5RB%2ByNIKUf6tLSxXU2tUo%3D"></p>
+</li>
+</ol>
+<h2 id="step10">Task 8. Update a config in the repo</h2>
+<p>In this task, you verify that Anthos Config Management <strong>updates</strong> managed
+objects when the configs in your repo change.</p>
+<h3>Review the current configuration and set up watches</h3>
+<ol>
+<li>
+<p>Switch to the left-hand pane  (<code>&lt;Ctrl&gt;+b</code>, <code>&lt;rigt-arrow&gt;</code>), and cancel the
+<code>kubectl</code> watch command by typing <code>&lt;Ctrl&gt;+c</code>.</p>
+</li>
+<li>
+<p>In the left pane, review the <code>namespace-readers</code> ClusterRoleBinding
+on the <strong>gke</strong> cluster:</p>
+<pre><code class="language-bash prettyprint">clear&#x000A;kubectx gke&#x000A;kubectl get clusterrolebindings namespace-readers -o yaml&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code class="language-bash prettyprint">...&#x000A;subjects:&#x000A;- apiGroup: rbac.authorization.k8s.io&#x000A;  kind: User&#x000A;  name: cheryl@anthos_labs.com&#x000A;</code></pre>
+</li>
+<li>
+<p>Configure <code>kubectl</code> to watch for changes to the subjects in this
+ClusterRoleBinding on the <strong>gke</strong> cluster.</p>
+<pre><code class="language-base prettyprint">clear&#x000A;kubectx gke&#x000A;kubectl get clusterrolebinding namespace-readers -o \&#x000A;    custom-columns=NAME:.subjects --watch-only&#x000A;</code></pre>
+</li>
+<li>
+<p>Switch to the middle pane (<code>&lt;Ctrl&gt;+b</code>, <code>&lt;right-arrow&gt;</code>), and
+cancel the <code>kubectl</code> watch command by typing <code>&lt;Ctrl&gt;+c</code>.</p>
+</li>
+<li>
+<p>In the middle pane, review the <code>namespace-readers</code> ClusterRoleBinding
+on the <strong>oprem</strong> cluster:</p>
+<pre><code class="language-bash prettyprint">clear&#x000A;kubectx onprem.k8s.local&#x000A;kubectl get clusterrolebindings namespace-readers -o yaml&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code class="language-bash prettyprint">...&#x000A;subjects:&#x000A;- apiGroup: rbac.authorization.k8s.io&#x000A;  kind: User&#x000A;  name: cheryl@anthos_labs.com&#x000A;</code></pre>
+</li>
+<li>
+<p>Configure <code>kubectl</code> to watch for changes to the subjects in this
+ClusterRoleBinding on the <strong>onprem</strong> cluster.</p>
+<pre><code class="language-base prettyprint">clear&#x000A;kubectx onprem.k8s.local&#x000A;kubectl get clusterrolebinding namespace-readers -o \&#x000A;    custom-columns=NAME:.subjects --watch-only&#x000A;</code></pre>
+</li>
+<li>
+<p>Switch to the right-hand pane (<code>&lt;Ctrl&gt;+b</code>, <code>&lt;right-arrow&gt;</code>), and clear
+the pane:</p>
+<pre><code class="language-bash prettyprint">clear&#x000A;</code></pre>
+</li>
+</ol>
+<h3>Update your cluster configuration repo</h3>
+<ol start="8">
+<li>
+<p>Using the Cloud Shell Code Editor, edit the configuration file for the
+ClusterRoleBinding:</p>
+<pre><code class="language-bash prettyprint">edit ~/acm-lab/training-data-analyst/courses/ahybrid/v1.0/AHYBRID071/config/cluster/clusterrolebinding-namespace-readers.yaml&#x000A;</code></pre>
+</li>
+<li>
+<p>Add a new <strong>User</strong> block to the <code>subjects</code> field for <code>jane@anthos_labs.com</code>.
+You can copy the entire <code>cheryl@anthos_labs.com</code> <strong>User</strong>, to a new
+<strong>User</strong>, and replace the <strong>name</strong> with <code>jane@anthos_labs.com</code>.</p>
+<p>The new <strong>subjects</strong> block has the contents:</p>
+<pre><code class="language-yaml prettyprint">subjects:&#x000A;- kind: User&#x000A;  name: cheryl@anthos_labs.com&#x000A;  apiGroup: rbac.authorization.k8s.io&#x000A;- kind: User&#x000A;  name: jane@anthos_labs.com&#x000A;  apiGroup: rbac.authorization.k8s.io&#x000A;</code></pre>
+<p>Save your changes.</p>
+</li>
+</ol>
+<h3>Push the change to your config repo</h3>
+<ol start="10">
+<li>
+<p>In the <strong>right pane</strong>, check your config changes are syntactically valid.</p>
+<pre><code class="language-bash prettyprint">export LAB_DIR=$HOME/acm-lab&#x000A;cd $LAB_DIR&#x000A;&#x000A;./nomos vet --path=training-data-analyst/courses/ahybrid/v1.0/AHYBRID071/config&#x000A;</code></pre>
+<p>No errors are printed, so the configuration is valid.</p>
+</li>
+<li>
+<p>In the <strong>right pane</strong>, create a commit, and push the change to your repo.</p>
+<pre><code class="language-bash prettyprint">cd ~/acm-lab/training-data-analyst/courses/ahybrid/v1.0/AHYBRID071/config&#x000A;&#x000A;git add .&#x000A;git commit -m "Add Jane to namespace-reader."&#x000A;git push origin master&#x000A;</code></pre>
+<p>Within a few seconds of the push being completed, you should see a message
+in each of the panes where you are watching for object changes. They should
+show that there are now entries for both <strong>Cheryl</strong> and <strong>Jane</strong>.</p>
+<p><img alt="New user added to ClusterRoleBinding" src="https://cdn.qwiklabs.com/4E5RZCNaD8btjbD3IKaaGAfF5Boq2mpuUMo8e61ppck%3D"></p>
+</li>
+</ol>
+<h2 id="step11">Review</h2>
+<p>In this lab, you configured Anthos Config Management and explored some of its
+useful features. You connected a Git repository for configuration-as-code
+change-management.  You set up a Config Operator to manage your clusters, and
+you verified that the operator maintains state in your clusters to match your
+repository.</p>
+<h2 id="step12">End your lab</h2>
+<p>When you have completed your lab, click <strong>End Lab</strong>. Qwiklabs removes the resources you’ve used and cleans the account for you.</p>
+<p>You will be given an opportunity to rate the lab experience. Select the applicable number of stars, type a comment, and then click <strong>Submit</strong>.</p>
+<p>The number of stars indicates the following:</p>
+<ul>
+<li>1 star = Very dissatisfied</li>
+<li>2 stars = Dissatisfied</li>
+<li>3 stars = Neutral</li>
+<li>4 stars = Satisfied</li>
+<li>5 stars = Very satisfied</li>
+</ul>
+<p>You can close the dialog box if you don't want to provide feedback.</p>
+<p>For feedback, suggestions, or corrections, please use the <strong>Support</strong> tab.</p>
+
+<p>Copyright 2021 Google LLC All rights reserved. Google and the Google logo are trademarks of Google LLC. All other company and product names may be trademarks of the respective companies with which they are associated.</p>
+
+
+
+</div>
+</div>
+
+
+<div class='hidden js-end-lab-button-container lab-content__end-lab-button'>
+<ql-lab-control-button class='js-end-lab-button' running></ql-lab-control-button>
+</div>
+<!-- / TODO: Move recommendations into the end lab modal -->
+</ql-drawer-content>
+<ql-drawer end id='outline-drawer' open slot='drawer' width='320'>
+<div class='js-lab-content-outline lab-content__outline'>
+<a href='#step1'>Overview</a><a href='#step2'>Task 0. Lab Setup</a><a href='#step3'>Task 1: Complete and verify the lab setup</a><a href='#step4'>Task 2. Install the Config Management Operator and the nomos command-line tool</a><a href='#step5'>Task 3. Set up your Anthos Config Management repository</a><a href='#step6'>Task 4: Define and deploy Config Management Operators</a><a href='#step7'>Task 5. Verify that the clusters are in sync from the Anthos Config Management UI</a><a href='#step8'>Task 6. Verify that the configurations have been applied to your clusters</a><a href='#step9'>Task 7. Review automated drift management</a><a href='#step10'>Task 8. Update a config in the repo</a><a href='#step11'>Review</a><a href='#step12'>End your lab</a>
+</div>
+</ql-drawer>
+</ql-drawer-container>
+</ql-drawer-content>
+</ql-drawer-container>
+<div class='lab-introduction js-lab-introduction is-hidden'>
+<div class='lab-introduction__inner'>
+<h1 class='headline-1'>Welcome to Your First Lab!</h1>
+<ql-icon-button class='js-skip-button'>close</ql-icon-button>
+<div class='lab-introduction__video'>
+<iframe allow='autoplay; encrypted-media' allowfullscreen frameborder='0' id='lab-introduction' src='https://www.youtube.com/embed/yF7EDXKTmoQ?enablejsapi=1&amp;rel=0&amp;showinfo=0'></iframe>
+</div>
+<a class='js-skip-button button button--outline'>Skip this video</a>
+</div>
+</div>
+
+
+
+</div>
+</main>
+
+
+<div class='modal fade' id='lab-details-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<div class='modal-body'>
+<p class='l-mbm'>
+Architecting Hybrid Infrastructure with Anthos: Install and configure Anthos Config Management for unified policy management of multi-service applications across multiple clusters.
+</p>
+<p class='small-label l-mbs'>
+<strong>
+Duration:
+</strong>
+16m setup
+&middot;
+180m access
+&middot;
+120m completion
+</p>
+<p class='small-label l-mbs'>
+<span><strong>Levels: </strong>intermediate</span>
+</p>
+<p class='small-label'>
+<strong>
+Permalink:
+</strong>
+<a href="https://googlecoursera.qwiklabs.com/catalog_lab/2078">https://googlecoursera.qwiklabs.com/catalog_lab/2078</a>
+</p>
+</div>
+<div class='modal-actions'>
+<a class='button button--text' data-dismiss='modal'>
+Got It
+</a>
+</div>
+
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='modal fade' id='lab-review-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<form class="simple_form js-lab-review-form" id="edit_lab_review_12137731" action="/lab_reviews/12137731" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="_method" value="patch" /><div class='modal-body'>
+<p class='label'>
+How satisfied are you with this lab?*
+</p>
+<div class='rateit js-rateit' data-rateit-max='5' data-rateit-min='0' data-rateit-resetable='false' data-rateit-step='1' data-rateit-value='5'></div>
+<div class='l-mtm'>
+
+<div class="control-group hidden lab_review_user_id"><div class="controls"><input class="hidden" type="hidden" value="3894861" name="lab_review[user_id]" id="lab_review_user_id" /></div></div>
+<div class="control-group hidden lab_review_classroom_id"><div class="controls"><input class="hidden" type="hidden" name="lab_review[classroom_id]" id="lab_review_classroom_id" /></div></div>
+<div class="control-group hidden lab_review_lab_id"><div class="controls"><input class="hidden" type="hidden" value="2078" name="lab_review[lab_id]" id="lab_review_lab_id" /></div></div>
+<div class="control-group hidden lab_review_focus_id"><div class="controls"><input class="hidden" type="hidden" name="lab_review[focus_id]" id="lab_review_focus_id" /></div></div>
+<div class="control-group hidden lab_review_rating"><div class="controls"><input class="hidden js-rating-input" type="hidden" value="2" name="lab_review[rating]" id="lab_review_rating" /></div></div>
+<div class="control-group text optional lab_review_comment"><label class="text optional control-label" for="lab_review_comment">Comment</label><div class="controls"><textarea class="text optional" name="lab_review[comment]" id="lab_review_comment">
+</textarea></div></div>
+</div>
+</div>
+<div class='modal-actions'>
+<a class='button button--text' data-dismiss='modal'>
+Cancel
+</a>
+<input type="submit" name="commit" value="Submit" disabled="disabled" id="submit" data-disabled="false" class="button" data-disable-with="Submit" />
+</div>
+</form>
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+
+
+<script>
+  $( function() {
+    ql.initMaterialInputs();
+    initChosen();
+    initSearch();
+    initTabs();
+    ql.list.init();
+    ql.favoriting.init();
+    ql.header.myAccount.init();
+    initTooltips();
+    ql.autocomplete.init();
+    ql.modals.init();
+    ql.toggleButtons.init();
+    ql.analytics.init();
+    ql.labControlPanel.addRecaptchaErrorHandler();
+  initLabContent();
+  ql.labOutline.links.init();
+  initLabReviewModal();
+  ql.labAssessment.init();
+  ql.labIntroduction.init( true );
+  ql.labData.init();
+  initLabTranslations( {"are_you_sure":"All done? If you end this lab, you will lose all your work. You may not be able to restart the lab if there is a quota limit. Are you sure you want to end this lab?\n","in_progress":"*In Progress*","ending":"*Ending*","starting":"*Starting, please wait*","end_concurrent_labs":"Sorry, you can only run one lab at a time. To start this lab, please confirm that you want all of your existing labs to end.\n","copied":"Copied","no_resource":"Error retrieving resource.","no_support":"No Support","mac_press":"Press ⌘-C to copy","thanks_review":"Thanks for reviewing this lab.","windows_press":"Press Ctrl-C to copy","days":"days"} );
+  ql.labRun.init();
+  ql.chat.init();
+  ql.initHeader();
+  ql.navigation.init();
+  ql.navPanel.init();
+  ql.navigation.init();
+  
+  });
+</script>
+
+</body>
+</html>
+

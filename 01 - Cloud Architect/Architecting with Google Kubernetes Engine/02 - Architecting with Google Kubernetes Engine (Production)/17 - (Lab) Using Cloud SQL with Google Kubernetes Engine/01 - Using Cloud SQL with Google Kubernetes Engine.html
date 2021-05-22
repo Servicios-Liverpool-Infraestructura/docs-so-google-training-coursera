@@ -1,0 +1,995 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title>Using Cloud SQL with Google Kubernetes Engine | Qwiklabs</title>
+<script>
+//<![CDATA[
+window.gon={};gon.current_user={"firstname":"DANIEL","lastname":"ENRIQUE SANDOVAL SANCHEZ","fullname":"DANIEL ENRIQUE SANDOVAL SANCHEZ","company":"Coursera","email":"desandovals@liverpool.com.mx","origin":"googlecoursera-run, lti-coursera","subscriptions":0,"id":"40414ff5fc280f833d9acca966912f93","qlCreatedAt":"2020-11-17 20:45:59 UTC","optIn":null,"current_organization_id":null,"current_organization_role":null};gon.segment="j4Im8pqIko0Lxq4wVVZWMPMM0EroHUvb";gon.deployment="googlecoursera-run";gon.content={"type":"Lab","id":2309,"name":"Using Cloud SQL with Google Kubernetes Engine"};
+//]]>
+</script>
+<script>
+  dataLayer = [
+    {user: gon.current_user},
+    {content: gon.content}
+  ];
+</script>
+<script>
+  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer',"GTM-TQR88QK");
+</script>
+<script>
+  EVENT_SOURCE_BASE_URL = "https://googlecoursera-run.qwiklabs.com/nchan-sub?id=";
+</script>
+<script src="https://cdn.qwiklabs.com/assets/hallofmirrors/polyfills/webcomponents-loader-408088dc333247a761de5f2b2a4ba1cabd2bc36579f83ba92a559eb3682a9b77.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/vendor-45d462772c30000424907184f70c7157e95fb6227698d1671c5051818a6f60d8.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/application-6874b164d8346f46605fc772a6f7375a39626ffc9f6d168e23a3a8c40bb6fd28.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/hallofmirrors/hallofmirrors-b7ff781d00ceebdf75589f58475cea695bafd8d5cc1f3eb4baf6122ed4a4b736.js"></script>
+<!--[if lt IE 9]>
+<script src='http://html5shim.googlecode.com/svn/trunk/html5.js' type='text/javascript'></script>
+<![endif]-->
+<!--[endif]>  <![endif]-->
+<script type='application/ld+json'>
+{
+  "@context": "http://schema.org",
+  "@type": "WebSite",
+  "url": "https://www.qwiklabs.com/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://www.qwiklabs.com/catalog?keywords={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script id='ze-snippet' src='https://static.zdassets.com/ekr/snippet.js?key=511e4158-0aec-4e3c-b2e6-4daa1769f51e'></script>
+
+
+<meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="p4R9YGlulE8dnbWlHr4XzYGXY9AwuzYZTSpEbKK2Xn7u4c2KCtoegE7W8hJfq7lafE5edIjSEWrqbPRi7lfp1Q==" />
+<meta content='width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0' name='viewport'>
+<meta content='1rRsY0INj8RvwB5EF5pwdxt2A2P9aDgAlsICaJ0d5w0' name='google-site-verification'>
+<meta content='#3681E4' property='msapplication-TileColor'>
+<meta content='/favicon-144.png' property='msapplication-TileImage'>
+<meta content='[{&quot;id&quot;:&quot;recaptcha_experiment&quot;,&quot;optimize_id&quot;:&quot;dpViOcLkT3qS4TvL2mRojA&quot;,&quot;title&quot;:&quot;No Recaptcha shown for trusted users&quot;,&quot;variant_index&quot;:0,&quot;variant&quot;:&quot;original&quot;}]' name='active-experiments'>
+<meta content='{&quot;userId&quot;:3894861}' name='help-api-product-data'>
+<meta content='Architecting with Google Kubernetes Engine: Using Cloud SQL with Kubernetes Engine' name='description'>
+<meta content='Qwiklabs' name='author'>
+<meta content='Using Cloud SQL with Google Kubernetes Engine | Qwiklabs' property='og:title'>
+<meta content='website' property='og:type'>
+<meta content='/favicon-144.png' property='og:image'>
+<meta content='Qwiklabs' property='og:site_name'>
+<meta content='Architecting with Google Kubernetes Engine: Using Cloud SQL with Kubernetes Engine' property='og:description'>
+<meta content='/qwiklabs_logo_900x887.png' property='og:logo' size='900x887'>
+<meta content='/qwiklabs_logo_994x187.png' property='og:logo' size='994x187'>
+
+
+<link href='/favicon-32.png' rel='shortcut icon'>
+<link color='#3681E4' href='/favicon-svg.svg' rel='mask-icon'>
+<link href='/favicon-180.png' rel='apple-touch-icon-precomposed'>
+
+
+
+<link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css?family=Oswald:400|Roboto+Mono:400,700|Roboto:300,400,500,700|Google+Sans:300,400,500,700|Google+Sans+Display:400|Material+Icons|Google+Material+Icons" />
+
+
+<link rel="stylesheet" media="all" href="https://cdn.qwiklabs.com/assets/application-cf67fd00dd904ecce1e24779d7504aefc7fbd5d00696246fa80212743a81bf07.css" />
+
+
+
+</head>
+<body class='lab-show l-full no-nav application-new focuses focuses-show lab-show l-full no-nav '>
+<noscript>
+<iframe height='0' src='https://www.googletagmanager.com/ns.html?id=GTM-TQR88QK' style='display:none;visibility:hidden;' width='0'></iframe>
+</noscript>
+<span class='hidden' id='flash-sibling-before'></span>
+
+<div class='header-container'>
+<div class='header'>
+<ql-icon-button class='js-nav-toggle header__nav-panel-button l-mrm'>menu</ql-icon-button>
+<div class='header__title'>
+<ql-icon-button label="Back" href="https://www.coursera.org/" id="d5e72e8976782fe4" target="_self">arrow_back</ql-icon-button><div class="mdl-tooltip" data-mdl-for="d5e72e8976782fe4">Back</div>
+
+<h1 class='headline-5'>
+Using Cloud SQL with Google Kubernetes Engine
+</h1>
+</div>
+<div class='header__actions'>
+<ql-icon-button class='header__button--search js-header-search-bar-button'>search</ql-icon-button>
+<ql-icon-button id='control-panel-target' style='display: none;'>
+dashboard
+</ql-icon-button>
+<ql-menu for='control-panel-target' id='control-panel-menu'></ql-menu>
+
+<ql-icon-button id='help-menu-button'>help</ql-icon-button>
+<div class='mdl-tooltip js-tooltip' data-mdl-for='help-menu-button'>
+Help
+</div>
+<ql-menu for='help-menu-button' id='help-menu'>
+<ql-menu-item>
+<ql-help context='lab' data-analytics-action='opened_help' data-analytics-label='lab' productdata='{&quot;userId&quot;:3894861}'>
+Help Center
+</ql-help>
+</ql-menu-item>
+<ql-menu-item>
+<a target="_blank" class="ql-body-1" href="https://support.google.com/qwiklabs/contact/contact_us">Email support</a>
+</ql-menu-item>
+<ql-menu-item>
+<a class='ql-body-1' onClick='ql.chat.open()'>Chat support</a>
+</ql-menu-item>
+</ql-menu>
+
+<ql-icon-button id='language'>language</ql-icon-button>
+<div class='mdl-menu mdl-menu__bottom-right mdl-js-menu elevation-3' for='language'>
+<a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ar" href="/focuses/15531745?locale=ar&amp;parent=lti_session">العربية‬‎
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="de" href="/focuses/15531745?locale=de&amp;parent=lti_session">Deutsch
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="en" href="/focuses/15531745?locale=en&amp;parent=lti_session">English
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="es" href="/focuses/15531745?locale=es&amp;parent=lti_session">español (Latinoamérica)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="fr" href="/focuses/15531745?locale=fr&amp;parent=lti_session">français
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="id" href="/focuses/15531745?locale=id&amp;parent=lti_session">bahasa Indonesia
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="it" href="/focuses/15531745?locale=it&amp;parent=lti_session">Italiano
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ja" href="/focuses/15531745?locale=ja&amp;parent=lti_session">日本語
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ko" href="/focuses/15531745?locale=ko&amp;parent=lti_session">한국어
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pl" href="/focuses/15531745?locale=pl&amp;parent=lti_session">Polski
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pt_BR" href="/focuses/15531745?locale=pt_BR&amp;parent=lti_session">português (Brasil)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pt_PT" href="/focuses/15531745?locale=pt_PT&amp;parent=lti_session">português (Portugal)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ru" href="/focuses/15531745?locale=ru&amp;parent=lti_session">русский
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="tr" href="/focuses/15531745?locale=tr&amp;parent=lti_session">Türkçe
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="zh" href="/focuses/15531745?locale=zh&amp;parent=lti_session">简体中文
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="zh_TW" href="/focuses/15531745?locale=zh_TW&amp;parent=lti_session">繁體中文
+</a></div>
+<button class='icon-button' id='my_account'>
+<ql-avatar></ql-avatar>
+</button>
+<ql-menu for='my_account' open>
+<div class='my-account-menu'>
+<ql-avatar class='l-mtl l-mbl' size='120'></ql-avatar>
+<div class='my-account-menu__user-info l-mbl'>
+<h4 class='ql-subhead-1'>DANIEL ENRIQUE SANDOVAL SANCHEZ</h4>
+<p class='ql-body-2 text--light'>desandovals@liverpool.com.mx</p>
+<p class='ql-body-2 text--light'>
+</p>
+<a class="text--green ql-subhead-2" href="/my_account/payments"><ql-chip positive>
+0 Credits
+</ql-chip>
+</a></div>
+<div class='buttons l-mbl'>
+<a class="button button--hairline" id="settings" href="/my_account/profile">Settings</a>
+</div>
+<hr>
+<ql-button data-analytics-action='clicked_sign_out' href='/users/sign_out' method='delete'>
+Sign Out
+</ql-button>
+<div class='privacy l-mtl'>
+<a class="ql-caption text--light" href="/privacy_policy">Privacy</a>
+<span class='ql-caption text--light l-mls l-mrs'>&middot;</span>
+<a class="ql-caption text--light" href="/terms_of_service">Terms</a>
+</div>
+</div>
+</ql-menu>
+
+</div>
+</div>
+<div class='header__search-bar js-header-search-bar'>
+<form class="js-search-form-mobile" onsubmit="ql.searchFilter(); return false;" action="/searches/elasticsearch" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="DU6Sr8NvEglugVzI3sYoeaOwUORKOTtM4cgwOYPp0V1EKyJFoNuYxj3KG3+f04buXmltQPJQHD9GjoA3zwhm9g==" />
+<input type="text" name="keywords" id="keywords" placeholder="Search" maxlength="255" aria-label="catalog search bar" />
+</form>
+
+<ql-icon-button class='js-close-search-bar'>close</ql-icon-button>
+</div>
+</div>
+
+<nav class='nav-bar'>
+<a class="nav-bar__item js-navigation-button" href="/"><ql-icon class='nav-bar__item__icon'>
+home
+</ql-icon>
+<span class='nav-bar__item__label'>
+Home
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="/catalog"><ql-icon class='nav-bar__item__icon'>
+school
+</ql-icon>
+<span class='nav-bar__item__label'>
+Catalog
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="/my_learning"><ql-icon class='nav-bar__item__icon'>
+event_note
+</ql-icon>
+<span class='nav-bar__item__label'>
+My Learning
+</span>
+</a>
+</nav>
+
+<nav class='nav-panel js-nav-panel'>
+<div class='nav-panel__logo'>
+<div class='logo logo--blue'></div>
+</div>
+<a title="Home" tabindex="-1" class="nav-panel__item js-navigation-button" href="/"><ql-icon class='nav-panel__item__icon'>
+home
+</ql-icon>
+<div class='nav-panel__item__label'>
+Home
+</div>
+</a>
+<a title="Catalog" tabindex="-1" class="nav-panel__item js-navigation-button" href="/catalog"><ql-icon class='nav-panel__item__icon'>
+school
+</ql-icon>
+<div class='nav-panel__item__label'>
+Catalog
+</div>
+</a>
+<a title="My Learning" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_learning"><ql-icon class='nav-panel__item__icon'>
+event_note
+</ql-icon>
+<div class='nav-panel__item__label'>
+My Learning
+</div>
+</a>
+<div class='nav-panel__spacer'></div>
+<a title="Profile" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/profile"><ql-icon class='nav-panel__item__icon'>
+account_circle
+</ql-icon>
+<div class='nav-panel__item__label'>
+Profile
+</div>
+</a>
+<a title="Credits &amp; Subscriptions" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/credits"><ql-icon class='nav-panel__item__icon'>
+money
+</ql-icon>
+<div class='nav-panel__item__label'>
+Credits &amp; Subscriptions
+</div>
+</a>
+<a title="Security" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/security"><ql-icon class='nav-panel__item__icon'>
+security
+</ql-icon>
+<div class='nav-panel__item__label'>
+Security
+</div>
+</a>
+<div class='nav-panel__spacer'></div>
+<a class="nav-panel__item" tabindex="-1" href="#"><ql-help>
+<div class='nav-panel__help-item'>
+<ql-icon class='nav-panel__item__icon'>help</ql-icon>
+<div class='nav-panel__item__label'>
+Help
+</div>
+</div>
+</ql-help>
+</a><div class='nav-panel__small-links'>
+<a tabindex="-1" href="/privacy_policy">Privacy</a>
+<a tabindex="-1" href="/terms_of_service">Terms</a>
+</div>
+</nav>
+<div class='nav-panel__overlay js-nav-toggle'></div>
+
+<main class='js-main'>
+<div class='l-main-wrapper' id='main-wrapper'>
+
+
+
+
+
+
+
+<div class='lab-assessment__tab js-open-lab-assessment-panel'>
+<h6 class='js-lab-assessment-total-score'>
+&mdash;/35
+</h6>
+</div>
+<div class='lab-assessment__panel js-lab-assessment-panel'>
+<div class='lab-assessment__panel__header'>
+<h4>Checkpoints</h4>
+<ql-icon-button class='js-close-lab-assessment-panel'>arrow_forward</ql-icon-button>
+</div>
+<div class='lab-assessment__step'>
+<p class='lab-assessment__step__title'>
+Create a Cloud SQL Instance and database
+</p>
+<div class='lab-assessment__step__action'>
+<a class='button js-show-run-step-button' step_no='1'>
+Check my progress
+</a>
+<p class='lab-assessment__step__score'>
+<span class='js-assessment-step-score-1'>
+</span>
+/ 10
+</p>
+</div>
+</div>
+
+<div class='lab-assessment__step'>
+<p class='lab-assessment__step__title'>
+Create Service Account
+</p>
+<div class='lab-assessment__step__action'>
+<a class='button js-show-run-step-button' step_no='2'>
+Check my progress
+</a>
+<p class='lab-assessment__step__score'>
+<span class='js-assessment-step-score-2'>
+</span>
+/ 5
+</p>
+</div>
+</div>
+
+<div class='lab-assessment__step'>
+<p class='lab-assessment__step__title'>
+Create Secrets
+</p>
+<div class='lab-assessment__step__action'>
+<a class='button js-show-run-step-button' step_no='3'>
+Check my progress
+</a>
+<p class='lab-assessment__step__score'>
+<span class='js-assessment-step-score-3'>
+</span>
+/ 10
+</p>
+</div>
+</div>
+
+<div class='lab-assessment__step'>
+<p class='lab-assessment__step__title'>
+Deploy the SQL Proxy agent as a sidecar container
+</p>
+<div class='lab-assessment__step__action'>
+<a class='button js-show-run-step-button' step_no='4'>
+Check my progress
+</a>
+<p class='lab-assessment__step__score'>
+<span class='js-assessment-step-score-4'>
+</span>
+/ 10
+</p>
+</div>
+</div>
+
+</div>
+<ql-drawer-container class='js-lab-state' data-analytics-payload='{&quot;label&quot;:&quot;Using Cloud SQL with Google Kubernetes Engine&quot;,&quot;lab_name&quot;:&quot;Using Cloud SQL with Google Kubernetes Engine&quot;,&quot;classroom_name&quot;:null,&quot;deployment&quot;:&quot;googlecoursera-run&quot;}' data-focus-id='15531745' data-lab-billing-limit='0.0' data-lab-duration='3600' data-parent='lti_session' data-recaptcha-enabled id='lab-container'>
+<ql-drawer id='terminal-drawer' slot='drawer' style='width: calc(100% - 480px)'>
+<iframe allow='clipboard-read' class='terminal' id='embedded-resource'></iframe>
+</ql-drawer>
+<ql-drawer-content class='js-lab-wrapper' id='lab-content' slot='drawer-content'>
+<ql-drawer-container id='lab-content-container'>
+<ql-drawer id='control-panel-drawer' open slot='drawer' width='320'>
+<ql-lab-control-panel class='ql-lab-control-panel__max-height control-panel js-lab-control-panel' connectionFiles='[]' labControlButton='{&quot;disabled&quot;:false,&quot;pending&quot;:false,&quot;running&quot;:false}' labDetails='[]' labTimer='{&quot;ticking&quot;:false,&quot;secondsRemaining&quot;:3600}' studentResources='[]'>
+<script src="https://www.recaptcha.net/recaptcha/api.js?render=6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr"   ></script>
+        <script>
+          // Define function so that we can call it again later if we need to reset it
+          // This executes reCAPTCHA and then calls our callback.
+          function executeRecaptchaForStartLab() {
+            grecaptcha.ready(function() {
+              grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}).then(function(token) {
+                setInputWithRecaptchaResponseTokenForStartLab('g-recaptcha-response-data-start-lab', token)
+              });
+            });
+          };
+          // Invoke immediately
+          executeRecaptchaForStartLab()
+
+          // Async variant so you can await this function from another async function (no need for
+          // an explicit callback function then!)
+          // Returns a Promise that resolves with the response token.
+          async function executeRecaptchaForStartLabAsync() {
+            return new Promise((resolve, reject) => {
+              grecaptcha.ready(async function() {
+                resolve(await grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}))
+              });
+            })
+          };
+
+                    var setInputWithRecaptchaResponseTokenForStartLab = function(id, token) {
+            var element = document.getElementById(id);
+            element.value = token;
+          }
+
+        </script>
+<input type="hidden" name="g-recaptcha-response-data[start_lab]" id="g-recaptcha-response-data-start-lab" data-sitekey="6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr" class="g-recaptcha g-recaptcha-response "/>
+
+<div class='hidden' id='recaptcha-v2-start-lab' slot='recaptcha'>
+<script src="https://www.recaptcha.net/recaptcha/api.js" async defer ></script>
+<div data-sitekey="6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV" data-callback="recaptchaComplete" data-expired-callback="expireV2Token" class="g-recaptcha "></div>
+          <noscript>
+            <div>
+              <div style="width: 302px; height: 422px; position: relative;">
+                <div style="width: 302px; height: 422px; position: absolute;">
+                  <iframe
+                    src="https://www.recaptcha.net/recaptcha/api/fallback?k=6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV"
+                    name="ReCAPTCHA"
+                    style="width: 302px; height: 422px; border-style: none; border: 0; overflow: hidden;">
+                  </iframe>
+                </div>
+              </div>
+              <div style="width: 300px; height: 60px; border-style: none;
+                bottom: 12px; left: 25px; margin: 0px; padding: 0px; right: 25px;
+                background: #f9f9f9; border: 1px solid #c1c1c1; border-radius: 3px;">
+                <textarea id="g-recaptcha-response" name="g-recaptcha-response"
+                  class="g-recaptcha-response"
+                  style="width: 250px; height: 40px; border: 1px solid #c1c1c1;
+                  margin: 10px 25px; padding: 0px; resize: none;">
+                </textarea>
+              </div>
+            </div>
+          </noscript>
+
+</div>
+</ql-lab-control-panel>
+</ql-drawer>
+<ql-drawer-content id='lab-instructions' slot='drawer-content'>
+<div class='alert alert--fake js-alert'>
+<p class='alert__message js-alert-message'></p>
+<a class='alert__close js-alert-close'>
+<i class='fa fa-times'></i>
+</a>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='js-lab-content lab-content__renderable-instructions'>
+<div class='lab-preamble'>
+<h1 class='lab-preamble__title'>
+Using Cloud SQL with Google Kubernetes Engine
+</h1>
+<div class='lab-preamble__details subtitle-headline-1'>
+<span>1 hour </span>
+<span>Free</span>
+<div class='lab__rating'>
+<a href="/focuses/15531745/reviews?parent=lti_session"><div class='rateit' data-rateit-readonly='true' data-rateit-value='4.526'></div>
+
+</a><a data-target='#lab-review-modal' data-toggle='modal'>
+Rate Lab
+</a>
+</div>
+</div>
+</div>
+
+<div class='js-markdown-instructions markdown-lab-instructions' id='markdown-lab-instructions'>
+
+
+
+<h2 id="step1">Overview</h2>
+<p>In this lab, you set up a Kubernetes Deployment of WordPress connected to Cloud SQL via the SQL Proxy. The SQL Proxy lets you interact with a Cloud SQL instance as if it were installed locally (localhost:3306), and even though you are on an unsecured port locally, the SQL Proxy makes sure you are secure over the wire to your Cloud SQL Instance.</p>
+<p>To complete this lab you'll create several components. First you create a GKE cluster, next you create a Cloud SQL Instance to connect to, and a Service Account to provide permission for your Pods to access the Cloud SQL Instance. Finally you deploy WordPress on your GKE cluster, with the SQL Proxy as a Sidecar, connected to your Cloud SQL Instance.</p>
+<h2 id="step2">Objectives</h2>
+<p>In this lab, you learn how to perform the following tasks:</p>
+<ul>
+<li>
+<p>Create a Cloud SQL instance and database for Wordpress</p>
+</li>
+<li>
+<p>Create credentials and Kubernetes Secrets for application authentication</p>
+</li>
+<li>
+<p>Configure a Deployment with a Wordpress image to use SQL Proxy</p>
+</li>
+<li>
+<p>Install SQL Proxy as a sidecar container and use it to provide SSL access to a CloudSQL instance external to the GKE Cluster</p>
+</li>
+</ul>
+<h2 id="step3">Task 0. Lab Setup</h2>
+<h3><strong>Access Qwiklabs</strong></h3>
+<p>For each lab, you get a new GCP project and set of resources for a fixed time at no cost.</p>
+<ol>
+<li>
+<p>Make sure you signed into Qwiklabs using an <strong>incognito window</strong>.</p>
+</li>
+<li>
+<p>Note the lab's access time (for example, <img alt="img/time.png" src="https://cdn.qwiklabs.com/aZQJ4BT7uCmM9XR6BTXgTRP1Hfu1T7q6V%2BcnbdEsbpU%3D"> and make sure you can finish in that time block.</p>
+</li>
+</ol>
+<aside> <p>
+  There is no pause feature. You can restart if needed, but you have to start at the beginning.
+  </p>
+
+</aside>
+<ol start="3">
+<li>
+<p>When ready, click <img alt="img/start_lab.png" src="https://cdn.qwiklabs.com/XE8x7uvQokyubNwnYKKc%2BvBBNrMlo5iNZiDDzQQ3Ddo%3D">.</p>
+</li>
+<li>
+<p>Note your lab credentials. You will use them to sign in to Cloud Platform Console.
+<img alt="img/open_google_console.png" src="https://cdn.qwiklabs.com/0d78dhX6IVMVWmixCPPSBbmi5O2GPokCXf1Ps1AkTgI%3D"></p>
+</li>
+<li>
+<p>Click <strong>Open Google Console</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Use another account</strong> and copy/paste credentials for <strong>this</strong> lab into the prompts.</p>
+</li>
+</ol>
+<aside class="warning"><p>
+  If you use other credentials, you'll get errors or <strong>incur charges</strong>.
+  </p>
+</aside>
+<ol start="7">
+<li>Accept the terms and skip the recovery resource page.</li>
+</ol>
+<aside class="warning"><p>
+  Do not click <strong>End Lab</strong> unless you are finished with the lab or want to restart it. This clears your work and removes the project.
+  </p>
+</aside>
+
+<p>After you complete the initial sign-in steps, the project dashboard appears.</p>
+<h3>Activate Google Cloud Shell</h3>
+<p>Google Cloud Shell is a virtual machine that is loaded with development tools. It offers a persistent 5GB home directory and runs on the Google Cloud.
+Google Cloud Shell provides command-line access to your GCP resources.</p>
+<ol>
+<li>
+<p>In GCP console, on the top right toolbar, click the Open Cloud Shell button.</p>
+<p><img alt="Cloud Shell icon" src="https://cdn.qwiklabs.com/vdY5e%2Fan9ZGXw5a%2FZMb1agpXhRGozsOadHURcR8thAQ%3D"></p>
+</li>
+<li>
+<p>Click <strong>Continue</strong>.
+<img alt="cloudshell_continue.png" src="https://cdn.qwiklabs.com/lr3PBRjWIrJ%2BMQnE8kCkOnRQQVgJnWSg4UWk16f0s%2FA%3D"></p>
+</li>
+</ol>
+<p>It takes a few moments to provision and connect to the environment. When you are connected, you are already authenticated, and the project is set to your <em>PROJECT_ID</em>. For example:</p>
+<p><img alt="Cloud Shell Terminal" src="https://cdn.qwiklabs.com/hmMK0W41Txk%2B20bQyuDP9g60vCdBajIS%2B52iI2f4bYk%3D"></p>
+<p><strong>gcloud</strong> is the command-line tool for Google Cloud Platform. It comes pre-installed on Cloud Shell and supports tab-completion.</p>
+<p>You can list the active account name with this command:</p>
+<pre><code>gcloud auth list&#x000A;</code></pre>
+<p>Output:</p>
+<pre><code class="language-output prettyprint">Credentialed accounts:&#x000A; - &lt;myaccount&gt;@&lt;mydomain&gt;.com (active)&#x000A;</code></pre>
+<p>Example output:</p>
+<pre><code class="language-Output prettyprint">Credentialed accounts:&#x000A; - google1623327_student@qwiklabs.net&#x000A;</code></pre>
+<p>You can list the project ID with this command:</p>
+<pre><code>gcloud config list project&#x000A;</code></pre>
+<p>Output:</p>
+<pre><code class="language-output prettyprint">[core]&#x000A;project = &lt;project_ID&gt;&#x000A;</code></pre>
+<p>Example output:</p>
+<pre><code class="language-Output prettyprint">[core]&#x000A;project = qwiklabs-gcp-44776a13dea667a6&#x000A;</code></pre>
+<ql-infobox>
+  Full documentation of <strong>gcloud</strong> is available on
+  <a href="https://cloud.google.com/sdk/gcloud" target="_blank">
+    Google Cloud gcloud Overview
+  </a>.
+</ql-infobox>
+
+<h2 id="step4">Task 1. Connect to the lab GKE cluster</h2>
+<ol>
+<li>
+<p>In Cloud Shell, type the following command to set the environment variable for the Google Cloud zone and cluster name.</p>
+</li>
+</ol>
+<pre><code>export my_zone=us-central1-a&#x000A;export my_cluster=standard-cluster-1&#x000A;</code></pre>
+<ol start="2">
+<li>
+<p>Configure tab completion for the <code>kubectl</code> command-line tool.</p>
+</li>
+</ol>
+<pre><code>source &lt;(kubectl completion bash)&#x000A;</code></pre>
+<ol start="3">
+<li>
+<p>Configure access to your cluster for kubectl:</p>
+</li>
+</ol>
+<pre><code>gcloud container clusters get-credentials $my_cluster --zone $my_zone&#x000A;</code></pre>
+<ol start="4">
+<li>
+<p>In Cloud Shell enter the following command  to clone the lab repository to the lab Cloud Shell.</p>
+</li>
+</ol>
+<pre><code>git clone https://github.com/GoogleCloudPlatform/training-data-analyst&#x000A;</code></pre>
+<ol start="5">
+<li>
+<p>Create a soft link as a shortcut to the working directory.</p>
+</li>
+</ol>
+<pre><code>ln -s ~/training-data-analyst/courses/ak8s/v1.1 ~/ak8s&#x000A;</code></pre>
+<ol start="6">
+<li>
+<p>Change to the directory that contains the sample files for this lab.</p>
+</li>
+</ol>
+<pre><code>cd ~/ak8s/Cloud_SQL/&#x000A;</code></pre>
+<h2 id="step5">Task 2. Enable Cloud SQL APIs</h2>
+<ol>
+<li>In the Google Cloud Console, on the <strong>Navigation menu</strong> (<img alt="9a951fa6d60a98a5.png" src="https://cdn.qwiklabs.com/fXo8j8i%2FKJoMkZ7FeHUYU7Vvu2PQfFZtFbLISSnYEaY%3D">), click <strong>APIs &amp; Services</strong>.</li>
+<li>Click <strong>+ Enable APIs and Services</strong>.</li>
+<li>For <strong>Search for APIs &amp; Services</strong>, type <strong>SQL</strong> and then click the <strong>Cloud SQL</strong> API tile.</li>
+<li>Click <strong>Enable</strong> to enable Cloud SQL API.</li>
+</ol>
+<p>If the API is already enabled, a <strong>Manage</strong> button appears instead, with an <strong>API enabled</strong> message. In that case, no action is required.</p>
+<ol start="5">
+<li>
+<p>Repeat the above step to enable <strong>Cloud SQL Admin API</strong>.</p>
+</li>
+</ol>
+<h2 id="step6">Task 3. Create a Cloud SQL instance</h2>
+<ol>
+<li>
+<p>In the Cloud Shell, run the following command to create the instance:</p>
+</li>
+</ol>
+<pre><code>gcloud sql instances create sql-instance --tier=db-n1-standard-2 --region=us-central1&#x000A;</code></pre>
+<ol start="2">
+<li>In the Google Cloud Console, navigate to <strong>SQL</strong>.</li>
+<li>You should see <code>sql-instance</code> listed , click on the name, and then click on the <strong>Users</strong> menu.</li>
+</ol>
+<ql-infobox><strong>Note:</strong> You have to wait a few minutes for the Cloud SQL instance to be provisioned.</ql-infobox>
+<p>When you see the existing <code>root</code> user listed you can proceed to the next step.</p>
+<p><img alt="b33ef5a7ffb68009.png" src="https://cdn.qwiklabs.com/6a%2FHhRHEK%2F59%2Fjb6iz8qN3DCiSGjoQWmai0HzZefV8w%3D"></p>
+<ol start="4">
+<li>Click <strong>ADD USER ACCOUNT</strong> and create an account, using <code>sqluser</code>  as the username and <code>sqlpassword</code> as the password.</li>
+</ol>
+<p>Leave the <strong>Host name</strong> option set to <strong>Allow any host (%).</strong> and click <strong>ADD</strong>.</p>
+<ol start="5">
+<li>Go back to <strong>Overview</strong> menu, still in your instance (<code>sql-instance</code>), and copy your Instance connection name.</li>
+</ol>
+<p>You will probably need to scroll down a bit to see it.</p>
+<ol start="6">
+<li>
+<p>Create an environment variable to hold your Cloud SQL instance name, substituting the placeholder with the name you copied in the previous step.</p>
+</li>
+</ol>
+<pre><code>export SQL_NAME=[Cloud SQL Instance Name]&#x000A;</code></pre>
+<ol start="7">
+<li>Your command should look similar to the following:</li>
+</ol>
+<p><img alt="65149875469aa0e1.png" src="https://cdn.qwiklabs.com/kxgM2Xhb77QFHrip7gwjsRmBBCDLhJfCpLu%2FQngocxc%3D"></p>
+<ol start="8">
+<li>
+<p>Connect to your Cloud SQL instance.</p>
+</li>
+</ol>
+<pre><code>gcloud sql connect sql-instance&#x000A;</code></pre>
+<ol start="9">
+<li>When prompted to enter the root password press enter. The root SQL user password is blank by default.</li>
+</ol>
+<p>The <code>MySQL [(none)]&gt;</code> prompt appears indicating that you are now connected to the Cloud SQL instance using the MySQL client.</p>
+<ol start="10">
+<li>
+<p>Create the database required for Wordpress. This is called <code>wordpress</code> by default.</p>
+</li>
+</ol>
+<pre><code>create database wordpress;&#x000A;</code></pre>
+<ol start="11">
+<li>
+<p>Select the wordpress database:</p>
+</li>
+</ol>
+<pre><code>use wordpress;&#x000A;</code></pre>
+<ol start="12">
+<li>
+<p>Select the wordpress database:</p>
+</li>
+</ol>
+<pre><code>show tables;&#x000A;</code></pre>
+<p>This will report Empty set as you have not created any tables yet.</p>
+<ol start="13">
+<li>
+<p>Exit the MySQL client.</p>
+</li>
+</ol>
+<pre><code>exit;&#x000A;</code></pre>
+<p>Click Check my progress to verify the objective.</p>
+<ql-activity-tracking step="1">
+      Create a Cloud SQL Instance
+  </ql-activity-tracking>
+<h2 id="step7">Task 4. Prepare a Service Account with permission to access Cloud SQL</h2>
+<ol>
+<li>To create a Service Account, in the Google Cloud Console navigate to <strong>IAM &amp; admin</strong>&gt; <strong>Service accounts</strong>.</li>
+<li>Click <strong>+ Create Service Account</strong>.</li>
+<li>Specify a <strong>Service account name</strong> called <code>sql-access</code> then click <strong>Create</strong>.</li>
+<li>Click <strong>Select a role.</strong>
+</li>
+<li>Search for <strong>Cloud SQL</strong>, select <strong>Cloud SQL Client</strong> and click <strong>Continue</strong>.</li>
+<li>Click <strong>Done</strong>.</li>
+<li>Locate the service account <code>sql-access</code> and click on three dots icon in <strong>Actions</strong> column.</li>
+<li>Click <strong>Create Key</strong>, and make sure <strong>JSON</strong> key type is selected and click <strong>Create</strong>.</li>
+</ol>
+<p>This will create a public/private key pair, and download the private key file automatically to your computer. You'll need this JSON file later.</p>
+<ol start="9">
+<li>Click <strong>Close</strong> to close the notification dialog.</li>
+<li>Locate the JSON credential file you downloaded and rename it to <code>credentials.json.</code>
+</li>
+</ol>
+<p>Click Check my progress to verify the objective.</p>
+<ql-activity-tracking step="2">
+      Create Service Account
+  </ql-activity-tracking>
+<h2 id="step8">Task 5. Create Secrets</h2>
+<p>You create two Kubernetes Secrets: one to provide the MySQL credentials and one to provide the Google credentials (the service account).</p>
+<ol>
+<li>
+<p>To create a Secret for your MySQL credentials, enter the following in the Cloud Shell.</p>
+</li>
+</ol>
+<pre><code>kubectl create secret generic sql-credentials \&#x000A;   --from-literal=username=sqluser\&#x000A;   --from-literal=password=sqlpassword&#x000A;</code></pre>
+<p>If you used a different username and password when creating the Cloud SQL user accounts substitute those here.</p>
+<ol start="2">
+<li>In the Cloud Shell, click the <strong>More</strong> icon on the far right of the Cloud Shell menu bar.</li>
+</ol>
+<p><img alt="78aa0f6c2769f329.png" src="https://cdn.qwiklabs.com/7yFs%2FTnaGa7LGYbm5hp0mlVyW5YZXqGY%2BupA9ZNZ3%2Bo%3D"></p>
+<ol start="3">
+<li>
+<p>Select <strong>Upload File</strong> and upload the <code>credentials.json</code> credential file you downloaded in the previous task to the Cloud Shell.</p>
+</li>
+<li>
+<p>In the Cloud Shell move the credential file to the current working directory.</p>
+</li>
+</ol>
+<pre><code>mv ~/credentials.json .&#x000A;</code></pre>
+<p>Files uploaded to the Cloud Shell are uploaded to the user's home directory. It is easier to work with files in the current working directory with <code>kubectl</code> so moving it makes the next step simpler.</p>
+<ol start="5">
+<li>
+<p>Create a Secret for your Google Cloud Service Account credentials using the following command:</p>
+</li>
+</ol>
+<pre><code>kubectl create secret generic google-credentials\&#x000A;   --from-file=key.json=credentials.json&#x000A;</code></pre>
+<p>Note that the file is uploaded to the Secret using the name <code>key.json</code>. That is the file name that a container will see when this Secret is attached as a Secret Volume.</p>
+<p>Click Check my progress to verify the objective.</p>
+<ql-activity-tracking step="3">
+      Create Secrets
+  </ql-activity-tracking>
+<h2 id="step9">Task 6. Deploy the SQL Proxy agent as a sidecar container</h2>
+<p>A sample deployment manifest file called <code>sql-proxy.yaml</code> has been provided for you that deploys a demo Wordpress application container with the SQL Proxy agent as a sidecar container.</p>
+<p>In the Wordpress container environment settings the WORDPRESS_DB_HOST is specified using the localhost IP address. The <code>cloudsql-proxy</code> sidecar container is configured to point to the Cloud SQL instance you created in the previous task. The database username and password are passed to the Wordpress container as secret keys, and the JSON credentials file is passed to the container using a Secret volume. A Service is also created to allow you to connect to the Wordpress instance from the internet.</p>
+<pre><code>apiVersion: apps/v1&#x000A;kind: Deployment&#x000A;metadata:&#x000A;  name: wordpress&#x000A;  labels:&#x000A;    app: wordpress&#x000A;spec:&#x000A;  selector:&#x000A;    matchLabels:&#x000A;      app: wordpress&#x000A;  template:&#x000A;    metadata:&#x000A;      labels:&#x000A;        app: wordpress&#x000A;    spec:&#x000A;      containers:&#x000A;        - name: web&#x000A;          image: gcr.io/cloud-marketplace/google/wordpress&#x000A;          ports:&#x000A;            - containerPort: 80&#x000A;          env:&#x000A;            - name: WORDPRESS_DB_HOST&#x000A;              value: 127.0.0.1:3306&#x000A;            # These secrets are required to start the pod.&#x000A;            # [START cloudsql_secrets]&#x000A;            - name: WORDPRESS_DB_USER&#x000A;              valueFrom:&#x000A;                secretKeyRef:&#x000A;                  name: sql-credentials&#x000A;                  key: username&#x000A;            - name: WORDPRESS_DB_PASSWORD&#x000A;              valueFrom:&#x000A;                secretKeyRef:&#x000A;                  name: sql-credentials&#x000A;                  key: password&#x000A;            # [END cloudsql_secrets]&#x000A;        # Change &lt;INSTANCE_CONNECTION_NAME&gt; here to include your Google Cloud&#x000A;        # project, the region of your Cloud SQL instance and the name&#x000A;        # of your Cloud SQL instance. The format is&#x000A;        # $PROJECT:$REGION:$INSTANCE&#x000A;        # [START proxy_container]&#x000A;        - name: cloudsql-proxy&#x000A;          image: gcr.io/cloudsql-docker/gce-proxy:1.11&#x000A;          command: ["/cloud_sql_proxy",&#x000A;                    "-instances=&lt;INSTANCE_CONNECTION_NAME&gt;=tcp:3306",&#x000A;                    "-credential_file=/secrets/cloudsql/key.json"]&#x000A;          # [START cloudsql_security_context]&#x000A;          securityContext:&#x000A;            runAsUser: 2  # non-root user&#x000A;            allowPrivilegeEscalation: false&#x000A;          # [END cloudsql_security_context]&#x000A;          volumeMounts:&#x000A;            - name: cloudsql-instance-credentials&#x000A;              mountPath: /secrets/cloudsql&#x000A;              readOnly: true&#x000A;        # [END proxy_container]&#x000A;      # [START volumes]&#x000A;      volumes:&#x000A;        - name: cloudsql-instance-credentials&#x000A;          secret:&#x000A;            secretName: google-credentials&#x000A;      # [END volumes]&#x000A;---&#x000A;apiVersion: "v1"&#x000A;kind: "Service"&#x000A;metadata:&#x000A;  name: "wordpress-service"&#x000A;  namespace: "default"&#x000A;  labels:&#x000A;    app: "wordpress"&#x000A;spec:&#x000A;  ports:&#x000A;  - protocol: "TCP"&#x000A;    port: 80&#x000A;  selector:&#x000A;    app: "wordpress"&#x000A;  type: "LoadBalancer"&#x000A;  loadBalancerIP: ""&#x000A;</code></pre>
+<p>The important sections to note in this manifest are:</p>
+<ul>
+<li>
+<p>In the Wordpress env section the variable  <code>WORDPRESS_DB_HOST</code> is set to <code>127.0.0.1:3306.</code> This will connect to a container in the same Pod listening on port 3306. This is the port that the SQL-Proxy listens on by default.</p>
+</li>
+<li>
+<p>In the Wordpress <code>env</code> section the variables <code>WORDPRESS_DB_USER</code> and <code>WORDPRESS_DB_PASSWORD</code> are set using values stored in the <code>sql-credential</code> Secret you created in the last task.</p>
+</li>
+<li>
+<p>In the <code>cloudsql-proxy</code> container section the command switch  that defines the SQL Connection name, <code>"-instances=&lt;INSTANCE_CONNECTION_NAME&gt;=tcp:3306",</code> contains a placeholder variable that is not configured using a ConfigMap or Secret and so must be updated directly in this example manifest to point to your Cloud SQL instance.</p>
+</li>
+<li>
+<p>In the <code>cloudsql-proxy</code> container section the JSON credential file is mounted using the Secret volume in the directory <code>/secrets/cloudsql/</code> . The command switch <code>"-credential_file=/secrets/cloudsql/key.json"</code> points to the filename in that directory that you specified when creating the <code>google-credentials</code> Secret<code>.</code></p>
+</li>
+<li>
+<p>The Service section at the end creates an external LoadBalancer called <code>"wordpress-service</code>" that  allows the application to be accessed from external internet addresses.</p>
+</li>
+</ul>
+<ol>
+<li>
+<p>Use <code>sed</code> to update the placeholder variable for the SQL Connection name to the instance name of your Cloud SQL instance.</p>
+</li>
+</ol>
+<pre><code>sed -i 's/&lt;INSTANCE_CONNECTION_NAME&gt;/'"${SQL_NAME}"'/g'\&#x000A;   sql-proxy.yaml&#x000A;</code></pre>
+<aside class="special">
+<p>The <strong>sed</strong> command in UNIX is stands for <strong>stream editor</strong> and it can perform many functions on files such as replace, insertion, or deletion. Though most common use of <strong>sed</strong> is for substitution. By using <strong>sed</strong> you can edit files even without opening them, which is much quicker way to find and replace something in file, than first opening that file in an editor and then changing it.</p>
+</aside>
+<ol start="2">
+<li>
+<p>Deploy the application.</p>
+</li>
+</ol>
+<pre><code>kubectl apply -f sql-proxy.yaml&#x000A;</code></pre>
+<ol start="3">
+<li>
+<p>Query the status of the Deployment:</p>
+</li>
+</ol>
+<pre><code>kubectl get deployment wordpress&#x000A;</code></pre>
+<ql-infobox><strong>Note:</strong> You need to repeat this command until you see that an instance is available.</ql-infobox>
+<pre><code class="language-bash prettyprint">NAME        READY   UP-TO-DATE   AVAILABLE   AGE&#x000A;wordpress   1/1     1            1           45s&#x000A;</code></pre>
+<ol start="4">
+<li>
+<p>List the services in your GKE cluster.</p>
+</li>
+</ol>
+<pre><code>kubectl get services&#x000A;</code></pre>
+<p>The external LoadBalancer ip-address for the wordpress-service is the address you use to connect to your Wordpress blog. Repeat the command until you get an external address as shown here.</p>
+<pre><code class="language-bash prettyprint">NAME              TYPE         CLUSTER-IP   EXTERNAL-IP    PORT(S)&#x000A;kubernetes        ClusterIP    10.12.0.1    &lt;none&gt;         443/TCP&#x000A;wordpress-service LoadBalancer 10.12.3.17   35.238.218.6   80:31095/TCP&#x000A;</code></pre>
+<p>Click Check my progress to verify the objective.</p>
+<ql-activity-tracking step="4">
+      Deploy the SQL Proxy agent as a sidecar container
+  </ql-activity-tracking>
+<h2 id="step10">Task 7. Connect to your Wordpress instance</h2>
+<ol>
+<li>Open a new browser tab and connect to your Wordpress site using the external LoadBalancer ip-address. This will start the initial Wordpress installation wizard.</li>
+<li>Select <strong>English (United States)</strong> and click <strong>Continue</strong>.</li>
+<li>Enter a sample name for the <strong>Site Title</strong>.</li>
+<li>Enter a <strong>Username</strong> and <strong>Password</strong> to administer the site.</li>
+<li>Enter an email address.</li>
+</ol>
+<p>None of these values are particularly important, you will not need to use them.</p>
+<ol start="6">
+<li>Click <strong>Install Wordpress</strong>.</li>
+</ol>
+<p>After a few seconds you will see the <strong>Success!</strong> Notification.  You can log in if you wish to explore the Wordpress admin interface but it is not required for the lab.</p>
+<p>The initialization process has created new database tables and data in the wordpress database on your Cloud SQL instance. You will now validate that these new database tables have been created using the SQL proxy container.</p>
+<ol start="7">
+<li>
+<p>Switch back to the Cloud Shell and connect to your Cloud SQL instance.</p>
+</li>
+</ol>
+<pre><code>gcloud sql connect sql-instance&#x000A;</code></pre>
+<ol start="8">
+<li>When prompted to enter the root password press enter. The root SQL user password is blank by default.</li>
+</ol>
+<p>The <code>MySQL [(none)]&gt;</code> prompt appears indicating that you are now connected to the Cloud SQL instance using the MySQL client.</p>
+<ol start="9">
+<li>
+<p>Select the wordpress database:</p>
+</li>
+</ol>
+<pre><code>use wordpress;&#x000A;</code></pre>
+<ol start="10">
+<li>
+<p>Select the wordpress database:</p>
+</li>
+</ol>
+<pre><code>show tables;&#x000A;</code></pre>
+<p>This will now show a number of new database tables that were created when Wordpress was initialized demonstrating that the sidecar SQL Proxy container was configured correctly.</p>
+<pre><code class="language-bash prettyprint">MySQL [wordpress]&gt; show tables;&#x000A;+-----------------------+&#x000A;| Tables_in_wordpress   |&#x000A;+-----------------------+&#x000A;| wp_commentmeta        |&#x000A;| wp_comments           |&#x000A;| wp_links              |&#x000A;| wp_options            |&#x000A;| wp_postmeta           |&#x000A;| wp_posts              |&#x000A;| wp_term_relationships |&#x000A;| wp_term_taxonomy      |&#x000A;| wp_termmeta           |&#x000A;| wp_terms              |&#x000A;| wp_usermeta           |&#x000A;| wp_users              |&#x000A;+-----------------------+&#x000A;12 rows in set (0.19 sec)&#x000A;</code></pre>
+<ol start="11">
+<li>
+<p>List all of the Wordpress user table entries:</p>
+</li>
+</ol>
+<pre><code>select * from wp_users;&#x000A;</code></pre>
+<p>This will list the database record for the Wordpress admin account showing the email you chose when initializing Wordpress.</p>
+<ol start="12">
+<li>
+<p>Exit the MySQL client.</p>
+</li>
+</ol>
+<pre><code>exit;&#x000A;</code></pre>
+<h2 id="step11">End your lab</h2>
+<p>When you have completed your lab, click <strong>End Lab</strong>. Qwiklabs removes the resources you’ve used and cleans the account for you.</p>
+<p>You will be given an opportunity to rate the lab experience. Select the applicable number of stars, type a comment, and then click <strong>Submit</strong>.</p>
+<p>The number of stars indicates the following:</p>
+<ul>
+<li>1 star = Very dissatisfied</li>
+<li>2 stars = Dissatisfied</li>
+<li>3 stars = Neutral</li>
+<li>4 stars = Satisfied</li>
+<li>5 stars = Very satisfied</li>
+</ul>
+<p>You can close the dialog box if you don't want to provide feedback.</p>
+<p>For feedback, suggestions, or corrections, please use the <strong>Support</strong> tab.</p>
+
+<p>Copyright 2021 Google LLC All rights reserved. Google and the Google logo are trademarks of Google LLC. All other company and product names may be trademarks of the respective companies with which they are associated.</p>
+
+
+
+</div>
+</div>
+
+
+<div class='hidden js-end-lab-button-container lab-content__end-lab-button'>
+<ql-lab-control-button class='js-end-lab-button' running></ql-lab-control-button>
+</div>
+<!-- / TODO: Move recommendations into the end lab modal -->
+</ql-drawer-content>
+<ql-drawer end id='outline-drawer' open slot='drawer' width='320'>
+<div class='js-lab-content-outline lab-content__outline'>
+<a href='#step1'>Overview</a><a href='#step2'>Objectives</a><a href='#step3'>Task 0. Lab Setup</a><a href='#step4'>Task 1. Connect to the lab GKE cluster</a><a href='#step5'>Task 2. Enable Cloud SQL APIs</a><a href='#step6'>Task 3. Create a Cloud SQL instance</a><a href='#step7'>Task 4. Prepare a Service Account with permission to access Cloud SQL</a><a href='#step8'>Task 5. Create Secrets</a><a href='#step9'>Task 6. Deploy the SQL Proxy agent as a sidecar container</a><a href='#step10'>Task 7. Connect to your Wordpress instance</a><a href='#step11'>End your lab</a>
+</div>
+</ql-drawer>
+</ql-drawer-container>
+</ql-drawer-content>
+</ql-drawer-container>
+<div class='lab-introduction js-lab-introduction is-hidden'>
+<div class='lab-introduction__inner'>
+<h1 class='headline-1'>Welcome to Your First Lab!</h1>
+<ql-icon-button class='js-skip-button'>close</ql-icon-button>
+<div class='lab-introduction__video'>
+<iframe allow='autoplay; encrypted-media' allowfullscreen frameborder='0' id='lab-introduction' src='https://www.youtube.com/embed/yF7EDXKTmoQ?enablejsapi=1&amp;rel=0&amp;showinfo=0'></iframe>
+</div>
+<a class='js-skip-button button button--outline'>Skip this video</a>
+</div>
+</div>
+
+
+
+</div>
+</main>
+
+
+<div class='modal fade' id='lab-details-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<div class='modal-body'>
+<p class='l-mbm'>
+Architecting with Google Kubernetes Engine: Using Cloud SQL with Kubernetes Engine
+</p>
+<p class='small-label l-mbs'>
+<strong>
+Duration:
+</strong>
+3m setup
+&middot;
+60m access
+&middot;
+60m completion
+</p>
+<p class='small-label l-mbs'>
+<span><strong>Levels: </strong>fundamental</span>
+</p>
+<p class='small-label'>
+<strong>
+Permalink:
+</strong>
+<a href="https://googlecoursera.qwiklabs.com/catalog_lab/2309">https://googlecoursera.qwiklabs.com/catalog_lab/2309</a>
+</p>
+</div>
+<div class='modal-actions'>
+<a class='button button--text' data-dismiss='modal'>
+Got It
+</a>
+</div>
+
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='modal fade' id='lab-review-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<form class="simple_form js-lab-review-form" id="edit_lab_review_12005109" action="/lab_reviews/12005109" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="_method" value="patch" /><div class='modal-body'>
+<p class='label'>
+How satisfied are you with this lab?*
+</p>
+<div class='rateit js-rateit' data-rateit-max='5' data-rateit-min='0' data-rateit-resetable='false' data-rateit-step='1' data-rateit-value='5'></div>
+<div class='l-mtm'>
+
+<div class="control-group hidden lab_review_user_id"><div class="controls"><input class="hidden" type="hidden" value="3894861" name="lab_review[user_id]" id="lab_review_user_id" /></div></div>
+<div class="control-group hidden lab_review_classroom_id"><div class="controls"><input class="hidden" type="hidden" name="lab_review[classroom_id]" id="lab_review_classroom_id" /></div></div>
+<div class="control-group hidden lab_review_lab_id"><div class="controls"><input class="hidden" type="hidden" value="2309" name="lab_review[lab_id]" id="lab_review_lab_id" /></div></div>
+<div class="control-group hidden lab_review_focus_id"><div class="controls"><input class="hidden" type="hidden" name="lab_review[focus_id]" id="lab_review_focus_id" /></div></div>
+<div class="control-group hidden lab_review_rating"><div class="controls"><input class="hidden js-rating-input" type="hidden" value="2" name="lab_review[rating]" id="lab_review_rating" /></div></div>
+<div class="control-group text optional lab_review_comment"><label class="text optional control-label" for="lab_review_comment">Comment</label><div class="controls"><textarea class="text optional" name="lab_review[comment]" id="lab_review_comment">
+</textarea></div></div>
+</div>
+</div>
+<div class='modal-actions'>
+<a class='button button--text' data-dismiss='modal'>
+Cancel
+</a>
+<input type="submit" name="commit" value="Submit" disabled="disabled" id="submit" data-disabled="false" class="button" data-disable-with="Submit" />
+</div>
+</form>
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+
+
+<script>
+  $( function() {
+    ql.initMaterialInputs();
+    initChosen();
+    initSearch();
+    initTabs();
+    ql.list.init();
+    ql.favoriting.init();
+    ql.header.myAccount.init();
+    initTooltips();
+    ql.autocomplete.init();
+    ql.modals.init();
+    ql.toggleButtons.init();
+    ql.analytics.init();
+    ql.labControlPanel.addRecaptchaErrorHandler();
+  initLabContent();
+  ql.labOutline.links.init();
+  initLabReviewModal();
+  ql.labAssessment.init();
+  ql.labIntroduction.init( true );
+  ql.labData.init();
+  initLabTranslations( {"are_you_sure":"All done? If you end this lab, you will lose all your work. You may not be able to restart the lab if there is a quota limit. Are you sure you want to end this lab?\n","in_progress":"*In Progress*","ending":"*Ending*","starting":"*Starting, please wait*","end_concurrent_labs":"Sorry, you can only run one lab at a time. To start this lab, please confirm that you want all of your existing labs to end.\n","copied":"Copied","no_resource":"Error retrieving resource.","no_support":"No Support","mac_press":"Press ⌘-C to copy","thanks_review":"Thanks for reviewing this lab.","windows_press":"Press Ctrl-C to copy","days":"days"} );
+  ql.labRun.init();
+  ql.chat.init();
+  ql.initHeader();
+  ql.navigation.init();
+  ql.navPanel.init();
+  ql.navigation.init();
+  
+  });
+</script>
+
+</body>
+</html>
+

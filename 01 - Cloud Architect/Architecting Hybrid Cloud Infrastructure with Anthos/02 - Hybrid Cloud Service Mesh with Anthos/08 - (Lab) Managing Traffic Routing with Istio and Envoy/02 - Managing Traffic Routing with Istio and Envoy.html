@@ -1,0 +1,1236 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title>AHYBRID050 Traffic Management with Anthos Service Mesh | Qwiklabs</title>
+<script>
+//<![CDATA[
+window.gon={};gon.current_user={"firstname":"DANIEL","lastname":"ENRIQUE SANDOVAL SANCHEZ","fullname":"DANIEL ENRIQUE SANDOVAL SANCHEZ","company":"Coursera","email":"desandovals@liverpool.com.mx","origin":"googlecoursera-run, lti-coursera","subscriptions":0,"id":"40414ff5fc280f833d9acca966912f93","qlCreatedAt":"2020-11-17 20:45:59 UTC","optIn":null,"current_organization_id":null,"current_organization_role":null};gon.segment="j4Im8pqIko0Lxq4wVVZWMPMM0EroHUvb";gon.deployment="googlecoursera-run";gon.content={"type":"Lab","id":2074,"name":"AHYBRID050 Traffic Management with Anthos Service Mesh"};
+//]]>
+</script>
+<script>
+  dataLayer = [
+    {user: gon.current_user},
+    {content: gon.content}
+  ];
+</script>
+<script>
+  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer',"GTM-TQR88QK");
+</script>
+<script>
+  EVENT_SOURCE_BASE_URL = "https://googlecoursera-run.qwiklabs.com/nchan-sub?id=";
+</script>
+<script src="https://cdn.qwiklabs.com/assets/hallofmirrors/polyfills/webcomponents-loader-408088dc333247a761de5f2b2a4ba1cabd2bc36579f83ba92a559eb3682a9b77.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/vendor-45d462772c30000424907184f70c7157e95fb6227698d1671c5051818a6f60d8.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/application-6874b164d8346f46605fc772a6f7375a39626ffc9f6d168e23a3a8c40bb6fd28.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/hallofmirrors/hallofmirrors-b7ff781d00ceebdf75589f58475cea695bafd8d5cc1f3eb4baf6122ed4a4b736.js"></script>
+<!--[if lt IE 9]>
+<script src='http://html5shim.googlecode.com/svn/trunk/html5.js' type='text/javascript'></script>
+<![endif]-->
+<!--[endif]>  <![endif]-->
+<script type='application/ld+json'>
+{
+  "@context": "http://schema.org",
+  "@type": "WebSite",
+  "url": "https://www.qwiklabs.com/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://www.qwiklabs.com/catalog?keywords={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script id='ze-snippet' src='https://static.zdassets.com/ekr/snippet.js?key=511e4158-0aec-4e3c-b2e6-4daa1769f51e'></script>
+
+
+<meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="NXNtmLh5yC68/nZmaMfUwrM9nCmINSGqp6WUhZ1BLsD/XudBiD5SiKyYlVj6AjA8fhq3YGjGlR2qrZzfJJbfGA==" />
+<meta content='width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0' name='viewport'>
+<meta content='1rRsY0INj8RvwB5EF5pwdxt2A2P9aDgAlsICaJ0d5w0' name='google-site-verification'>
+<meta content='#3681E4' property='msapplication-TileColor'>
+<meta content='/favicon-144.png' property='msapplication-TileImage'>
+<meta content='[{&quot;id&quot;:&quot;recaptcha_experiment&quot;,&quot;optimize_id&quot;:&quot;dpViOcLkT3qS4TvL2mRojA&quot;,&quot;title&quot;:&quot;No Recaptcha shown for trusted users&quot;,&quot;variant_index&quot;:0,&quot;variant&quot;:&quot;original&quot;}]' name='active-experiments'>
+<meta content='{&quot;userId&quot;:3894861}' name='help-api-product-data'>
+<meta content='Architecting Hybrid Infrastructure with Anthos: Configure fine-grained traffic control for routing to services.' name='description'>
+<meta content='Qwiklabs' name='author'>
+<meta content='AHYBRID050 Traffic Management with Anthos Service Mesh | Qwiklabs' property='og:title'>
+<meta content='website' property='og:type'>
+<meta content='/favicon-144.png' property='og:image'>
+<meta content='Qwiklabs' property='og:site_name'>
+<meta content='Architecting Hybrid Infrastructure with Anthos: Configure fine-grained traffic control for routing to services.' property='og:description'>
+<meta content='/qwiklabs_logo_900x887.png' property='og:logo' size='900x887'>
+<meta content='/qwiklabs_logo_994x187.png' property='og:logo' size='994x187'>
+
+
+<link href='/favicon-32.png' rel='shortcut icon'>
+<link color='#3681E4' href='/favicon-svg.svg' rel='mask-icon'>
+<link href='/favicon-180.png' rel='apple-touch-icon-precomposed'>
+
+
+
+<link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css?family=Oswald:400|Roboto+Mono:400,700|Roboto:300,400,500,700|Google+Sans:300,400,500,700|Google+Sans+Display:400|Material+Icons|Google+Material+Icons" />
+
+
+<link rel="stylesheet" media="all" href="https://cdn.qwiklabs.com/assets/application-cf67fd00dd904ecce1e24779d7504aefc7fbd5d00696246fa80212743a81bf07.css" />
+
+
+
+</head>
+<body class='lab-show l-full no-nav application-new focuses focuses-show lab-show l-full no-nav '>
+<noscript>
+<iframe height='0' src='https://www.googletagmanager.com/ns.html?id=GTM-TQR88QK' style='display:none;visibility:hidden;' width='0'></iframe>
+</noscript>
+<span class='hidden' id='flash-sibling-before'></span>
+
+<div class='header-container'>
+<div class='header'>
+<ql-icon-button class='js-nav-toggle header__nav-panel-button l-mrm'>menu</ql-icon-button>
+<div class='header__title'>
+<ql-icon-button label="Back" href="https://www.coursera.org/" id="cf3ae8690d089372" target="_self">arrow_back</ql-icon-button><div class="mdl-tooltip" data-mdl-for="cf3ae8690d089372">Back</div>
+
+<h1 class='headline-5'>
+AHYBRID050 Traffic Management with Anthos Service Mesh
+</h1>
+</div>
+<div class='header__actions'>
+<ql-icon-button class='header__button--search js-header-search-bar-button'>search</ql-icon-button>
+<ql-icon-button id='control-panel-target' style='display: none;'>
+dashboard
+</ql-icon-button>
+<ql-menu for='control-panel-target' id='control-panel-menu'></ql-menu>
+
+<ql-icon-button id='help-menu-button'>help</ql-icon-button>
+<div class='mdl-tooltip js-tooltip' data-mdl-for='help-menu-button'>
+Help
+</div>
+<ql-menu for='help-menu-button' id='help-menu'>
+<ql-menu-item>
+<ql-help context='lab' data-analytics-action='opened_help' data-analytics-label='lab' productdata='{&quot;userId&quot;:3894861}'>
+Help Center
+</ql-help>
+</ql-menu-item>
+<ql-menu-item>
+<a target="_blank" class="ql-body-1" href="https://support.google.com/qwiklabs/contact/contact_us">Email support</a>
+</ql-menu-item>
+<ql-menu-item>
+<a class='ql-body-1' onClick='ql.chat.open()'>Chat support</a>
+</ql-menu-item>
+</ql-menu>
+
+<ql-icon-button id='language'>language</ql-icon-button>
+<div class='mdl-menu mdl-menu__bottom-right mdl-js-menu elevation-3' for='language'>
+<a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ar" href="/focuses/15531145?locale=ar&amp;parent=lti_session">العربية‬‎
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="de" href="/focuses/15531145?locale=de&amp;parent=lti_session">Deutsch
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="en" href="/focuses/15531145?locale=en&amp;parent=lti_session">English
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="es" href="/focuses/15531145?locale=es&amp;parent=lti_session">español (Latinoamérica)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="fr" href="/focuses/15531145?locale=fr&amp;parent=lti_session">français
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="id" href="/focuses/15531145?locale=id&amp;parent=lti_session">bahasa Indonesia
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="it" href="/focuses/15531145?locale=it&amp;parent=lti_session">Italiano
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ja" href="/focuses/15531145?locale=ja&amp;parent=lti_session">日本語
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ko" href="/focuses/15531145?locale=ko&amp;parent=lti_session">한국어
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pl" href="/focuses/15531145?locale=pl&amp;parent=lti_session">Polski
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pt_BR" href="/focuses/15531145?locale=pt_BR&amp;parent=lti_session">português (Brasil)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pt_PT" href="/focuses/15531145?locale=pt_PT&amp;parent=lti_session">português (Portugal)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ru" href="/focuses/15531145?locale=ru&amp;parent=lti_session">русский
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="tr" href="/focuses/15531145?locale=tr&amp;parent=lti_session">Türkçe
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="zh" href="/focuses/15531145?locale=zh&amp;parent=lti_session">简体中文
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="zh_TW" href="/focuses/15531145?locale=zh_TW&amp;parent=lti_session">繁體中文
+</a></div>
+<button class='icon-button' id='my_account'>
+<ql-avatar></ql-avatar>
+</button>
+<ql-menu for='my_account' open>
+<div class='my-account-menu'>
+<ql-avatar class='l-mtl l-mbl' size='120'></ql-avatar>
+<div class='my-account-menu__user-info l-mbl'>
+<h4 class='ql-subhead-1'>DANIEL ENRIQUE SANDOVAL SANCHEZ</h4>
+<p class='ql-body-2 text--light'>desandovals@liverpool.com.mx</p>
+<p class='ql-body-2 text--light'>
+</p>
+<a class="text--green ql-subhead-2" href="/my_account/payments"><ql-chip positive>
+0 Credits
+</ql-chip>
+</a></div>
+<div class='buttons l-mbl'>
+<a class="button button--hairline" id="settings" href="/my_account/profile">Settings</a>
+</div>
+<hr>
+<ql-button data-analytics-action='clicked_sign_out' href='/users/sign_out' method='delete'>
+Sign Out
+</ql-button>
+<div class='privacy l-mtl'>
+<a class="ql-caption text--light" href="/privacy_policy">Privacy</a>
+<span class='ql-caption text--light l-mls l-mrs'>&middot;</span>
+<a class="ql-caption text--light" href="/terms_of_service">Terms</a>
+</div>
+</div>
+</ql-menu>
+
+</div>
+</div>
+<div class='header__search-bar js-header-search-bar'>
+<form class="js-search-form-mobile" onsubmit="ql.searchFilter(); return false;" action="/searches/elasticsearch" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="gxVPrMxyUYKkkBkkjlLtaAl6c4NyoLmf4OHcPSFzeghJOMV1/DXLJLT2+hoclwmWxF1YypJTDSjt6dRnmKSL0A==" />
+<input type="text" name="keywords" id="keywords" placeholder="Search" maxlength="255" aria-label="catalog search bar" />
+</form>
+
+<ql-icon-button class='js-close-search-bar'>close</ql-icon-button>
+</div>
+</div>
+
+<nav class='nav-bar'>
+<a class="nav-bar__item js-navigation-button" href="/"><ql-icon class='nav-bar__item__icon'>
+home
+</ql-icon>
+<span class='nav-bar__item__label'>
+Home
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="/catalog"><ql-icon class='nav-bar__item__icon'>
+school
+</ql-icon>
+<span class='nav-bar__item__label'>
+Catalog
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="/my_learning"><ql-icon class='nav-bar__item__icon'>
+event_note
+</ql-icon>
+<span class='nav-bar__item__label'>
+My Learning
+</span>
+</a>
+</nav>
+
+<nav class='nav-panel js-nav-panel'>
+<div class='nav-panel__logo'>
+<div class='logo logo--blue'></div>
+</div>
+<a title="Home" tabindex="-1" class="nav-panel__item js-navigation-button" href="/"><ql-icon class='nav-panel__item__icon'>
+home
+</ql-icon>
+<div class='nav-panel__item__label'>
+Home
+</div>
+</a>
+<a title="Catalog" tabindex="-1" class="nav-panel__item js-navigation-button" href="/catalog"><ql-icon class='nav-panel__item__icon'>
+school
+</ql-icon>
+<div class='nav-panel__item__label'>
+Catalog
+</div>
+</a>
+<a title="My Learning" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_learning"><ql-icon class='nav-panel__item__icon'>
+event_note
+</ql-icon>
+<div class='nav-panel__item__label'>
+My Learning
+</div>
+</a>
+<div class='nav-panel__spacer'></div>
+<a title="Profile" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/profile"><ql-icon class='nav-panel__item__icon'>
+account_circle
+</ql-icon>
+<div class='nav-panel__item__label'>
+Profile
+</div>
+</a>
+<a title="Credits &amp; Subscriptions" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/credits"><ql-icon class='nav-panel__item__icon'>
+money
+</ql-icon>
+<div class='nav-panel__item__label'>
+Credits &amp; Subscriptions
+</div>
+</a>
+<a title="Security" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/security"><ql-icon class='nav-panel__item__icon'>
+security
+</ql-icon>
+<div class='nav-panel__item__label'>
+Security
+</div>
+</a>
+<div class='nav-panel__spacer'></div>
+<a class="nav-panel__item" tabindex="-1" href="#"><ql-help>
+<div class='nav-panel__help-item'>
+<ql-icon class='nav-panel__item__icon'>help</ql-icon>
+<div class='nav-panel__item__label'>
+Help
+</div>
+</div>
+</ql-help>
+</a><div class='nav-panel__small-links'>
+<a tabindex="-1" href="/privacy_policy">Privacy</a>
+<a tabindex="-1" href="/terms_of_service">Terms</a>
+</div>
+</nav>
+<div class='nav-panel__overlay js-nav-toggle'></div>
+
+<main class='js-main'>
+<div class='l-main-wrapper' id='main-wrapper'>
+
+
+
+
+
+
+
+<ql-drawer-container class='js-lab-state' data-analytics-payload='{&quot;label&quot;:&quot;AHYBRID050 Traffic Management with Anthos Service Mesh&quot;,&quot;lab_name&quot;:&quot;AHYBRID050 Traffic Management with Anthos Service Mesh&quot;,&quot;classroom_name&quot;:null,&quot;deployment&quot;:&quot;googlecoursera-run&quot;}' data-focus-id='15531145' data-lab-billing-limit='0.0' data-lab-duration='10800' data-parent='lti_session' data-recaptcha-enabled id='lab-container'>
+<ql-drawer id='terminal-drawer' slot='drawer' style='width: calc(100% - 480px)'>
+<iframe allow='clipboard-read' class='terminal' id='embedded-resource'></iframe>
+</ql-drawer>
+<ql-drawer-content class='js-lab-wrapper' id='lab-content' slot='drawer-content'>
+<ql-drawer-container id='lab-content-container'>
+<ql-drawer id='control-panel-drawer' open slot='drawer' width='320'>
+<ql-lab-control-panel class='ql-lab-control-panel__max-height control-panel js-lab-control-panel' connectionFiles='[]' labControlButton='{&quot;disabled&quot;:false,&quot;pending&quot;:false,&quot;running&quot;:false}' labDetails='[]' labTimer='{&quot;ticking&quot;:false,&quot;secondsRemaining&quot;:10800}' studentResources='[]'>
+<script src="https://www.recaptcha.net/recaptcha/api.js?render=6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr"   ></script>
+        <script>
+          // Define function so that we can call it again later if we need to reset it
+          // This executes reCAPTCHA and then calls our callback.
+          function executeRecaptchaForStartLab() {
+            grecaptcha.ready(function() {
+              grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}).then(function(token) {
+                setInputWithRecaptchaResponseTokenForStartLab('g-recaptcha-response-data-start-lab', token)
+              });
+            });
+          };
+          // Invoke immediately
+          executeRecaptchaForStartLab()
+
+          // Async variant so you can await this function from another async function (no need for
+          // an explicit callback function then!)
+          // Returns a Promise that resolves with the response token.
+          async function executeRecaptchaForStartLabAsync() {
+            return new Promise((resolve, reject) => {
+              grecaptcha.ready(async function() {
+                resolve(await grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}))
+              });
+            })
+          };
+
+                    var setInputWithRecaptchaResponseTokenForStartLab = function(id, token) {
+            var element = document.getElementById(id);
+            element.value = token;
+          }
+
+        </script>
+<input type="hidden" name="g-recaptcha-response-data[start_lab]" id="g-recaptcha-response-data-start-lab" data-sitekey="6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr" class="g-recaptcha g-recaptcha-response "/>
+
+<div class='hidden' id='recaptcha-v2-start-lab' slot='recaptcha'>
+<script src="https://www.recaptcha.net/recaptcha/api.js" async defer ></script>
+<div data-sitekey="6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV" data-callback="recaptchaComplete" data-expired-callback="expireV2Token" class="g-recaptcha "></div>
+          <noscript>
+            <div>
+              <div style="width: 302px; height: 422px; position: relative;">
+                <div style="width: 302px; height: 422px; position: absolute;">
+                  <iframe
+                    src="https://www.recaptcha.net/recaptcha/api/fallback?k=6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV"
+                    name="ReCAPTCHA"
+                    style="width: 302px; height: 422px; border-style: none; border: 0; overflow: hidden;">
+                  </iframe>
+                </div>
+              </div>
+              <div style="width: 300px; height: 60px; border-style: none;
+                bottom: 12px; left: 25px; margin: 0px; padding: 0px; right: 25px;
+                background: #f9f9f9; border: 1px solid #c1c1c1; border-radius: 3px;">
+                <textarea id="g-recaptcha-response" name="g-recaptcha-response"
+                  class="g-recaptcha-response"
+                  style="width: 250px; height: 40px; border: 1px solid #c1c1c1;
+                  margin: 10px 25px; padding: 0px; resize: none;">
+                </textarea>
+              </div>
+            </div>
+          </noscript>
+
+</div>
+</ql-lab-control-panel>
+</ql-drawer>
+<ql-drawer-content id='lab-instructions' slot='drawer-content'>
+<div class='alert alert--fake js-alert'>
+<p class='alert__message js-alert-message'></p>
+<a class='alert__close js-alert-close'>
+<i class='fa fa-times'></i>
+</a>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='js-lab-content lab-content__renderable-instructions'>
+<div class='lab-preamble'>
+<h1 class='lab-preamble__title'>
+AHYBRID050 Traffic Management with Anthos Service Mesh
+</h1>
+<div class='lab-preamble__details subtitle-headline-1'>
+<span>3 hours </span>
+<span>Free</span>
+<div class='lab__rating'>
+<a href="/focuses/15531145/reviews?parent=lti_session"><div class='rateit' data-rateit-readonly='true' data-rateit-value='0'></div>
+
+</a><a data-target='#lab-review-modal' data-toggle='modal'>
+Rate Lab
+</a>
+</div>
+</div>
+</div>
+
+<div class='js-markdown-instructions markdown-lab-instructions' id='markdown-lab-instructions'>
+
+
+
+<h2 id="step1">Overview</h2>
+<p>With Anthos Service Mesh, you can manage service discovery, traffic routing, and
+load balancing for your service mesh without having to update code in your
+services. Anthos Service Mesh simplifies configuration of service-level
+properties like timeouts and retries, and makes it straightforward to set up
+tasks like staged rollouts with percentage-based traffic splits.</p>
+<p>Anthos Service Mesh’s traffic management model relies on the following two
+components:</p>
+<ul>
+<li>Pilot: the core traffic management controller component.</li>
+<li>Envoy proxies: which enforce configurations and policies set through Pilot.</li>
+</ul>
+<p><img alt="Pilot architecture" src="https://cdn.qwiklabs.com/a5KD7t4slicLD%2FXSZiw%2F0M9att0j%2F%2FFpjNpCRMYFrpc%3D"></p>
+<p>These components enable Istio traffic management features including:</p>
+<ul>
+<li>
+<p>Service discovery</p>
+</li>
+<li>
+<p>Load balancing</p>
+</li>
+<li>
+<p>Traffic routing and control</p>
+</li>
+</ul>
+<h3>Objectives</h3>
+<p>In this lab, you learn how to perform the following tasks:</p>
+<ul>
+<li>
+<p>Configure and use Istio Gateways</p>
+</li>
+<li>
+<p>Apply default destination rules, for all available versions</p>
+</li>
+<li>
+<p>Apply virtual services to route by default to only one version</p>
+</li>
+<li>
+<p>Route to a specific version of a service based on user identity</p>
+</li>
+<li>
+<p>Shift traffic gradually from one version of a microservice to another</p>
+</li>
+<li>
+<p>Use the Anthos Service Mesh dashboard to view routing to multiple versions</p>
+</li>
+</ul>
+<h2 id="step2">Task 0. Lab Setup</h2>
+<p>In this task, you use Qwiklabs and perform initialization steps for your lab.</p>
+<h3>Access Qwiklabs</h3>
+<p>For each lab, you get a new GCP project and set of resources for a fixed time at no cost.</p>
+<ol>
+<li>
+<p>Make sure you signed into Qwiklabs using an <strong>incognito window</strong>.</p>
+</li>
+<li>
+<p>Note the lab's access time (for example, <img alt="img/time.png" src="https://cdn.qwiklabs.com/aZQJ4BT7uCmM9XR6BTXgTRP1Hfu1T7q6V%2BcnbdEsbpU%3D"> and make sure you can finish in that time block.</p>
+</li>
+</ol>
+<aside> <p>
+  There is no pause feature. You can restart if needed, but you have to start at the beginning.
+  </p>
+
+</aside>
+<ol start="3">
+<li>
+<p>When ready, click <img alt="img/start_lab.png" src="https://cdn.qwiklabs.com/XE8x7uvQokyubNwnYKKc%2BvBBNrMlo5iNZiDDzQQ3Ddo%3D">.</p>
+</li>
+<li>
+<p>Note your lab credentials. You will use them to sign in to Cloud Platform Console.
+<img alt="img/open_google_console.png" src="https://cdn.qwiklabs.com/0d78dhX6IVMVWmixCPPSBbmi5O2GPokCXf1Ps1AkTgI%3D"></p>
+</li>
+<li>
+<p>Click <strong>Open Google Console</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Use another account</strong> and copy/paste credentials for <strong>this</strong> lab into the prompts.</p>
+</li>
+</ol>
+<aside class="warning"><p>
+  If you use other credentials, you'll get errors or <strong>incur charges</strong>.
+  </p>
+</aside>
+<ol start="7">
+<li>Accept the terms and skip the recovery resource page.</li>
+</ol>
+<aside class="warning"><p>
+  Do not click <strong>End Lab</strong> unless you are finished with the lab or want to restart it. This clears your work and removes the project.
+  </p>
+</aside>
+
+<p>After you complete the initial sign-in steps, the project dashboard appears.</p>
+<p><img alt="GCP Project Dashboard" src="https://cdn.qwiklabs.com/dxfeoOcn1ObyC0BYyoqqqSi4rO%2FeMdbWPFjoK6C0YYk%3D"></p>
+<p>Click <strong>Select a project</strong>, highlight your <em>GCP Project ID</em>, and click
+<strong>OPEN</strong> to select your project.</p>
+<h3>Activate Google Cloud Shell</h3>
+<p>Google Cloud Shell is a virtual machine that is loaded with development tools. It offers a persistent 5GB home directory and runs on the Google Cloud.
+Google Cloud Shell provides command-line access to your GCP resources.</p>
+<ol>
+<li>
+<p>In GCP console, on the top right toolbar, click the Open Cloud Shell button.</p>
+<p><img alt="Cloud Shell icon" src="https://cdn.qwiklabs.com/vdY5e%2Fan9ZGXw5a%2FZMb1agpXhRGozsOadHURcR8thAQ%3D"></p>
+</li>
+<li>
+<p>Click <strong>Continue</strong>.
+<img alt="cloudshell_continue.png" src="https://cdn.qwiklabs.com/lr3PBRjWIrJ%2BMQnE8kCkOnRQQVgJnWSg4UWk16f0s%2FA%3D"></p>
+</li>
+</ol>
+<p>It takes a few moments to provision and connect to the environment. When you are connected, you are already authenticated, and the project is set to your <em>PROJECT_ID</em>. For example:</p>
+<p><img alt="Cloud Shell Terminal" src="https://cdn.qwiklabs.com/hmMK0W41Txk%2B20bQyuDP9g60vCdBajIS%2B52iI2f4bYk%3D"></p>
+<p><strong>gcloud</strong> is the command-line tool for Google Cloud Platform. It comes pre-installed on Cloud Shell and supports tab-completion.</p>
+<p>You can list the active account name with this command:</p>
+<pre><code>gcloud auth list&#x000A;</code></pre>
+<p>Output:</p>
+<pre><code class="language-output prettyprint">Credentialed accounts:&#x000A; - &lt;myaccount&gt;@&lt;mydomain&gt;.com (active)&#x000A;</code></pre>
+<p>Example output:</p>
+<pre><code class="language-Output prettyprint">Credentialed accounts:&#x000A; - google1623327_student@qwiklabs.net&#x000A;</code></pre>
+<p>You can list the project ID with this command:</p>
+<pre><code>gcloud config list project&#x000A;</code></pre>
+<p>Output:</p>
+<pre><code class="language-output prettyprint">[core]&#x000A;project = &lt;project_ID&gt;&#x000A;</code></pre>
+<p>Example output:</p>
+<pre><code class="language-Output prettyprint">[core]&#x000A;project = qwiklabs-gcp-44776a13dea667a6&#x000A;</code></pre>
+<ql-infobox>
+  Full documentation of <strong>gcloud</strong> is available on
+  <a href="https://cloud.google.com/sdk/gcloud" target="_blank">
+    Google Cloud gcloud Overview
+  </a>.
+</ql-infobox>
+
+<h2 id="step3">Task 1. Review Traffic Management use cases</h2>
+<p>Different traffic management capabilities are enabled by using different
+configuration options.</p>
+<h3>Example: Traffic Splitting</h3>
+<p>Route traffic to multiple versions of a service.</p>
+<p><img alt="Traffic splitting" src="https://cdn.qwiklabs.com/CYhAJvkREi1fcv3TkOYcFqhx44U0%2BT1PqZTgAw8lWhk%3D"></p>
+<h3>Example: Timeouts</h3>
+<p>Set a timeout, the amount of time Istio waits for a response to a request.
+The timeout for HTTP requests is 15 seconds, but it can be overridden.</p>
+<p><img alt="Timeouts" src="https://cdn.qwiklabs.com/p9nCO6j8v696BJRPTNp4moB52hhCwrsS4K1vvqaSJrY%3D"></p>
+<h3>Example: Retries</h3>
+<p>A retry is an attempt to complete an operation multiple times if it fails.
+Adjust the maximum number of retry attempts, or the number of attempts possible
+within the default or overridden timeout period.</p>
+<p><img alt="Retries" src="https://cdn.qwiklabs.com/PRde7lNpqiE9NDk%2Fr4G6W7s2GvDZeltBE9rf7TmXj7w%3D"></p>
+<h3>Example: Fault injection: inserting delays</h3>
+<p>Fault injection is a testing method that introduces errors into a system to
+ensure that it can withstand and recover from error conditions.</p>
+<p><img alt="Fault Injection Delays" src="https://cdn.qwiklabs.com/bNpNnvHY6AZFhuCj83%2FZHhGcD9WlZIqDyLUP4mLkn4o%3D"></p>
+<p>This example introduces a 5 second delay in 10% of the requests to the
+"v1" version of the ratings microservice.</p>
+<h3>Example: Fault injection: inserting aborts</h3>
+<p><img alt="Fault Injection Aborts" src="https://cdn.qwiklabs.com/YWHgqXhGwKR4OmsdOI80PjmokOlVey5fL0i%2BIro3wWk%3D"></p>
+<p>The above example returns an HTTP 400 error code for 10% of the requests to the
+ratings service "v1".</p>
+<h3>Example: Conditional routing: Based on source labels</h3>
+<p><img alt="Conditional Source Labels" src="https://cdn.qwiklabs.com/WFtJeiFL%2Fpg8qA57tHtHvMJwEWr0FYqctYiwwNqXGgM%3D"></p>
+<p>A rule can indicate that it only applies to calls from workloads (pods)
+implementing the version v2 of the reviews service.</p>
+<h3>Example: Complete lab setup</h3>
+<p><img alt="Conditional End User" src="https://cdn.qwiklabs.com/vxDmL5tzCrbj7k4xeLUwjeL3iaYS1EENEr3qBv3aSYA%3D"></p>
+<p>The above rule only applies to an incoming request if it includes a custom
+"end-user" header that contains the string “atharvak”.</p>
+<h2 id="step4">Task 2. Complete lab setup</h2>
+<p>This lab environment has already been partially configured.</p>
+<ul>
+<li>
+<p>A GKE cluster named <code>gke</code> was created.</p>
+</li>
+<li>
+<p>Anthos Service Mesh has been installed</p>
+</li>
+<li>
+<p>The Bookinfo multi-service sample application was deployed.</p>
+</li>
+</ul>
+<h3>Configure cluster access for kubectl</h3>
+<ol>
+<li>
+<p>In <strong>Cloud Shell</strong>, set environment variables for the zone and cluster name.</p>
+<pre><code class="language-bash prettyprint">export CLUSTER_NAME=gke&#x000A;export CLUSTER_ZONE=us-central1-b&#x000A;</code></pre>
+</li>
+<li>
+<p>Configure <code>kubectl</code> command line access by running:</p>
+<pre><code class="language-bash prettyprint">export GCLOUD_PROJECT=$(gcloud config get-value project)&#x000A;gcloud container clusters get-credentials $CLUSTER_NAME \&#x000A;    --zone $CLUSTER_ZONE --project $GCLOUD_PROJECT&#x000A;</code></pre>
+<p>If prompted, click the <strong>Authorize</strong> button.</p>
+</li>
+</ol>
+<h3>Verify cluster and Anthos Service Mesh installation</h3>
+<ol start="3">
+<li>
+<p>Check that your cluster is up and running.</p>
+<pre><code class="language-bash prettyprint">gcloud container clusters list&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>NAME     LOCATION       MASTER_VERSION  ... STATUS&#x000A;gke      us-central1-b  1.16.13-gke.1   ... RUNNING&#x000A;</code></pre>
+</li>
+<li>
+<p>Ensure the Kubernetes pods for the Istio control plane are deployed.</p>
+<pre><code class="language-bash prettyprint">kubectl get pods -n istio-system&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>NAME                                    READY   STATUS    ...&#x000A;istio-ingressgateway-5c9b4874bb-4wz6m   1/1     Running&#x000A;istio-ingressgateway-5c9b4874bb-wssl7   1/1     Running&#x000A;istiod-69c7bd76f-jf2tv                  1/1     Running&#x000A;istiod-69c7bd76f-pfkrz                  1/1     Running&#x000A;</code></pre>
+<p>Pod status should be <strong>Running</strong> or <strong>Completed</strong>.</p>
+</li>
+<li>
+<p>Ensure corresponding Kubernetes services for the Istio control plane are
+deployed.</p>
+<pre><code class="language-bash prettyprint">kubectl get service -n istio-system&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>NAME                        TYPE            ...&#x000A;istio-ingressgateway        LoadBalancer&#x000A;istiod                      ClusterIP&#x000A;</code></pre>
+</li>
+<li>
+<p>Ensure corresponding Kubernetes pods for the Anthos Service Mesh control
+plane are deployed, so that telemetry data is displayed in the
+ASM Dashboard</p>
+<pre><code class="language-bash prettyprint">kubectl get pods -n asm-system&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>NAME                                                    READY  STATUS  ...&#x000A;canonical-service-controller-manager-7684454647-4pgx7   2/2    Running&#x000A;</code></pre>
+<p>Pod status should be <strong>Running</strong>.</p>
+</li>
+</ol>
+<h3>Verify the Bookinfo deployment</h3>
+<ol start="7">
+<li>
+<p>Confirm that the application has been deployed correctly:</p>
+<pre><code class="language-bash prettyprint">kubectl get pods&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>NAME                              READY     STATUS&#x000A;details-v1-1520924117-48z17       2/2       Running&#x000A;productpage-v1-560495357-jk1lz    2/2       Running&#x000A;ratings-v1-734492171-rnr5l        2/2       Running&#x000A;reviews-v1-874083890-f0qf0        2/2       Running&#x000A;reviews-v2-1343845940-b34q5       2/2       Running&#x000A;reviews-v3-1813607990-8ch52       2/2       Running&#x000A;</code></pre>
+<aside> <p><strong>Note:</strong> See how each pod has two containers?
+ That's the application container and the Istio proxy sidecar.</p>
+</aside>
+</li>
+<li>
+<p>Review running application services:</p>
+<pre><code class="language-bash prettyprint">kubectl get services&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>NAME          TYPE        CLUSTER-IP    EXTERNAL-IP   ...&#x000A;details       ClusterIP   10.7.248.49   &lt;none&gt;&#x000A;kubernetes    ClusterIP   10.7.240.1    &lt;none&gt;&#x000A;productpage   ClusterIP   10.7.248.22   &lt;none&gt;&#x000A;ratings       ClusterIP   10.7.247.26   &lt;none&gt;&#x000A;reviews       ClusterIP   10.7.246.22   &lt;none&gt;&#x000A;</code></pre>
+</li>
+</ol>
+<h3>Install a load generation tool</h3>
+<p>You will need a tool to generate traffic against your application later in the
+lab.</p>
+<ol start="9">
+<li>
+<p>In Cloud Shell, install <strong>siege</strong>.</p>
+<pre><code class="language-bash prettyprint">sudo apt install siege&#x000A;&#x000A;</code></pre>
+</li>
+</ol>
+<h2 id="step5">Task 3. Understand ingress configuration using an Istio Gateway resource</h2>
+<p>In a Kubernetes environment, the Kubernetes Ingress Resource is used to specify
+services that should be exposed outside the cluster. In Anthos Service Mesh, a
+better approach, which also works in Kubernetes and other environments, is
+to use a Gateway resource. A Gateway allows Istio features such as monitoring
+and route rules to be applied to traffic <strong>entering</strong> the cluster.</p>
+<p><img alt="Istio gateways" src="https://cdn.qwiklabs.com/mEjOpgz8BLXxqQ0oS1W2iof8bMYV3NZKSX7eLftfATw%3D"></p>
+<p>The Istio Gateway overcomes Kubernetes Ingress shortcomings by separating the
+L4-L6 spec from L7. It only configures the L4-L6 functions (e.g. ports to
+expose, TLS configuration) that are uniformly implemented by all good L7
+proxies. Users bind a <strong>VirtualService</strong> resource to the <strong>Gateway</strong> then use
+standard Istio rules to control HTTP requests and TCP traffic.</p>
+<p>The Anthos Service Mesh installed with this lab, enables the
+<code>istio-ingressgateway</code> component. This ingress gateway uses an external TCP
+load balancer in GCP.</p>
+<h3>Explore ingress in the istio control plane</h3>
+<ol>
+<li>
+<p>View details about <code>istio-ingressgateway</code>.</p>
+<pre><code class="language-bash prettyprint">kubectl describe svc istio-ingressgateway -n istio-system&#x000A;</code></pre>
+<p>Notice the resource is a <code>LoadBalancer</code>.</p>
+</li>
+<li>
+<p>Save this external IP in your <strong>Cloud Shell</strong> environment.</p>
+<pre><code class="language-bash prettyprint">export GATEWAY_URL=$(kubectl get svc istio-ingressgateway \&#x000A;-o=jsonpath='{.status.loadBalancer.ingress[0].ip}' -n istio-system)&#x000A;echo The gateway address is $GATEWAY_URL&#x000A;</code></pre>
+</li>
+</ol>
+<h3>Generate some background traffic</h3>
+<p>You will generate some background traffic against the application so that
+when you explore the Anthos Service Mesh dashboard, there's some interesting
+data to view.</p>
+<ol start="3">
+<li>
+<p>Use <strong>siege</strong> to create traffic against your services.</p>
+<pre><code class="language-bash prettyprint">siege http://${GATEWAY_URL}/productpage&#x000A;</code></pre>
+</li>
+</ol>
+<h3>Explore using the ingress gateway with your application</h3>
+<p>As part of the lab setup, a <code>Gateway</code> resource, <code>bookinfo-gateway</code> was
+configured, referencing the Istio ingress gateway.</p>
+<ol start="4">
+<li>
+<p>In Cloud Shell, open another tab by clicking on the <strong>+</strong> icon in the Cloud
+Shell menu bar.</p>
+</li>
+<li>
+<p>Initialize the new Cloud Shell tab:</p>
+<pre><code class="language-bash prettyprint">export CLUSTER_NAME=gke&#x000A;export CLUSTER_ZONE=us-central1-b&#x000A;export GCLOUD_PROJECT=$(gcloud config get-value project)&#x000A;gcloud container clusters get-credentials $CLUSTER_NAME \&#x000A;    --zone $CLUSTER_ZONE --project $GCLOUD_PROJECT&#x000A;export GATEWAY_URL=$(kubectl get svc istio-ingressgateway \&#x000A;-o=jsonpath='{.status.loadBalancer.ingress[0].ip}' -n istio-system)&#x000A;</code></pre>
+</li>
+<li>
+<p>Display the <code>bookinfo-gateway</code> configuration.</p>
+<pre><code class="language-bash prettyprint">kubectl describe gateway bookinfo-gateway&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>Name:         bookinfo-gateway&#x000A;Namespace:    default&#x000A;Labels:       &lt;none&gt;&#x000A;Annotations:  API Version:  networking.istio.io/v1alpha3&#x000A;Kind:         Gateway&#x000A;Metadata:&#x000A;  Creation Timestamp:  2020-06-10T14:20:03Z&#x000A;  Generation:          1&#x000A;  Resource Version:    2039&#x000A;  Self Link:           /apis/networking.istio.io/v1alpha3/namespaces/default/gateways/bookinfo-gateway&#x000A;  UID:                 7899a7a9-dcc4-4607-bf18-1984f4f3f31a&#x000A;Spec:&#x000A;  Selector:&#x000A;    Istio:  ingressgateway&#x000A;  Servers:&#x000A;    Hosts:&#x000A;      *&#x000A;    Port:&#x000A;      Name:      http&#x000A;      Number:    80&#x000A;      Protocol:  HTTP&#x000A;Events:          &lt;none&gt;&#x000A;</code></pre>
+<p>Notice that the gateway enables <code>HTTP</code> traffic over port 80.</p>
+</li>
+<li>
+<p>Explore the <code>VirtualService</code> used by Bookinfo to route traffic from the
+gateway.</p>
+<pre><code class="language-bash prettyprint">kubectl describe virtualservices bookinfo&#x000A;</code></pre>
+<p>Notice that the virtual service references <code>bookinfo-gateway</code>, and
+establishes a default destination of the <code>productpage</code> service.</p>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>Name:         bookinfo&#x000A;Namespace:    default&#x000A;Labels:       &lt;none&gt;&#x000A;Annotations:  API Version:  networking.istio.io/v1alpha3&#x000A;Kind:         VirtualService&#x000A;Metadata:&#x000A;  Creation Timestamp:  2020-06-10T14:20:03Z&#x000A;  Generation:          1&#x000A;  Resource Version:    2041&#x000A;  Self Link:           /apis/networking.istio.io/v1alpha3/namespaces/default/virtualservices/bookinfo&#x000A;  UID:                 c792923b-3de0-41b3-82d9-87840efbe5b2&#x000A;Spec:&#x000A;  Gateways:&#x000A;    bookinfo-gateway&#x000A;  Hosts:&#x000A;    *&#x000A;  Http:&#x000A;    Match:&#x000A;      Uri:&#x000A;        Exact:  /productpage&#x000A;      Uri:&#x000A;        Prefix:  /static&#x000A;      Uri:&#x000A;        Exact:  /login&#x000A;      Uri:&#x000A;        Exact:  /logout&#x000A;      Uri:&#x000A;        Prefix:  /api/v1/products&#x000A;    Route:&#x000A;      Destination:&#x000A;        Host:  productpage&#x000A;        Port:&#x000A;          Number:  9080&#x000A;Events:            &lt;none&gt;&#x000A;</code></pre>
+</li>
+<li>
+<p>Confirm that the Bookinfo application responds by sending a <code>curl</code> request
+to it from some pod, <strong>within</strong> the cluster, for example from <code>ratings</code>:</p>
+<pre><code class="language-bash prettyprint">kubectl exec -it \&#x000A;$(kubectl get pod -l app=ratings -o jsonpath='{.items[0].metadata.name}') \&#x000A;-c ratings -- curl productpage:9080/productpage \&#x000A;| grep -o "&lt;title&gt;.*&lt;/title&gt;"&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>&lt;title&gt;Simple Bookstore App&lt;/title&gt;&#x000A;</code></pre>
+</li>
+<li>
+<p>Check that the Bookinfo app responds to a <code>curl</code> request sent to it
+from <strong>outside</strong> the cluster, using the external IP saved earlier.</p>
+<pre><code class="language-bash prettyprint">curl -I http://${GATEWAY_URL}/productpage&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>HTTP/1.1 200 OK&#x000A;content-type: text/html; charset=utf-8&#x000A;content-length: 4415&#x000A;server: istio-envoy&#x000A;...&#x000A;</code></pre>
+</li>
+</ol>
+<p>You exposed an HTTP endpoint for the Bookinfo <code>productpage</code> service to external
+traffic. The Gateway configuration resources allow external traffic to enter
+the Istio service mesh and make the traffic management and policy features of
+Istio available for edge services.</p>
+<h2 id="step6">Task 4. Use the Anthos Service Mesh dashboard view routing to multiple versions</h2>
+<ql-infobox>
+<p>
+    There are a couple of items to note when it comes to viewing data in the
+    Anthos Service Mesh dashboard.
+  </p>
+<p>
+    The first is that, for most pages, it takes 1-2 minutes for the data to be
+    available for display. That means that if you look at a page, it might not
+    have the data you expect for 1-2 minutes. If you don't see the data you
+    want, wait a for a minute or so and then refresh the page.
+  </p>
+<p>
+    The Topology page also has a big initial delay before data is shown. It
+    can take up to 5+ minutes for the intial set of data to be available. If
+    you see a message that there is no data, wait a bit and then refresh the
+    page and return to the Topology view.
+  </p>
+<p>
+    In the previous paragraphs, you are instructed to wait AND to refresh the
+    page. As it turns out, not only is the data a bit delayed in arriving,
+    but many pages won't show the available data without a page refresh. So
+    if you expect the data to be available and you don't see it, make sure
+    to do a refresh of the page in your browser.
+  </p>
+</ql-infobox>
+<h3>View routing information in the Table View</h3>
+<ol>
+<li>
+<p>Select <strong>Navigation &gt; Anthos &gt; Service Mesh</strong>.</p>
+<p><img alt="Anthos Service Mesh Dashboard" src="https://cdn.qwiklabs.com/mGrUpyEXNJyoMm5eVz6E6gJmMmv1LSQ%2FQ2WpgchZKgw%3D"></p>
+</li>
+<li>
+<p>Click on the <strong>productpage</strong> service, then select <strong>Connected Services</strong>
+on the left.</p>
+<p><img alt="Connected services" src="https://cdn.qwiklabs.com/LdJ1QuLvTLGWjM4IesRpGQQUhFqPEWRxRziYa3Fx978%3D"></p>
+</li>
+<li>
+<p>Select the <strong>OUTBOUND</strong> tab and note the two services called by the
+<strong>productpage</strong> pods.</p>
+<p><img alt="Outbound connections" src="https://cdn.qwiklabs.com/1%2Ff1npIkFpuQ07R7YDBZio6GRkNKY4ADpMzDA0SbR1M%3D"></p>
+</li>
+<li>
+<p>Click on the <strong>reviews</strong> service, then click on the <strong>reviews</strong> service link
+in the <strong>Service details</strong> pane to the right.</p>
+<p><img alt="Reviews link" src="https://cdn.qwiklabs.com/vhxGfIpfELXtOo%2B5VYj4b7Qr2R0i4IKAUG45PBanTbM%3D"></p>
+</li>
+<li>
+<p>Note the service statistics, then select the <strong>Infrastructure</strong> link on the
+left-hand menu.</p>
+<p><img alt="Reviews Infrastructure" src="https://cdn.qwiklabs.com/Ez7YK2OSq0MDAsakl0tz4xchRbtH1MxTSXZHB1YEshA%3D"></p>
+<p>You can see that there are multiple pods, running different versions of
+the reviews logic, that receive traffic sent to the reviews service.</p>
+</li>
+<li>
+<p>Click on <strong>Traffic</strong> in the left-hand menu to see another view of traffic
+distribution.</p>
+<p><img alt="Reviews Traffic" src="https://cdn.qwiklabs.com/DM6QB8FhHGK%2F65ATZMDiE0m0huvOAvJjgOkXhWSiOgo%3D"></p>
+<p>You can see that there is relatively even distribution of traffic across
+the three backend pods running the different versions of the application
+logic.</p>
+</li>
+</ol>
+<h3>View routing information in the Topology View</h3>
+<ol start="7">
+<li>
+<p>Click on the Anthos Service Mesh logo in the upper left corner to return
+to the main dashboard page.</p>
+</li>
+<li>
+<p>Click on the <strong>TOPOLOGY</strong> link in the upper-right corner</p>
+</li>
+</ol>
+<ql-warningbox>
+  If you see an error message indicating that there is no data available to
+  graph, or you see a chart that doesn't have all the traffic you expect,
+  wait 1-2 minutes and try again.
+</ql-warningbox>
+<ol start="9">
+<li>
+<p>Rearrange the mesh graph so that you can easily view:</p>
+<ul>
+<li>The <strong>productpage</strong> service going to <strong>productpage</strong> deployment</li>
+<li>The <strong>productpage</strong> deployment going to <strong>reviews</strong> service</li>
+<li>The <strong>reviews</strong> service going to three version of <strong>reviews</strong>
+</li>
+</ul>
+<p><img alt="Mesh topology" src="https://cdn.qwiklabs.com/CvDjG3YCVS9Y2jIBvFGaxH17CpLujc3xNL4MuTYVMbA%3D"></p>
+</li>
+<li>
+<p>Click on the <strong>reviews</strong> service node and see relative qps for each backend
+version.</p>
+<p><img alt="Reviews topology" src="https://cdn.qwiklabs.com/ku0dSbpm0Of9r1XMbhD4%2FA5DXa2m1z5zsaStWQbXduM%3D"></p>
+</li>
+</ol>
+<h2 id="step7">Task 5. Review the current traffic management configuration</h2>
+<ol>
+<li>
+<p>Use <code>kubectl</code> to look for virtual services:</p>
+<pre><code class="language-bash prettyprint">kubectl get virtualservices&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>NAME       GATEWAYS             HOSTS   AGE&#x000A;bookinfo   [bookinfo-gateway]   [*]     2h&#x000A;</code></pre>
+<p>A <code>VirtualService</code> is defined and a <code>Gateway</code> is attached to it. This
+was established as part of the lab setup which applied:
+<code>samples/bookinfo/networking/bookinfo-gateway.yaml</code>.</p>
+</li>
+<li>
+<p>Use <code>kubectl</code> to view details about the <code>VirtualService</code>:</p>
+<pre><code class="language-bash prettyprint">kubectl describe virtualservices&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>Name:         bookinfo&#x000A;Namespace:    default&#x000A;Labels:       &lt;none&gt;&#x000A;Annotations:  API Version:  networking.istio.io/v1alpha3&#x000A;Kind:         VirtualService&#x000A;Metadata:&#x000A;  Creation Timestamp:  2020-06-10T14:20:03Z&#x000A;  Generation:          1&#x000A;  Resource Version:    2041&#x000A;  Self Link:           /apis/networking.istio.io/v1alpha3/namespaces/default/virtualservices/bookinfo&#x000A;  UID:                 c792923b-3de0-41b3-82d9-87840efbe5b2&#x000A;Spec:&#x000A;  Gateways:&#x000A;    bookinfo-gateway&#x000A;  Hosts:&#x000A;    *&#x000A;  Http:&#x000A;    Match:&#x000A;      Uri:&#x000A;        Exact:  /productpage&#x000A;      Uri:&#x000A;        Prefix:  /static&#x000A;      Uri:&#x000A;        Exact:  /login&#x000A;      Uri:&#x000A;        Exact:  /logout&#x000A;      Uri:&#x000A;        Prefix:  /api/v1/products&#x000A;    Route:&#x000A;      Destination:&#x000A;        Host:  productpage&#x000A;        Port:&#x000A;          Number:  9080&#x000A;Events:            &lt;none&gt;&#x000A;</code></pre>
+</li>
+<li>
+<p>Use <code>kubectl</code> to look for destination rules:</p>
+<pre><code class="language-bash prettyprint">kubectl get destinationrules&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>No resources found.&#x000A;</code></pre>
+<p>Currently, no destination rules exist.</p>
+</li>
+</ol>
+<h2 id="step8">Task 6. Apply default destination rules, for all available versions</h2>
+<p>In this task, you define all the available versions, called subsets, in
+destination rules.</p>
+<ol>
+<li>
+<p>Review the configuration found at
+<a href="https://github.com/istio/istio/blob/master/samples/bookinfo/networking/destination-rule-all.yaml" target="_blank">https://github.com/istio/istio/blob/master/samples/bookinfo/networking/destination-rule-all.yaml</a>. This configuration defines 4 <code>DestinationRule</code>
+resources, 1 for each service.</p>
+</li>
+<li>
+<p>Apply the configuration with the following command in Cloud Shell:</p>
+<pre><code class="language-bash prettyprint">kubectl apply -f https://raw.githubusercontent.com/istio/istio/master/samples/bookinfo/networking/destination-rule-all.yaml&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>destinationrule.networking.istio.io/productpage created&#x000A;destinationrule.networking.istio.io/reviews created&#x000A;destinationrule.networking.istio.io/ratings created&#x000A;destinationrule.networking.istio.io/details created&#x000A;</code></pre>
+</li>
+<li>
+<p>Check that 4 <code>DestinationRule</code> resources were defined.</p>
+<pre><code class="language-bash prettyprint">kubectl get destinationrules&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>NAME          HOST          AGE&#x000A;details       details       1m&#x000A;productpage   productpage   1m&#x000A;ratings       ratings       1m&#x000A;reviews       reviews       1m&#x000A;</code></pre>
+</li>
+<li>
+<p>Review the details of the destination rules.</p>
+<pre><code class="language-bash prettyprint">kubectl get destinationrules -o yaml&#x000A;</code></pre>
+<p>Notice that <code>subsets</code> are defined within the <code>spec</code> of a
+<code>DestinationRule</code>.</p>
+</li>
+<li>
+<p>Wait for 1-2 minutes, then return to the Anthos Service Mesh dashboard.
+Look in both the table and topology views and confirm that the traffic
+continues to be evenly distributed across the three backend versions. You can
+click <strong>SHOW TIMELINE</strong> to adjust the period of time that is being charted,
+making it easier to zero in on the data you are interested in.</p>
+<p><img alt="Reviews traffic with rules" src="https://cdn.qwiklabs.com/gyU9fXkNcltnnR6Gi39JpZpp0l%2FDFAi0UM7E0cfwAYo%3D"></p>
+</li>
+</ol>
+<h2 id="step9">Task 7. Apply virtual services to route by default to only one version</h2>
+<p>In this task, you apply virtual services for each service that routes
+all traffic to v1 of the service workload.</p>
+<ol>
+<li>
+<p>Review the configuration found at
+<a href="https://github.com/istio/istio/blob/master/samples/bookinfo/networking/virtual-service-all-v1.yaml" target="_blank">https://github.com/istio/istio/blob/master/samples/bookinfo/networking/virtual-service-all-v1.yaml</a>. This configuration defines 4 <code>VirtualService</code>
+resources, 1 for each service.</p>
+</li>
+<li>
+<p>Apply the configuration with the following command in Cloud Shell:</p>
+<pre><code class="language-bash prettyprint">kubectl apply -f https://raw.githubusercontent.com/istio/istio/master/samples/bookinfo/networking/virtual-service-all-v1.yaml&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>virtualservice.networking.istio.io/productpage created&#x000A;virtualservice.networking.istio.io/reviews created&#x000A;virtualservice.networking.istio.io/ratings created&#x000A;virtualservice.networking.istio.io/details created&#x000A;</code></pre>
+<p>Because configuration propagation is eventually consistent, wait a few
+seconds for the virtual services to take effect.</p>
+</li>
+<li>
+<p>Check that 4 routes, <code>VirtualService</code> resources, were defined.</p>
+<pre><code class="language-bash prettyprint">kubectl get virtualservices&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>NAME          GATEWAYS             HOSTS&#x000A;bookinfo      [bookinfo-gateway]   [*]&#x000A;details                            [details]&#x000A;productpage                        [productpage]&#x000A;ratings                            [ratings]&#x000A;reviews                            [reviews]&#x000A;</code></pre>
+</li>
+<li>
+<p>In <strong>Cloud Shell</strong>, get the <strong>external IP</strong> address of the
+<strong>ingress gateway</strong>:</p>
+<pre><code class="language-bash prettyprint">echo $GATEWAY_URL&#x000A;</code></pre>
+</li>
+<li>
+<p>Test the new routing configuration using the Bookinfo UI.</p>
+<p>Open the Bookinfo site in your browser. The URL is
+<code>http://[GATEWAY_URL]/productpage</code>, where <code>GATEWAY_URL</code> is the External IP
+address of the ingress.</p>
+<p>Refresh the page a few times to issue multiple requests.</p>
+<p>Notice that the <strong>Book Reviews</strong> part of the page displays with no rating
+stars, no matter how many times you refresh. This is because you configured
+Istio to route all traffic for the reviews service to the version
+<strong>reviews:v1</strong> and this version of the service does <strong>not</strong> access the star
+ratings service.</p>
+</li>
+<li>
+<p>Wait for 1-2 minutes, then return to the Anthos Service Mesh dashboard by
+selecting <strong>Navigation &gt; Anthos &gt; Service Mesh &gt; reviews &gt; Infrastructure</strong>.</p>
+</li>
+<li>
+<p>Select <strong>SHOW TIMELINE</strong> and focus the chart on the last 5 minutes of
+traffic. You should see that the traffic goes from being evenly distributed
+to being routed to the version 1 workload 100% of the time.</p>
+<p><img alt="All traffic going to version 1" src="https://cdn.qwiklabs.com/rd0Y8e3wi0D82vk02c9VlhuoqNks8QIEOoQAoztoiMU%3D"></p>
+<p>You can also see the new traffic distribution by looking at the <strong>Traffic</strong>
+tab or the topology view - though these both take a couple extra minutes
+before the data is shown.</p>
+</li>
+</ol>
+<h2 id="step10">Task 8. Route to a specific version of a service based on user identity</h2>
+<p>In this task, you change the route configuration so that all traffic from a
+specific user is routed to a specific service version. In this case, all traffic
+from user <code>jason</code> will be routed to the service <code>reviews:v2</code>, the version that
+includes the star ratings feature.</p>
+<aside>
+<p><strong>Note:</strong> Istio does not have any special, built-in
+understanding of user identity. This example is enabled by the fact that the
+productpage service adds a custom end-user header to all outbound HTTP requests
+to the reviews service.</p>
+</aside>
+<ol>
+<li>
+<p>Review the configuration found at
+<a href="https://github.com/istio/istio/blob/master/samples/bookinfo/networking/virtual-service-reviews-test-v2.yaml" target="_blank">https://github.com/istio/istio/blob/master/samples/bookinfo/networking/virtual-service-reviews-test-v2.yaml</a>. This configuration defines 1 <code>VirtualService</code> resource.</p>
+</li>
+<li>
+<p>Apply the configuration with the following command in Cloud Shell:</p>
+<pre><code class="language-bash prettyprint">kubectl apply -f https://raw.githubusercontent.com/istio/istio/master/samples/bookinfo/networking/virtual-service-reviews-test-v2.yaml&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>virtualservice.networking.istio.io/reviews configured&#x000A;</code></pre>
+</li>
+<li>
+<p>Confirm the rule is created:</p>
+<pre><code class="language-bash prettyprint">kubectl get virtualservice reviews&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>NAME      GATEWAYS   HOSTS       AGE&#x000A;reviews              [reviews]   35m&#x000A;</code></pre>
+</li>
+<li>
+<p>Test the new routing configuration using the Bookinfo UI.</p>
+<p>Browse again to <code>/productpage</code> of the Bookinfo application. This time,
+click <strong>Sign in</strong>, and use <strong>User Name</strong> of <code>jason</code> with no password.</p>
+<p>Notice the UI shows stars from the rating service.</p>
+<p>You can sign out, and try signing in as other users. You will no longer see
+stars with reviews.</p>
+</li>
+</ol>
+<p>To better visualize the effect of the new traffic routing, you can create a new
+background load of authenticated requests to the service.</p>
+<ol start="5">
+<li>
+<p>Start a new siege session, generating only 20% of the traffic of the first,
+but with all requests being authenticated as <code>jason</code>.</p>
+<pre><code class="language-bash prettyprint">curl -c cookies.txt -F "username=jason" -L -X \&#x000A;    POST http://$GATEWAY_URL/login&#x000A;cookie_info=$(grep -Eo "session.*" ./cookies.txt)&#x000A;cookie_name=$(echo $cookie_info | cut -d' ' -f1)&#x000A;cookie_value=$(echo $cookie_info | cut -d' ' -f2)&#x000A;siege -c 5 http://$GATEWAY_URL/productpage \&#x000A;    --header "Cookie: $cookie_name=$cookie_value"&#x000A;</code></pre>
+</li>
+<li>
+<p>Wait for 1-2 minutes, refresh the page showing the Infrastructure telemetry,
+then check in the Anthos Dashboard and you should see
+that roughly 85% of requests over the last few minutes have gone to version
+1 because they are unathenticated. About 15% have gone to version two because
+they are made as <code>jason</code>.</p>
+<p><img alt="15% Authenticated" src="https://cdn.qwiklabs.com/8TgnWdZp4t1R4raEiV6sYjG3nGJyr8tMx%2FqU2urB4Qo%3D"></p>
+</li>
+<li>
+<p>In Cloud Shell, cancel the siege session by typing <code>Ctrl+c</code>.</p>
+</li>
+<li>
+<p>Clean up from this task by removing the application virtual services.</p>
+<pre><code class="language-bash prettyprint">kubectl delete -f https://raw.githubusercontent.com/istio/istio/master/samples/bookinfo/networking/virtual-service-all-v1.yaml&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>virtualservice.networking.istio.io "productpage" deleted&#x000A;virtualservice.networking.istio.io "reviews" deleted&#x000A;virtualservice.networking.istio.io "ratings" deleted&#x000A;virtualservice.networking.istio.io "details" deleted&#x000A;</code></pre>
+</li>
+<li>
+<p>You can wait for 1-2 minutes, refresh the Anthos Service Mesh dashboard,
+and confirm that traffic is once again evenly balanced across versions.</p>
+<p><img alt="Back to even distribution" src="https://cdn.qwiklabs.com/Ku3rWibciFPAE5iYYGTjqwETwQ4MKFjbfjdhodqtlNM%3D"></p>
+</li>
+</ol>
+<h2 id="step11">Task 9. Shift traffic gradually from one version of a microservice to another</h2>
+<p>In this task, you gradually migrate traffic from one version of a microservice
+to another. For example, you might use this approach to migrate traffic from an
+older version to a new version.</p>
+<p>You will send 50% of traffic to reviews:v1 and 50% to reviews:v3. Then, you will
+complete the migration by sending 100% of traffic to reviews:v3.</p>
+<p>In Anthos Service Mesh, you accomplish this goal by configuring a sequence of
+rules that route a percentage of traffic to one service or another.</p>
+<ol>
+<li>
+<p>In Cloud Shell, route all traffic to the v1 version of each service.</p>
+<pre><code class="language-bash prettyprint">kubectl apply -f https://raw.githubusercontent.com/istio/istio/master/samples/bookinfo/networking/virtual-service-all-v1.yaml&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>virtualservice.networking.istio.io/productpage created&#x000A;virtualservice.networking.istio.io/reviews created&#x000A;virtualservice.networking.istio.io/ratings created&#x000A;virtualservice.networking.istio.io/details created&#x000A;</code></pre>
+</li>
+<li>
+<p>Browse again to <code>/productpage</code> of the Bookinfo application and confirm
+that you do not see stars with reviews. All traffic is being routed
+to the v1 backend.</p>
+</li>
+<li>
+<p>Wait 1 minute, then refresh the Anthos Service Mesh dashboard and confirm
+that all traffic has been routed to the v1 backend.</p>
+<p><img alt="Back to even distribution" src="https://cdn.qwiklabs.com/yVY6LOVPNSnWF%2FUGS7x%2Be10JwXqRqYBWtM7P3fuw7O8%3D"></p>
+</li>
+<li>
+<p>Transfer 50% of the traffic from reviews:v1 to reviews:v3.</p>
+<pre><code class="language-bash prettyprint">kubectl apply -f \&#x000A;    https://raw.githubusercontent.com/istio/istio/master/samples/bookinfo/networking/virtual-service-reviews-50-v3.yaml&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>virtualservice.networking.istio.io/reviews configured&#x000A;</code></pre>
+</li>
+<li>
+<p>Browse again to <code>/productpage</code> of the Bookinfo application.</p>
+<p>Refresh your view to issue multiple requests.</p>
+<p>Notice a roughly even distribution of reviews with no stars, from v1,
+and reviews with red stars, from v3, that accesses the ratings service.</p>
+</li>
+<li>
+<p>Wait 1 minute, then refresh the page and confirm in the Anthos Service
+Mesh dashboard that traffic to the reviews service is split 50/50 between v1 and v3.</p>
+<p><img alt="50-50 distribution between services" src="https://cdn.qwiklabs.com/Mf3GJ%2F%2FSwj8dmlFembZARz1RUc8nPw2GfdwjxocdaPM%3D"></p>
+</li>
+<li>
+<p>Transfer the remaining 50% of traffic to reviews:v3.</p>
+<p>Assuming you decide that the reviews:v3 service is stable, route 100% of
+the traffic to reviews:v3 by applying this virtual service.</p>
+<pre><code class="language-bash prettyprint">kubectl apply -f https://raw.githubusercontent.com/istio/istio/master/samples/bookinfo/networking//virtual-service-reviews-v3.yaml&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>virtualservice.networking.istio.io/reviews configured&#x000A;</code></pre>
+</li>
+<li>
+<p>Test the new routing configuration using the Bookinfo UI.</p>
+<p>Browse again to <code>/productpage</code> of the Bookinfo application.</p>
+<p>Refresh the <code>/productpage</code>; you will always see book
+reviews with red colored star ratings for each review.</p>
+</li>
+<li>
+<p>Wait 1 minute, refresh the page, then confirm in the Anthos Service Mesh dashboard
+that all traffic to the reviews service is sent to v3.</p>
+<p><img alt="100% to Version 3" src="https://cdn.qwiklabs.com/nW%2F4KFx7A%2FSdJb%2B%2F4YyVIrBOZRzfdN19AnIbBer%2BCQo%3D"></p>
+</li>
+<li>
+<p>Clean up from this exercise, by removing the application virtual services.</p>
+<pre><code class="language-bash prettyprint">kubectl delete -f https://raw.githubusercontent.com/istio/istio/master/samples/bookinfo/networking//virtual-service-reviews-v3.yaml&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>virtualservice.networking.istio.io "productpage" deleted&#x000A;virtualservice.networking.istio.io "reviews" deleted&#x000A;virtualservice.networking.istio.io "ratings" deleted&#x000A;virtualservice.networking.istio.io "details" deleted&#x000A;</code></pre>
+</li>
+</ol>
+<p>In this task you migrated traffic from an old version to a new version of the
+reviews service using Anthos Service Mesh weighted routing feature. This is very
+different than doing version migration using the deployment features of
+container orchestration platforms, which use instance scaling to manage the
+traffic.</p>
+<p>With Anthos Service Mesh, you can allow the two versions of the reviews service
+to scale up and down independently, without affecting the traffic distribution
+between them.</p>
+<h2 id="step12">Review</h2>
+<p>In this lab, you learned about many different ways to manage and route traffic
+for different purposes. You also experimented with adjusting and viewing traffic
+shifting for yourself, including some layer 7, application layer, routing,
+that looks at request headers.</p>
+<h3>Next Steps</h3>
+<ul>
+<li>Read more about
+<a href="https://istio.io/docs/concepts/traffic-management/" target="_blank">Istio Traffic Management</a>
+</li>
+<li>Read more about
+<a href="https://istio.io/blog/2017/0.1-canary/" target="_blank">Canary Deployments using Istio</a>
+with Istio.</li>
+</ul>
+<h2 id="step13">End your lab</h2>
+<p>When you have completed your lab, click <strong>End Lab</strong>. Qwiklabs removes the resources you’ve used and cleans the account for you.</p>
+<p>You will be given an opportunity to rate the lab experience. Select the applicable number of stars, type a comment, and then click <strong>Submit</strong>.</p>
+<p>The number of stars indicates the following:</p>
+<ul>
+<li>1 star = Very dissatisfied</li>
+<li>2 stars = Dissatisfied</li>
+<li>3 stars = Neutral</li>
+<li>4 stars = Satisfied</li>
+<li>5 stars = Very satisfied</li>
+</ul>
+<p>You can close the dialog box if you don't want to provide feedback.</p>
+<p>For feedback, suggestions, or corrections, please use the <strong>Support</strong> tab.</p>
+
+<p>Copyright 2021 Google LLC All rights reserved. Google and the Google logo are trademarks of Google LLC. All other company and product names may be trademarks of the respective companies with which they are associated.</p>
+
+
+
+</div>
+</div>
+
+
+<div class='hidden js-end-lab-button-container lab-content__end-lab-button'>
+<ql-lab-control-button class='js-end-lab-button' running></ql-lab-control-button>
+</div>
+<!-- / TODO: Move recommendations into the end lab modal -->
+</ql-drawer-content>
+<ql-drawer end id='outline-drawer' open slot='drawer' width='320'>
+<div class='js-lab-content-outline lab-content__outline'>
+<a href='#step1'>Overview</a><a href='#step2'>Task 0. Lab Setup</a><a href='#step3'>Task 1. Review Traffic Management use cases</a><a href='#step4'>Task 2. Complete lab setup</a><a href='#step5'>Task 3. Understand ingress configuration using an Istio Gateway resource</a><a href='#step6'>Task 4. Use the Anthos Service Mesh dashboard view routing to multiple versions</a><a href='#step7'>Task 5. Review the current traffic management configuration</a><a href='#step8'>Task 6. Apply default destination rules, for all available versions</a><a href='#step9'>Task 7. Apply virtual services to route by default to only one version</a><a href='#step10'>Task 8. Route to a specific version of a service based on user identity</a><a href='#step11'>Task 9. Shift traffic gradually from one version of a microservice to another</a><a href='#step12'>Review</a><a href='#step13'>End your lab</a>
+</div>
+</ql-drawer>
+</ql-drawer-container>
+</ql-drawer-content>
+</ql-drawer-container>
+<div class='lab-introduction js-lab-introduction is-hidden'>
+<div class='lab-introduction__inner'>
+<h1 class='headline-1'>Welcome to Your First Lab!</h1>
+<ql-icon-button class='js-skip-button'>close</ql-icon-button>
+<div class='lab-introduction__video'>
+<iframe allow='autoplay; encrypted-media' allowfullscreen frameborder='0' id='lab-introduction' src='https://www.youtube.com/embed/yF7EDXKTmoQ?enablejsapi=1&amp;rel=0&amp;showinfo=0'></iframe>
+</div>
+<a class='js-skip-button button button--outline'>Skip this video</a>
+</div>
+</div>
+
+
+
+</div>
+</main>
+
+
+<div class='modal fade' id='lab-details-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<div class='modal-body'>
+<p class='l-mbm'>
+Architecting Hybrid Infrastructure with Anthos: Configure fine-grained traffic control for routing to services.
+</p>
+<p class='small-label l-mbs'>
+<strong>
+Duration:
+</strong>
+8m setup
+&middot;
+180m access
+&middot;
+120m completion
+</p>
+<p class='small-label l-mbs'>
+<span><strong>Levels: </strong>intermediate</span>
+</p>
+<p class='small-label'>
+<strong>
+Permalink:
+</strong>
+<a href="https://googlecoursera.qwiklabs.com/catalog_lab/2074">https://googlecoursera.qwiklabs.com/catalog_lab/2074</a>
+</p>
+</div>
+<div class='modal-actions'>
+<a class='button button--text' data-dismiss='modal'>
+Got It
+</a>
+</div>
+
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='modal fade' id='lab-review-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<form class="simple_form js-lab-review-form" id="edit_lab_review_12095788" action="/lab_reviews/12095788" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="_method" value="patch" /><div class='modal-body'>
+<p class='label'>
+How satisfied are you with this lab?*
+</p>
+<div class='rateit js-rateit' data-rateit-max='5' data-rateit-min='0' data-rateit-resetable='false' data-rateit-step='1' data-rateit-value='5'></div>
+<div class='l-mtm'>
+
+<div class="control-group hidden lab_review_user_id"><div class="controls"><input class="hidden" type="hidden" value="3894861" name="lab_review[user_id]" id="lab_review_user_id" /></div></div>
+<div class="control-group hidden lab_review_classroom_id"><div class="controls"><input class="hidden" type="hidden" name="lab_review[classroom_id]" id="lab_review_classroom_id" /></div></div>
+<div class="control-group hidden lab_review_lab_id"><div class="controls"><input class="hidden" type="hidden" value="2074" name="lab_review[lab_id]" id="lab_review_lab_id" /></div></div>
+<div class="control-group hidden lab_review_focus_id"><div class="controls"><input class="hidden" type="hidden" name="lab_review[focus_id]" id="lab_review_focus_id" /></div></div>
+<div class="control-group hidden lab_review_rating"><div class="controls"><input class="hidden js-rating-input" type="hidden" value="2" name="lab_review[rating]" id="lab_review_rating" /></div></div>
+<div class="control-group text optional lab_review_comment"><label class="text optional control-label" for="lab_review_comment">Comment</label><div class="controls"><textarea class="text optional" name="lab_review[comment]" id="lab_review_comment">
+</textarea></div></div>
+</div>
+</div>
+<div class='modal-actions'>
+<a class='button button--text' data-dismiss='modal'>
+Cancel
+</a>
+<input type="submit" name="commit" value="Submit" disabled="disabled" id="submit" data-disabled="false" class="button" data-disable-with="Submit" />
+</div>
+</form>
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+
+
+<script>
+  $( function() {
+    ql.initMaterialInputs();
+    initChosen();
+    initSearch();
+    initTabs();
+    ql.list.init();
+    ql.favoriting.init();
+    ql.header.myAccount.init();
+    initTooltips();
+    ql.autocomplete.init();
+    ql.modals.init();
+    ql.toggleButtons.init();
+    ql.analytics.init();
+    ql.labControlPanel.addRecaptchaErrorHandler();
+  initLabContent();
+  ql.labOutline.links.init();
+  initLabReviewModal();
+  ql.labAssessment.init();
+  ql.labIntroduction.init( true );
+  ql.labData.init();
+  initLabTranslations( {"are_you_sure":"All done? If you end this lab, you will lose all your work. You may not be able to restart the lab if there is a quota limit. Are you sure you want to end this lab?\n","in_progress":"*In Progress*","ending":"*Ending*","starting":"*Starting, please wait*","end_concurrent_labs":"Sorry, you can only run one lab at a time. To start this lab, please confirm that you want all of your existing labs to end.\n","copied":"Copied","no_resource":"Error retrieving resource.","no_support":"No Support","mac_press":"Press ⌘-C to copy","thanks_review":"Thanks for reviewing this lab.","windows_press":"Press Ctrl-C to copy","days":"days"} );
+  ql.labRun.init();
+  ql.chat.init();
+  ql.initHeader();
+  ql.navigation.init();
+  ql.navPanel.init();
+  ql.navigation.init();
+  
+  });
+</script>
+
+</body>
+</html>
+

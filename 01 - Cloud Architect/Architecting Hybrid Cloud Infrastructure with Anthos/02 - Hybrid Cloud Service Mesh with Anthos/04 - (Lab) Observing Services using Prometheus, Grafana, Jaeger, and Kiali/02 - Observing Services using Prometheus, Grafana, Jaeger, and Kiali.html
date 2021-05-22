@@ -1,0 +1,1514 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title>AHYBRID045 Service Observability in Anthos | Qwiklabs</title>
+<script>
+//<![CDATA[
+window.gon={};gon.current_user={"firstname":"DANIEL","lastname":"ENRIQUE SANDOVAL SANCHEZ","fullname":"DANIEL ENRIQUE SANDOVAL SANCHEZ","company":"Coursera","email":"desandovals@liverpool.com.mx","origin":"googlecoursera-run, lti-coursera","subscriptions":0,"id":"40414ff5fc280f833d9acca966912f93","qlCreatedAt":"2020-11-17 20:45:59 UTC","optIn":null,"current_organization_id":null,"current_organization_role":null};gon.segment="j4Im8pqIko0Lxq4wVVZWMPMM0EroHUvb";gon.deployment="googlecoursera-run";gon.content={"type":"Lab","id":2736,"name":"AHYBRID045 Service Observability in Anthos"};
+//]]>
+</script>
+<script>
+  dataLayer = [
+    {user: gon.current_user},
+    {content: gon.content}
+  ];
+</script>
+<script>
+  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer',"GTM-TQR88QK");
+</script>
+<script>
+  EVENT_SOURCE_BASE_URL = "https://googlecoursera-run.qwiklabs.com/nchan-sub?id=";
+</script>
+<script src="https://cdn.qwiklabs.com/assets/hallofmirrors/polyfills/webcomponents-loader-408088dc333247a761de5f2b2a4ba1cabd2bc36579f83ba92a559eb3682a9b77.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/vendor-45d462772c30000424907184f70c7157e95fb6227698d1671c5051818a6f60d8.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/application-6874b164d8346f46605fc772a6f7375a39626ffc9f6d168e23a3a8c40bb6fd28.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/hallofmirrors/hallofmirrors-b7ff781d00ceebdf75589f58475cea695bafd8d5cc1f3eb4baf6122ed4a4b736.js"></script>
+<!--[if lt IE 9]>
+<script src='http://html5shim.googlecode.com/svn/trunk/html5.js' type='text/javascript'></script>
+<![endif]-->
+<!--[endif]>  <![endif]-->
+<script type='application/ld+json'>
+{
+  "@context": "http://schema.org",
+  "@type": "WebSite",
+  "url": "https://www.qwiklabs.com/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://www.qwiklabs.com/catalog?keywords={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script id='ze-snippet' src='https://static.zdassets.com/ekr/snippet.js?key=511e4158-0aec-4e3c-b2e6-4daa1769f51e'></script>
+
+
+<meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="u6CrizZdMeJhNrKyPNnbRbqSCTw9MZKvnL7oN5zOfsfYUj6gpNGWG8K+z+jjZKEHy1TBVAbuOPSSsxb9FLJdKQ==" />
+<meta content='width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0' name='viewport'>
+<meta content='1rRsY0INj8RvwB5EF5pwdxt2A2P9aDgAlsICaJ0d5w0' name='google-site-verification'>
+<meta content='#3681E4' property='msapplication-TileColor'>
+<meta content='/favicon-144.png' property='msapplication-TileImage'>
+<meta content='[{&quot;id&quot;:&quot;recaptcha_experiment&quot;,&quot;optimize_id&quot;:&quot;dpViOcLkT3qS4TvL2mRojA&quot;,&quot;title&quot;:&quot;No Recaptcha shown for trusted users&quot;,&quot;variant_index&quot;:0,&quot;variant&quot;:&quot;original&quot;}]' name='active-experiments'>
+<meta content='{&quot;userId&quot;:3894861}' name='help-api-product-data'>
+<meta content='Architecting Hybrid Infrastructure with Anthos: Use Anthos Service Mesh with Google Cloud&#39;s operations suite, and the Anthos Service Mesh Dashboard' name='description'>
+<meta content='Qwiklabs' name='author'>
+<meta content='AHYBRID045 Service Observability in Anthos | Qwiklabs' property='og:title'>
+<meta content='website' property='og:type'>
+<meta content='/favicon-144.png' property='og:image'>
+<meta content='Qwiklabs' property='og:site_name'>
+<meta content='Architecting Hybrid Infrastructure with Anthos: Use Anthos Service Mesh with Google Cloud&#39;s operations suite, and the Anthos Service Mesh Dashboard' property='og:description'>
+<meta content='/qwiklabs_logo_900x887.png' property='og:logo' size='900x887'>
+<meta content='/qwiklabs_logo_994x187.png' property='og:logo' size='994x187'>
+
+
+<link href='/favicon-32.png' rel='shortcut icon'>
+<link color='#3681E4' href='/favicon-svg.svg' rel='mask-icon'>
+<link href='/favicon-180.png' rel='apple-touch-icon-precomposed'>
+
+
+
+<link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css?family=Oswald:400|Roboto+Mono:400,700|Roboto:300,400,500,700|Google+Sans:300,400,500,700|Google+Sans+Display:400|Material+Icons|Google+Material+Icons" />
+
+
+<link rel="stylesheet" media="all" href="https://cdn.qwiklabs.com/assets/application-cf67fd00dd904ecce1e24779d7504aefc7fbd5d00696246fa80212743a81bf07.css" />
+
+
+
+</head>
+<body class='lab-show l-full no-nav application-new focuses focuses-show lab-show l-full no-nav '>
+<noscript>
+<iframe height='0' src='https://www.googletagmanager.com/ns.html?id=GTM-TQR88QK' style='display:none;visibility:hidden;' width='0'></iframe>
+</noscript>
+<span class='hidden' id='flash-sibling-before'></span>
+
+<div class='header-container'>
+<div class='header'>
+<ql-icon-button class='js-nav-toggle header__nav-panel-button l-mrm'>menu</ql-icon-button>
+<div class='header__title'>
+<ql-icon-button label="Back" href="https://www.coursera.org/" id="09b006837564c9ef" target="_self">arrow_back</ql-icon-button><div class="mdl-tooltip" data-mdl-for="09b006837564c9ef">Back</div>
+
+<h1 class='headline-5'>
+AHYBRID045 Service Observability in Anthos
+</h1>
+</div>
+<div class='header__actions'>
+<ql-icon-button class='header__button--search js-header-search-bar-button'>search</ql-icon-button>
+<ql-icon-button id='control-panel-target' style='display: none;'>
+dashboard
+</ql-icon-button>
+<ql-menu for='control-panel-target' id='control-panel-menu'></ql-menu>
+
+<ql-icon-button id='help-menu-button'>help</ql-icon-button>
+<div class='mdl-tooltip js-tooltip' data-mdl-for='help-menu-button'>
+Help
+</div>
+<ql-menu for='help-menu-button' id='help-menu'>
+<ql-menu-item>
+<ql-help context='lab' data-analytics-action='opened_help' data-analytics-label='lab' productdata='{&quot;userId&quot;:3894861}'>
+Help Center
+</ql-help>
+</ql-menu-item>
+<ql-menu-item>
+<a target="_blank" class="ql-body-1" href="https://support.google.com/qwiklabs/contact/contact_us">Email support</a>
+</ql-menu-item>
+<ql-menu-item>
+<a class='ql-body-1' onClick='ql.chat.open()'>Chat support</a>
+</ql-menu-item>
+</ql-menu>
+
+<ql-icon-button id='language'>language</ql-icon-button>
+<div class='mdl-menu mdl-menu__bottom-right mdl-js-menu elevation-3' for='language'>
+<a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ar" href="/focuses/15531078?locale=ar&amp;parent=lti_session">العربية‬‎
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="de" href="/focuses/15531078?locale=de&amp;parent=lti_session">Deutsch
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="en" href="/focuses/15531078?locale=en&amp;parent=lti_session">English
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="es" href="/focuses/15531078?locale=es&amp;parent=lti_session">español (Latinoamérica)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="fr" href="/focuses/15531078?locale=fr&amp;parent=lti_session">français
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="id" href="/focuses/15531078?locale=id&amp;parent=lti_session">bahasa Indonesia
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="it" href="/focuses/15531078?locale=it&amp;parent=lti_session">Italiano
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ja" href="/focuses/15531078?locale=ja&amp;parent=lti_session">日本語
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ko" href="/focuses/15531078?locale=ko&amp;parent=lti_session">한국어
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pl" href="/focuses/15531078?locale=pl&amp;parent=lti_session">Polski
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pt_BR" href="/focuses/15531078?locale=pt_BR&amp;parent=lti_session">português (Brasil)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pt_PT" href="/focuses/15531078?locale=pt_PT&amp;parent=lti_session">português (Portugal)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ru" href="/focuses/15531078?locale=ru&amp;parent=lti_session">русский
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="tr" href="/focuses/15531078?locale=tr&amp;parent=lti_session">Türkçe
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="zh" href="/focuses/15531078?locale=zh&amp;parent=lti_session">简体中文
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="zh_TW" href="/focuses/15531078?locale=zh_TW&amp;parent=lti_session">繁體中文
+</a></div>
+<button class='icon-button' id='my_account'>
+<ql-avatar></ql-avatar>
+</button>
+<ql-menu for='my_account' open>
+<div class='my-account-menu'>
+<ql-avatar class='l-mtl l-mbl' size='120'></ql-avatar>
+<div class='my-account-menu__user-info l-mbl'>
+<h4 class='ql-subhead-1'>DANIEL ENRIQUE SANDOVAL SANCHEZ</h4>
+<p class='ql-body-2 text--light'>desandovals@liverpool.com.mx</p>
+<p class='ql-body-2 text--light'>
+</p>
+<a class="text--green ql-subhead-2" href="/my_account/payments"><ql-chip positive>
+0 Credits
+</ql-chip>
+</a></div>
+<div class='buttons l-mbl'>
+<a class="button button--hairline" id="settings" href="/my_account/profile">Settings</a>
+</div>
+<hr>
+<ql-button data-analytics-action='clicked_sign_out' href='/users/sign_out' method='delete'>
+Sign Out
+</ql-button>
+<div class='privacy l-mtl'>
+<a class="ql-caption text--light" href="/privacy_policy">Privacy</a>
+<span class='ql-caption text--light l-mls l-mrs'>&middot;</span>
+<a class="ql-caption text--light" href="/terms_of_service">Terms</a>
+</div>
+</div>
+</ql-menu>
+
+</div>
+</div>
+<div class='header__search-bar js-header-search-bar'>
+<form class="js-search-form-mobile" onsubmit="ql.searchFilter(); return false;" action="/searches/elasticsearch" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="Gowxej34gPp05ayZdWe4cid+Icgf252tqhC6bt1SSqJ5fqRRr3QnA9dt0cOq2sIwVrjpoCQEN/akHUSkVS5pTA==" />
+<input type="text" name="keywords" id="keywords" placeholder="Search" maxlength="255" aria-label="catalog search bar" />
+</form>
+
+<ql-icon-button class='js-close-search-bar'>close</ql-icon-button>
+</div>
+</div>
+
+<nav class='nav-bar'>
+<a class="nav-bar__item js-navigation-button" href="/"><ql-icon class='nav-bar__item__icon'>
+home
+</ql-icon>
+<span class='nav-bar__item__label'>
+Home
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="/catalog"><ql-icon class='nav-bar__item__icon'>
+school
+</ql-icon>
+<span class='nav-bar__item__label'>
+Catalog
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="/my_learning"><ql-icon class='nav-bar__item__icon'>
+event_note
+</ql-icon>
+<span class='nav-bar__item__label'>
+My Learning
+</span>
+</a>
+</nav>
+
+<nav class='nav-panel js-nav-panel'>
+<div class='nav-panel__logo'>
+<div class='logo logo--blue'></div>
+</div>
+<a title="Home" tabindex="-1" class="nav-panel__item js-navigation-button" href="/"><ql-icon class='nav-panel__item__icon'>
+home
+</ql-icon>
+<div class='nav-panel__item__label'>
+Home
+</div>
+</a>
+<a title="Catalog" tabindex="-1" class="nav-panel__item js-navigation-button" href="/catalog"><ql-icon class='nav-panel__item__icon'>
+school
+</ql-icon>
+<div class='nav-panel__item__label'>
+Catalog
+</div>
+</a>
+<a title="My Learning" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_learning"><ql-icon class='nav-panel__item__icon'>
+event_note
+</ql-icon>
+<div class='nav-panel__item__label'>
+My Learning
+</div>
+</a>
+<div class='nav-panel__spacer'></div>
+<a title="Profile" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/profile"><ql-icon class='nav-panel__item__icon'>
+account_circle
+</ql-icon>
+<div class='nav-panel__item__label'>
+Profile
+</div>
+</a>
+<a title="Credits &amp; Subscriptions" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/credits"><ql-icon class='nav-panel__item__icon'>
+money
+</ql-icon>
+<div class='nav-panel__item__label'>
+Credits &amp; Subscriptions
+</div>
+</a>
+<a title="Security" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/security"><ql-icon class='nav-panel__item__icon'>
+security
+</ql-icon>
+<div class='nav-panel__item__label'>
+Security
+</div>
+</a>
+<div class='nav-panel__spacer'></div>
+<a class="nav-panel__item" tabindex="-1" href="#"><ql-help>
+<div class='nav-panel__help-item'>
+<ql-icon class='nav-panel__item__icon'>help</ql-icon>
+<div class='nav-panel__item__label'>
+Help
+</div>
+</div>
+</ql-help>
+</a><div class='nav-panel__small-links'>
+<a tabindex="-1" href="/privacy_policy">Privacy</a>
+<a tabindex="-1" href="/terms_of_service">Terms</a>
+</div>
+</nav>
+<div class='nav-panel__overlay js-nav-toggle'></div>
+
+<main class='js-main'>
+<div class='l-main-wrapper' id='main-wrapper'>
+
+
+
+
+
+
+
+<ql-drawer-container class='js-lab-state' data-analytics-payload='{&quot;label&quot;:&quot;AHYBRID045 Service Observability in Anthos&quot;,&quot;lab_name&quot;:&quot;AHYBRID045 Service Observability in Anthos&quot;,&quot;classroom_name&quot;:null,&quot;deployment&quot;:&quot;googlecoursera-run&quot;}' data-focus-id='15531078' data-lab-billing-limit='0.0' data-lab-duration='10800' data-parent='lti_session' data-recaptcha-enabled id='lab-container'>
+<ql-drawer id='terminal-drawer' slot='drawer' style='width: calc(100% - 480px)'>
+<iframe allow='clipboard-read' class='terminal' id='embedded-resource'></iframe>
+</ql-drawer>
+<ql-drawer-content class='js-lab-wrapper' id='lab-content' slot='drawer-content'>
+<ql-drawer-container id='lab-content-container'>
+<ql-drawer id='control-panel-drawer' open slot='drawer' width='320'>
+<ql-lab-control-panel class='ql-lab-control-panel__max-height control-panel js-lab-control-panel' connectionFiles='[]' labControlButton='{&quot;disabled&quot;:false,&quot;pending&quot;:false,&quot;running&quot;:false}' labDetails='[]' labTimer='{&quot;ticking&quot;:false,&quot;secondsRemaining&quot;:10800}' studentResources='[]'>
+<script src="https://www.recaptcha.net/recaptcha/api.js?render=6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr"   ></script>
+        <script>
+          // Define function so that we can call it again later if we need to reset it
+          // This executes reCAPTCHA and then calls our callback.
+          function executeRecaptchaForStartLab() {
+            grecaptcha.ready(function() {
+              grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}).then(function(token) {
+                setInputWithRecaptchaResponseTokenForStartLab('g-recaptcha-response-data-start-lab', token)
+              });
+            });
+          };
+          // Invoke immediately
+          executeRecaptchaForStartLab()
+
+          // Async variant so you can await this function from another async function (no need for
+          // an explicit callback function then!)
+          // Returns a Promise that resolves with the response token.
+          async function executeRecaptchaForStartLabAsync() {
+            return new Promise((resolve, reject) => {
+              grecaptcha.ready(async function() {
+                resolve(await grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}))
+              });
+            })
+          };
+
+                    var setInputWithRecaptchaResponseTokenForStartLab = function(id, token) {
+            var element = document.getElementById(id);
+            element.value = token;
+          }
+
+        </script>
+<input type="hidden" name="g-recaptcha-response-data[start_lab]" id="g-recaptcha-response-data-start-lab" data-sitekey="6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr" class="g-recaptcha g-recaptcha-response "/>
+
+<div class='hidden' id='recaptcha-v2-start-lab' slot='recaptcha'>
+<script src="https://www.recaptcha.net/recaptcha/api.js" async defer ></script>
+<div data-sitekey="6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV" data-callback="recaptchaComplete" data-expired-callback="expireV2Token" class="g-recaptcha "></div>
+          <noscript>
+            <div>
+              <div style="width: 302px; height: 422px; position: relative;">
+                <div style="width: 302px; height: 422px; position: absolute;">
+                  <iframe
+                    src="https://www.recaptcha.net/recaptcha/api/fallback?k=6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV"
+                    name="ReCAPTCHA"
+                    style="width: 302px; height: 422px; border-style: none; border: 0; overflow: hidden;">
+                  </iframe>
+                </div>
+              </div>
+              <div style="width: 300px; height: 60px; border-style: none;
+                bottom: 12px; left: 25px; margin: 0px; padding: 0px; right: 25px;
+                background: #f9f9f9; border: 1px solid #c1c1c1; border-radius: 3px;">
+                <textarea id="g-recaptcha-response" name="g-recaptcha-response"
+                  class="g-recaptcha-response"
+                  style="width: 250px; height: 40px; border: 1px solid #c1c1c1;
+                  margin: 10px 25px; padding: 0px; resize: none;">
+                </textarea>
+              </div>
+            </div>
+          </noscript>
+
+</div>
+</ql-lab-control-panel>
+</ql-drawer>
+<ql-drawer-content id='lab-instructions' slot='drawer-content'>
+<div class='alert alert--fake js-alert'>
+<p class='alert__message js-alert-message'></p>
+<a class='alert__close js-alert-close'>
+<i class='fa fa-times'></i>
+</a>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='js-lab-content lab-content__renderable-instructions'>
+<div class='lab-preamble'>
+<h1 class='lab-preamble__title'>
+AHYBRID045 Service Observability in Anthos
+</h1>
+<div class='lab-preamble__details subtitle-headline-1'>
+<span>3 hours </span>
+<span>Free</span>
+<div class='lab__rating'>
+<a href="/focuses/15531078/reviews?parent=lti_session"><div class='rateit' data-rateit-readonly='true' data-rateit-value='4.3754'></div>
+
+</a><a data-target='#lab-review-modal' data-toggle='modal'>
+Rate Lab
+</a>
+</div>
+</div>
+</div>
+
+<div class='js-markdown-instructions markdown-lab-instructions' id='markdown-lab-instructions'>
+
+
+
+<h2 id="step1">Overview</h2>
+<p>In this lab, you'll explore two different strategies for collecting and
+analyzing telemetry from Kubernetes deployments and services running
+within a service mesh.</p>
+<p>The first approach leverages Google Cloud's operations suite. A Google
+Kubernetes Engine (GKE) cluster running Anthos Service Mesh will write its
+logs into Cloud Logging, its metrics into Cloud Monitoring, and distributed
+trace information into Cloud Trace. You will use those tools, along with the
+Anthos Service Mesh dashboard to understand and troubleshoot service
+performance.</p>
+<p>The second approach entails using tools that are common with on-premises
+Kubernetes clusters. You will have a non-GKE cluster running open source
+Istio, and will have Prometheus, Grafana, Jaeger, Zipkin, and Kiali installed.
+You will explore each of these tools and see how logging, monitoring, tracing,
+and mesh visualization compare with the experience provided within Anthos.</p>
+<h3>Objectives</h3>
+<p>In this lab, you learn how to perform the following tasks:</p>
+<ul>
+<li>
+<p>Install Anthos Service Mesh, with tracing enabled and configured to use Cloud
+Trace as the backend</p>
+</li>
+<li>
+<p>Evaluate service performance using Cloud Monitoring, Cloud Logging, and Cloud
+Trace features within Google Cloud</p>
+</li>
+<li>
+<p>Create and monitor Service Level Objectives (SLOs)</p>
+</li>
+<li>
+<p>Leverage the Anthos Service Mesh Dashboard to understand service performance</p>
+</li>
+<li>
+<p>Install open source Istio with Prometheus, Grafana, Jaeger and Kiali</p>
+</li>
+<li>
+<p>See how alternative tools can be used for Kubernetes operations</p>
+</li>
+</ul>
+<h2 id="step2">Task 0. Lab Setup</h2>
+<p>In this task, you use Qwiklabs and perform initialization steps for your lab.</p>
+<h3>Access Qwiklabs</h3>
+<p>For each lab, you get a new GCP project and set of resources for a fixed time at no cost.</p>
+<ol>
+<li>
+<p>Make sure you signed into Qwiklabs using an <strong>incognito window</strong>.</p>
+</li>
+<li>
+<p>Note the lab's access time (for example, <img alt="img/time.png" src="https://cdn.qwiklabs.com/aZQJ4BT7uCmM9XR6BTXgTRP1Hfu1T7q6V%2BcnbdEsbpU%3D"> and make sure you can finish in that time block.</p>
+</li>
+</ol>
+<aside> <p>
+  There is no pause feature. You can restart if needed, but you have to start at the beginning.
+  </p>
+
+</aside>
+<ol start="3">
+<li>
+<p>When ready, click <img alt="img/start_lab.png" src="https://cdn.qwiklabs.com/XE8x7uvQokyubNwnYKKc%2BvBBNrMlo5iNZiDDzQQ3Ddo%3D">.</p>
+</li>
+<li>
+<p>Note your lab credentials. You will use them to sign in to Cloud Platform Console.
+<img alt="img/open_google_console.png" src="https://cdn.qwiklabs.com/0d78dhX6IVMVWmixCPPSBbmi5O2GPokCXf1Ps1AkTgI%3D"></p>
+</li>
+<li>
+<p>Click <strong>Open Google Console</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Use another account</strong> and copy/paste credentials for <strong>this</strong> lab into the prompts.</p>
+</li>
+</ol>
+<aside class="warning"><p>
+  If you use other credentials, you'll get errors or <strong>incur charges</strong>.
+  </p>
+</aside>
+<ol start="7">
+<li>Accept the terms and skip the recovery resource page.</li>
+</ol>
+<aside class="warning"><p>
+  Do not click <strong>End Lab</strong> unless you are finished with the lab or want to restart it. This clears your work and removes the project.
+  </p>
+</aside>
+
+<p>After you complete the initial sign-in steps, the project dashboard appears.</p>
+<p><img alt="GCP Project Dashboard" src="https://cdn.qwiklabs.com/dxfeoOcn1ObyC0BYyoqqqSi4rO%2FeMdbWPFjoK6C0YYk%3D"></p>
+<p>Click <strong>Select a project</strong>, highlight your <em>GCP Project ID</em>, and click
+<strong>OPEN</strong> to select your project.</p>
+<h3>Activate Google Cloud Shell</h3>
+<p>Google Cloud Shell is a virtual machine that is loaded with development tools. It offers a persistent 5GB home directory and runs on the Google Cloud.
+Google Cloud Shell provides command-line access to your GCP resources.</p>
+<ol>
+<li>
+<p>In GCP console, on the top right toolbar, click the Open Cloud Shell button.</p>
+<p><img alt="Cloud Shell icon" src="https://cdn.qwiklabs.com/vdY5e%2Fan9ZGXw5a%2FZMb1agpXhRGozsOadHURcR8thAQ%3D"></p>
+</li>
+<li>
+<p>Click <strong>Continue</strong>.
+<img alt="cloudshell_continue.png" src="https://cdn.qwiklabs.com/lr3PBRjWIrJ%2BMQnE8kCkOnRQQVgJnWSg4UWk16f0s%2FA%3D"></p>
+</li>
+</ol>
+<p>It takes a few moments to provision and connect to the environment. When you are connected, you are already authenticated, and the project is set to your <em>PROJECT_ID</em>. For example:</p>
+<p><img alt="Cloud Shell Terminal" src="https://cdn.qwiklabs.com/hmMK0W41Txk%2B20bQyuDP9g60vCdBajIS%2B52iI2f4bYk%3D"></p>
+<p><strong>gcloud</strong> is the command-line tool for Google Cloud Platform. It comes pre-installed on Cloud Shell and supports tab-completion.</p>
+<p>You can list the active account name with this command:</p>
+<pre><code>gcloud auth list&#x000A;</code></pre>
+<p>Output:</p>
+<pre><code class="language-output prettyprint">Credentialed accounts:&#x000A; - &lt;myaccount&gt;@&lt;mydomain&gt;.com (active)&#x000A;</code></pre>
+<p>Example output:</p>
+<pre><code class="language-Output prettyprint">Credentialed accounts:&#x000A; - google1623327_student@qwiklabs.net&#x000A;</code></pre>
+<p>You can list the project ID with this command:</p>
+<pre><code>gcloud config list project&#x000A;</code></pre>
+<p>Output:</p>
+<pre><code class="language-output prettyprint">[core]&#x000A;project = &lt;project_ID&gt;&#x000A;</code></pre>
+<p>Example output:</p>
+<pre><code class="language-Output prettyprint">[core]&#x000A;project = qwiklabs-gcp-44776a13dea667a6&#x000A;</code></pre>
+<ql-infobox>
+  Full documentation of <strong>gcloud</strong> is available on
+  <a href="https://cloud.google.com/sdk/gcloud" target="_blank">
+    Google Cloud gcloud Overview
+  </a>.
+</ql-infobox>
+
+<ql-infobox>
+<p>The lab environment has already been partially configured:</p>
+<p>
+</p>
+<ul>
+<li>A GKE cluster named <strong>gke</strong> has been created and
+  registered</li>
+<li>An open source Kubernetes cluster named <strong>onprem</strong>
+   has been created</li>
+</ul>
+
+</ql-infobox>
+<h2 id="step3">Task 1. Install Anthos Service Mesh with tracing enabled</h2>
+<p>A Google Kubernetes Engine (GKE) cluster named <strong>gke</strong> has already been created
+and registered. You are going to install Anthos Service Mesh onto this cluster,
+overriding the standard configuration to enable the optional tracing components.</p>
+<h3>Configure cluster access for kubectl and verify the cluster</h3>
+<ol>
+<li>
+<p>In Cloud Shell, set environment variables for use in scripts using the
+following commands:</p>
+<pre><code class="language-bash prettyprint">CLUSTER_NAME=gke&#x000A;CLUSTER_ZONE=us-central1-b&#x000A;PROJECT_ID=$(gcloud config get-value project)&#x000A;PROJECT_NUMBER=$(gcloud projects describe ${PROJECT_ID} \&#x000A;  --format="value(projectNumber)")&#x000A;IDNS=${PROJECT_ID}.svc.id.goog&#x000A;</code></pre>
+</li>
+<li>
+<p>Configure <code>kubectl</code> to manage your GKE cluster by running:</p>
+<pre><code class="language-bash prettyprint">gcloud container clusters get-credentials $CLUSTER_NAME \&#x000A;    --zone $CLUSTER_ZONE --project $PROJECT_ID&#x000A;kubectx gke=.&#x000A;</code></pre>
+</li>
+<li>
+<p>Review your kubectl configuration:</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">kubectl config view&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code class="language-yaml prettyprint"> apiVersion: v1&#x000A; clusters:&#x000A; - cluster:&#x000A;     certificate-authority-data: DATA+OMITTED&#x000A;     server: https://34.67.123.27&#x000A;   name: gke_qwiklabs-gcp-04-6163e6198bad_us-central1-b_gke&#x000A; contexts:&#x000A; - context:&#x000A;     cluster: gke_qwiklabs-gcp-04-6163e6198bad_us-central1-b_gke&#x000A;     user: gke_qwiklabs-gcp-04-6163e6198bad_us-central1-b_gke&#x000A;   name: gke&#x000A; current-context: gke&#x000A; kind: Config&#x000A; preferences: {}&#x000A; users:&#x000A; - name: gke_qwiklabs-gcp-04-6163e6198bad_us-central1-b_gke&#x000A;   user:&#x000A;     auth-provider:&#x000A;       config:&#x000A;         cmd-args: config config-helper --format=json&#x000A;         cmd-path: /usr/lib/google-cloud-sdk/bin/gcloud&#x000A;         expiry-key: '{.credential.token_expiry}'&#x000A;         token-key: '{.credential.access_token}'&#x000A;       name: gcp&#x000A;</code></pre>
+<ol start="4">
+<li>
+<p>Check that your cluster is up and running:</p>
+<pre><code class="language-bash prettyprint">gcloud container clusters list&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code class="language-bash prettyprint">NAME    LOCATION         MASTER_VERSION     ...   STATUS&#x000A;gke     us-central1-b    1.16.13-gke.401    ...   RUNNING&#x000A;</code></pre>
+<p><strong>MASTER_VERSION</strong> in your installation might be different, since we are
+installing the cluster using GKE's regular release channel.</p>
+</li>
+</ol>
+<h3>Install Anthos Service Mesh</h3>
+<ol>
+<li>
+<p>Download the Anthos Service Mesh installation script:</p>
+<pre><code class="language-bash prettyprint">curl https://storage.googleapis.com/csm-artifacts/asm/install_asm_1.7 &gt; install_asm&#x000A;</code></pre>
+</li>
+</ol>
+<p>For more information on exactly how the installation script works, visit
+<a href="https://cloud.google.com/service-mesh/docs/scripted-install/gke-asm-onboard-1-7#understanding_the_script" target="_blank"> https://cloud.google.com/service-mesh/docs/scripted-install/gke-asm-onboard-1-7#understanding_the_script</a>.</p>
+<ol start="2">
+<li>
+<p>Verify the signature on the download bundle:</p>
+<pre><code class="language-bash prettyprint">curl https://storage.googleapis.com/csm-artifacts/asm/install_asm_1.7.sha256 &gt; install_asm.sha256&#x000A;sha256sum -c --ignore-missing install_asm.sha256&#x000A;</code></pre>
+</li>
+<li>
+<p>Make the script executable:</p>
+<pre><code class="language-bash prettyprint">chmod +x install_asm&#x000A;</code></pre>
+</li>
+<li>
+<p>Create an IstioOperator configuration file which will enable the optional
+Cloud Trace feature:</p>
+<pre><code class="language-bash prettyprint">cat &gt; tracing.yaml &lt;&lt;EOF&#x000A;apiVersion: install.istio.io/v1alpha1&#x000A;kind: IstioOperator&#x000A;spec:&#x000A;  meshConfig:&#x000A;    enableTracing: true&#x000A;  values:&#x000A;    global:&#x000A;      proxy:&#x000A;        tracer: stackdriver&#x000A;EOF&#x000A;</code></pre>
+</li>
+<li>
+<p>Use <code>install_asm</code> to install Anthos Service Mesh:</p>
+<pre><code class="language-bash prettyprint">./install_asm \&#x000A;--project_id $PROJECT_ID \&#x000A;--cluster_name $CLUSTER_NAME \&#x000A;--cluster_location $CLUSTER_ZONE \&#x000A;--mode install \&#x000A;--enable_apis \&#x000A;--custom_overlay tracing.yaml&#x000A;</code></pre>
+</li>
+</ol>
+<p>Watch the output of the installation script and note the steps taken
+during installation.</p>
+<ql-infobox>
+<p>
+<strong>Congratulations!</strong> You now have a GKE cluster with
+  Anthos Service Mesh installed. Kubernetes Metrics are being recorded to
+  Cloud Monitoring, logs are being recorded to Cloud Logging, and distributed
+  trace information is being sent to Cloud Trace.
+</p>
+</ql-infobox>
+<h2 id="step4">Task 2. Install Istio with Prometheus, Grafana, Jaeger, and Kiali enabled</h2>
+<p>A non-GKE cluster has already been created for you. In this task, you will
+register the cluster with Anthos and install open source Istio.</p>
+<h3>Configure onprem cluster access for kubectl and register the cluster</h3>
+<ol>
+<li>
+<p>In Cloud Shell, create a firewall rule that will allow the Cloud Shell VM
+to communicate with the machines on your VPC:</p>
+<pre><code class="language-bash prettyprint">cd ~&#x000A;export SHELL_IP=$(curl -s api.ipify.org)&#x000A;gcloud compute firewall-rules create shell-to-onprem \&#x000A;  --allow tcp \&#x000A;  --source-ranges $SHELL_IP&#x000A;</code></pre>
+</li>
+<li>
+<p>During lab setup, a <strong>kubecfg</strong> file was created and stored in Google Cloud
+Storage. You will retrieve this file and use it to configure <code>kubectl</code>.</p>
+<p>Copy the provided <strong>kubecfg</strong> file for the onprem cluster, and set the
+<strong>KUBECONFIG</strong> environment variable used to identify which kubectl config
+files to use:</p>
+<pre><code class="language-bash prettyprint">gsutil cp gs://$DEVSHELL_PROJECT_ID-kops-onprem/config ~/.kube/onprem-config&#x000A;&#x000A;export KUBECONFIG=~/.kube/config:~/.kube/onprem-config&#x000A;</code></pre>
+</li>
+<li>
+<p>Switch to the <strong>onprem</strong> context, and extract the token from the secret
+that represents the Kubernetes Service Account that will be used for
+GKE Connect:</p>
+<pre><code class="language-bash prettyprint">kubectx onprem.k8s.local&#x000A;&#x000A;printf "\n$(kubectl describe secret remote-admin-sa| sed -ne 's/^token: *//p')\n\n"&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code class="language-bash prettyprint">aSB3aWxsIG5vdCB0cnkgdG8gc3RlYWwgc29tZW9uZSBlbHNlcyB0b2tlbiBhZ2FpbgppIHdpbGwgbm90IHRyeSB0byBzdGVhbCBzb21lb25lIGVsc2VzIHRva2VuIGFnYWluCmkgd2lsbCBub3QgdHJ5IHRvIHN0ZWFsIHNvbWVvbmUgZWxzZXMgdG9rZW4gYWdhaW4KaSB3aWxsIG5vdCB0cnkgdG8gc3RlYWwgc29tZW9uZSBlbHNlcyB0b2tlbiBhZ2FpbgppIHdpbGwgbm90IHRyeSB0byBzdGVhbCBzb21lb25lIGVsc2VzIHRva2VuIGFnYWluCmkgd2lsbCBub3QgdHJ5IHRvIHN0ZWFsIHNvbWVvbmUgZWxzZXMgdG9rZW4gYWdhaW4KaSB3aWxsIG5vdCB0cnkgdG8gc3RlYWwgc29tZW9uZSBlbHNlcyB0b2tlbiBhZ2FpbgppIHdpbGwgbm90IHRyeSB0byBzdGVhbCBzb21lb25lIGVsc2VzIHRva2VuIGFnYWluCmkgd2lsbCBub3QgdHJ5IHRvIHN0ZWFsIHNvbWVvbmUgZWxzZXMgdG9rZW4gYWdhaW4K&#x000A;</code></pre>
+<p>Select the token contents in the Cloud Shell, which copies it to the
+clipboard.</p>
+<ql-warningbox>
+<b>Cloud Shell</b> default behavior automatically copies text after you
+ select it. If you press <b>Ctrl+c</b> to copy you will add an extra
+ character to your token and <b>Login</b> will not work.
+ </ql-warningbox>
+</li>
+<li>
+<p>Go to <strong>Navigation &gt; Kubernetes Engine &gt; Clusters</strong> and click
+on the <strong>Login</strong> button displayed in the <strong>onprem-connect</strong> cluster row.</p>
+<p><img alt="Login button" src="https://cdn.qwiklabs.com/kXj0SBDMtVjkjl5kqUsHmWqe4H9mg7jPxF9ds2xgklc%3D"></p>
+</li>
+<li>
+<p>Select <strong>Token</strong> as the authentication type, paste the previously copied
+token, then click <strong>Login</strong>.</p>
+<p><img alt="Enter token" src="https://cdn.qwiklabs.com/jl6peYBczRwneFPxtte301UkloWcfbdWYRhyv8BGK84%3D"></p>
+<ql-infobox>
+<p>
+   You should see a green checkmark next to <strong>onprem-connect</strong>,
+   indicating that the cluster has been registered. If you look at the <strong>
+   Workloads</strong> section of the <strong>Kubernetes Engine</strong> page, 
+   you should now see deployments from both clusters.
+ </p>
+</ql-infobox>
+</li>
+</ol>
+<p><img alt="Registered cluster" src="https://cdn.qwiklabs.com/65c0xIkKNf%2F33e6refDr%2F2%2FwhP%2BnRAcRBCJDNo5KAt4%3D"></p>
+<h3>Download Istio and install with optional components</h3>
+<ol start="6">
+<li>
+<p>In Cloud Shell, download the most recent version of open source Istio:</p>
+<pre><code class="language-bash prettyprint">ISTIO_VERSION="${ISTIO_VERSION:-1.8.1}"&#x000A;curl -L https://git.io/getLatestIstio | ISTIO_VERSION=$ISTIO_VERSION sh -&#x000A;cd ./istio-${ISTIO_VERSION}/&#x000A;</code></pre>
+</li>
+<li>
+<p>Create the <code>istio-system</code> namespace:</p>
+<pre><code class="language-bash prettyprint">kubectl create namespace istio-system&#x000A;</code></pre>
+</li>
+<li>
+<p>Install Istio with the <a href="https://istio.io/latest/docs/setup/additional-setup/config-profiles/" target="_blank">demo profile</a>, which will add istiod, the ingres gateway and the egress gateway:</p>
+<pre><code class="language-bash prettyprint">./bin/istioctl install --set profile=demo&#x000A;</code></pre>
+<p>When prompted, enter <code>Y</code> to continue with the installation.</p>
+</li>
+<li>
+<p>If you see errors like this:</p>
+</li>
+</ol>
+<pre><code>unable to recognize "https://raw.githubusercontent.com/istio/istio/release-1.8/samples/addons/kiali.yaml": no matches for kind "MonitoringDashboard" in version "monitoring.kiali.io/v1alpha1"&#x000A;</code></pre>
+<p>The rerun the command in step 8. This is a known issue with Kiali
+installation.</p>
+<ol start="10">
+<li>
+<p>Ensure the Kubernetes pods for the Istio control plane are
+deployed:</p>
+<pre><code class="language-bash prettyprint">kubectl get pods -n istio-system&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code class="language-bash prettyprint">NAME                                   READY   STATUS    RESTARTS   AGE&#x000A;istio-egressgateway-6f9f4ddc9c-4ggkb    1/1     Running   0          86s&#x000A;istio-ingressgateway-78b47bc88b-dbs8k   1/1     Running   0          86s&#x000A;istiod-67dbfcd4dd-zw5vf                 1/1     Running   0          97s&#x000A;</code></pre>
+</li>
+<li>
+<p>Add istio addons for monitoring, tracing, and visualization:</p>
+<pre><code class="language-bash prettyprint">kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.8/samples/addons/prometheus.yaml&#x000A;kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.8/samples/addons/grafana.yaml&#x000A;kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.8/samples/addons/jaeger.yaml&#x000A;kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.8/samples/addons/kiali.yaml&#x000A;</code></pre>
+</li>
+<li>
+<p>Ensure corresponding Kubernetes services for both the Istio control plane and
+the addons are deployed:</p>
+<pre><code class="language-bash prettyprint">kubectl get service -n istio-system&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code class="language-bash prettyprint">NAME                     TYPE           CLUSTER-IP      ...&#x000A;grafana                     ClusterIP      100.65.22.8      &#x000A;istio-egressgateway         ClusterIP      100.68.235.12    &#x000A;istio-ingressgateway        LoadBalancer   100.67.197.105   &#x000A;istio-pilot                 ClusterIP      100.65.196.144   &#x000A;istiod                      ClusterIP      100.70.24.90     &#x000A;jaeger-collector            ClusterIP      100.66.73.157    &#x000A;kiali                       ClusterIP      100.66.26.232    &#x000A;prometheus                  ClusterIP      100.67.60.189    &#x000A;tracing                     ClusterIP      100.65.71.117    &#x000A;zipkin                      ClusterIP      100.69.250.131 &#x000A;</code></pre>
+</li>
+</ol>
+<ql-infobox>
+<p>
+<strong>Congratulations!</strong> You now have a non-GKE
+  Kubernetes cluster with open source Istio installed. Kubernetes Metrics are
+  being recorded to Prometheus and can be viewed using Grafana. Distributed
+  trace information is being collected and shown with Jaeger and Zipkin.
+  Your service mesh can be visualized using Kiali.
+</p>
+</ql-infobox>
+<h2 id="step5">Task 3. Install the microservices-demo application on both clusters</h2>
+<p><strong>Online Boutique</strong> is a cloud-native microservices demo application. Online
+Boutique consists of a 10-tier microservices application. The application is a
+web-based e-commerce app where users can browse items, add them to the cart,
+and purchase them.</p>
+<p>Google uses this application to demonstrate use of technologies like
+Kubernetes/GKE, Istio, Stackdriver, gRPC and OpenCensus. This application works
+on any Kubernetes cluster (such as a local one), as well as Google Kubernetes
+Engine. It’s easy to deploy with little to no configuration.</p>
+<p>For more information about the application, see the
+<a href="https://github.com/GoogleCloudPlatform/microservices-demo" target="_blank">github repo</a>.</p>
+<h3>Install the Online Boutique application on the onprem cluster</h3>
+<ol>
+<li>
+<p>In Cloud Shell, make sure that you are using the <code>onprem.k8s.local</code> context:</p>
+<pre><code class="language-bash prettyprint">kubectx onprem.k8s.local&#x000A;</code></pre>
+</li>
+<li>
+<p>Enable Istio sidecar injection, and deploy the application:</p>
+<pre><code class="language-bash prettyprint">kubectl label namespace default istio-injection=enabled --overwrite&#x000A;kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/master/release/kubernetes-manifests.yaml&#x000A;kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/master/release/istio-manifests.yaml&#x000A;kubectl patch deployments/productcatalogservice -p '{"spec":{"template":{"metadata":{"labels":{"version":"v1"}}}}}'&#x000A;</code></pre>
+</li>
+<li>
+<p>Use the Kubernetes Engine management console to verify the deployment. Select
+<strong>Navigation &gt; Kubernetes Engine &gt; Workloads</strong> and you should see many new
+deployments on the <strong>onprem-connect</strong> cluster. It may take a minute or two
+for all the deployments to show an <strong>OK</strong> status. If you see red alert
+icons, wait a bit then click the <strong>Refresh</strong> button to see if things have
+improved.</p>
+<p><img alt="Workloads" src="https://cdn.qwiklabs.com/hLF0D8O0fDmclw%2BfZQYl0ylIDy7E1hKb0WeDcS9%2BeZY%3D"></p>
+</li>
+</ol>
+<p>You can also check the <strong>Services &amp; Ingress</strong> page to verify that new services
+have been created on the <strong>onprem-connect</strong> cluster.</p>
+<h3>Install the Online Boutique application on the GKE cluster</h3>
+<ol start="4">
+<li>
+<p>Switch your <code>kubectl</code> context to the <strong>gke</strong> cluster:</p>
+<pre><code class="language-bash prettyprint">kubectx gke&#x000A;</code></pre>
+</li>
+<li>
+<p>Enable Istio sidecar injection</p>
+<pre><code class="language-bash prettyprint">export DEPLOYMENT=$(kubectl get deployments -n istio-system | grep istiod)&#x000A;export VERSION=asm-$(echo $DEPLOYMENT | cut -d'-' -f 3)-$(echo $DEPLOYMENT | cut -d'-' -f 4 | cut -d' ' -f 1)&#x000A;kubectl label namespace default istio-injection- istio.io/rev=${VERSION} --overwrite&#x000A;</code></pre>
+</li>
+</ol>
+<ql-infobox>
+<p>
+    With standard Istio, auto-injection of the sidecar proxy is enabled by
+    labelling a namespace with istio-injection=enabled.
+  </p>
+<p>
+    In Anthos Service Mesh, auto-injection of the sidecar proxy is enabled by
+    labelling a namespace with <strong>istio.io/rev=${VERSION}</strong>, where
+    $VERSION isa value on the revision label of <strong>istiod</strong>.
+  </p>
+</ql-infobox>
+<ol start="6">
+<li>
+<p>Deploy the application:</p>
+<pre><code>kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/master/release/kubernetes-manifests.yaml&#x000A;kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/master/release/istio-manifests.yaml&#x000A;kubectl patch deployments/productcatalogservice -p '{"spec":{"template":{"metadata":{"labels":{"version":"v1"}}}}}'&#x000A;</code></pre>
+</li>
+<li>
+<p>Go back to the <strong>Workloads</strong> and <strong>Services &amp; Ingress</strong> pages and verify that
+the new deployments and services have been created on the gke cluster.</p>
+</li>
+</ol>
+<ql-infobox>
+<p>
+<strong>Hint</strong> You can filter these pages by cluster,
+  object type, and namespace to make it easier to parse the information 
+  presented.
+</p>
+</ql-infobox>
+<ol start="8">
+<li>
+<p>Take a couple minutes to investigate the demo application. Once the workloads
+show an OK status, get the IP address associated with the
+<strong>frontend-external</strong> service (for either cluster). You can do this by
+looking in the <strong>Services &amp; Ingress</strong> page within the console or by doing a
+<code>kubectl get services</code> in the Cloud Shell.</p>
+<p>Open a new tab and enter the IP address for the frontend service. Click
+through various pages to get a sense of the application.</p>
+</li>
+</ol>
+<h2 id="step6">Task 4. Review Google Cloud's operations suite functionality</h2>
+<p>You can review Anthos cluster logs, metrics, and trace information using
+operations suites products. In this task, you'll confirm that this operations
+data is indeed flowing into Cloud Logging, Monitoring, and Trace.</p>
+<ol>
+<li>
+<p>Go to <strong>Navigation &gt; Logging &gt; Logs Explorer</strong>. Select each of the following
+resource types in turn and note the log entries being recorded:</p>
+<ul>
+<li>GKE Cluster Operations</li>
+<li>Kubernetes Cluster</li>
+<li>Kubernetes Container</li>
+<li>Kubernetes Node</li>
+<li>Kubernetes Pod</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>
+<p>The <strong>GKE Cluster Operations</strong> logs will record API requests made to the
+Google GKE service for things like creating a GKE cluster.</p>
+</li>
+<li>
+<p>The <strong>Kubernetes Cluster</strong> logs will record things like API requests made to
+the master.</p>
+</li>
+<li>
+<p>The <strong>Kubernetes Container</strong> logs will record log entries scraped from the
+running containers on the cluster.</p>
+</li>
+<li>
+<p>The <strong>Kubernetes Node</strong> logs will record worker node logs, and the
+<strong>Kubernetes Pod</strong> logs will record things like probe results and container
+restarts.</p>
+</li>
+</ul>
+<ol start="2">
+<li>
+<p>Switch to the Monitoring dashboard by going to
+<strong>Navigation &gt; Monitoring &gt; Dashboards</strong>. It will take 1-2 minutes for
+the Monitoring workspace to be created.</p>
+</li>
+<li>
+<p>Select the <strong>GKE</strong> dashboard. Take a moment to explore
+the various ways the dashboard organizes metrics information related to the
+pods and services running on your cluster.</p>
+<p><img alt="Monitoring dashboard" src="https://cdn.qwiklabs.com/38a6q4RJVysEsECwGnaHJXarng%2BExod6eZKiHXsfPKg%3D"></p>
+</li>
+</ol>
+<ql-infobox>
+<p>
+<strong>Note:</strong> You will only see metrics data from the <strong>gke
+  </strong>cluster, not the <strong>onprem-connect</strong> cluster. For the
+  purposes of this lab, the <strong>onprem-connect</strong> cluster isn't
+  configured to ship its telemetry to Google Cloud's operations suite; you
+  will be viewing it using common open source tools. In real Anthos deployments,
+  it's quite likely you would configure the <strong>onprem-connect</strong>
+  cluster to send its data to Google Cloud, and you would see a unified view of
+  metrics.
+</p>
+</ql-infobox>
+<ol start="4">
+<li>On the left hand side of the window you will see links that take you to
+other Cloud Monitoring features, including <strong>Alerting</strong> and
+<strong>Uptime checks</strong>. Click on <strong>Services</strong> to see a view of the services
+deployed on the <strong>gke</strong> cluster.</li>
+</ol>
+<ql-infobox>
+<p>
+An SLO is a Service Level Objective: a target value or range of values for a
+service level that is measured by a Service Level Indicator (SLI). A natural
+structure for SLOs is thus <code>SLI ≤ target</code>, or 
+<code>lower bound ≤ SLI ≤ upper bound</code>.</p>
+<p>For example, we might decide that we will return Shakespeare search
+results <b>quickly</b>, adopting an SLO that our average search request latency
+should be less than 100 milliseconds. --
+<a href="https://landing.google.com/sre/sre-book/chapters/service-level-objectives/" target="_blank">
+Site Reliability Engineering, Google. Chapter 4 - Service Level Objectives.
+</a>
+</p>
+</ql-infobox>
+<p>There aren't any SLOs defined for your service yet. You will return and define
+an SLO in an upcoming task.</p>
+<ol start="5">
+<li>
+<p>Go to <strong>Navigation &gt; Trace &gt; Trace List</strong>. You should see a trace graph
+that shows service requests made within the demo application. Click on a
+dot that displays higher up in the graph (representing a higher overall)
+request time.</p>
+</li>
+</ol>
+<ul>
+<li>How long did the request take?</li>
+<li>When did the request occur?</li>
+<li>What service was being called?</li>
+<li>What other services were called during execution of this request?</li>
+<li>Where was most of the time spent in processing this request?</li>
+</ul>
+<p>Review the <a href="https://cloud.google.com/trace/docs/viewing-details" target="_blank">Cloud Trace documentation</a>
+for more details on understanding trace information.</p>
+<h2 id="step7">Task 5. Deploy a canary release that has high latency</h2>
+<p>In this task, you will deploy a new version of a service that has an issue
+which causes high latency. In subsequent tasks, you will use the observability
+tools to diagnose and resolve.</p>
+<ol>
+<li>
+<p>In Cloud Shell, clone the repository that has the configuration files you
+need for this part of the lab.</p>
+<pre><code class="language-bash prettyprint">git clone https://github.com/GoogleCloudPlatform/istio-samples.git \&#x000A;  ~/istio-samples&#x000A;</code></pre>
+</li>
+<li>
+<p>Create the new resources on the <strong>gke</strong> cluster with the following commands:</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">kubectx gke&#x000A;kubectl apply -f ~/istio-samples/istio-canary-gke/canary/destinationrule.yaml&#x000A;kubectl apply -f ~/istio-samples/istio-canary-gke/canary/productcatalog-v2.yaml&#x000A;kubectl apply -f ~/istio-samples/istio-canary-gke/canary/vs-split-traffic.yaml&#x000A;</code></pre>
+<ql-infobox>
+<p>
+You are creating:
+</p>
+<ul>
+<li>
+      A DestinationRule to set routing of requests between the service versions
+    </li>
+<li>
+      A new Deployment of the product catalog service that has high latency
+    </li>
+<li>
+      A VirtualService to split product catalog traffic 75% to v1 and 25% to v2
+    </li>
+</ul>
+
+<p>
+  You can open each of the configuration files in the Cloud Shell editor to 
+  better understand the definition of each new resource.
+</p>
+</ql-infobox>
+<h2 id="step8">Task 6. Define your Service Level Objective</h2>
+<p>When you are not using Anthos Service Mesh, you can define SLOs with the
+<a href="https://cloud.google.com/monitoring/service-monitoring" target="_blank">Service Monitoring</a>
+API. When you are using Anthos Service Mesh, as with the <strong>gke</strong> cluster, you
+can define and monitor SLOs via the Anthos Service Mesh dashboard.</p>
+<ol>
+<li>
+<p>Go to <strong>Navigation &gt; Anthos</strong> to open the Anthos Dashboard. You can see
+that both clusters, having been registered, are visible in the dashboard.
+Only the <strong>gke</strong> cluster, however, is running Anthos Service Mesh, so only
+its services will be shown in the Service mesh section of the dashboard.</p>
+</li>
+<li>
+<p>Click <strong>View service mesh</strong> to go to the Anthos Service Mesh dashboard.</p>
+</li>
+</ol>
+<p>You will see a summary of service performance, including SLO information. You
+will proceed to define a new SLO for the product catalog service.</p>
+<ol start="3">
+<li>
+<p>In the <strong>Services</strong> list, click on <strong>productcatalogservice</strong>.</p>
+</li>
+<li>
+<p>On the left, click on <strong>Health</strong>.</p>
+</li>
+<li>
+<p>Click <strong>CREATE SLO</strong>.</p>
+</li>
+<li>
+<p>In the <strong>Set your SLI</strong> slideout, choose <strong>Latency</strong> as the <strong>metric</strong>.</p>
+<p>Make sure <strong>Request-based</strong> is the method of evaluation.</p>
+<p>Click <strong>CONTINUE</strong>.</p>
+</li>
+<li>
+<p>Set <strong>Latency Threshold</strong> to <code>1000</code> and click <strong>CONTINUE</strong>.</p>
+</li>
+<li>
+<p>Make sure <strong>Period type</strong> is <strong>Calendar</strong>.</p>
+<p>Set <strong>Period length</strong> to <strong>Calendar day</strong>.</p>
+</li>
+<li>
+<p>Set <strong>Performance goal</strong> to <strong>99.5%</strong>.</p>
+<p>Notice the <strong>Preview</strong> graph shows you how your goal is reflected
+against real historical data.</p>
+<p>Click <strong>Next</strong>.</p>
+</li>
+<li>
+<p>Review <strong>Display name</strong>: <strong>99.5% - Latency - Calendar day</strong>.</p>
+<p>You can adjust this as needed.</p>
+<p>Create the SLO by clicking <strong>CREATE SLO</strong>.</p>
+</li>
+</ol>
+<h2 id="step9">Task 7. Diagnose the problem</h2>
+<h3>Use service metrics to see where the problem is</h3>
+<ol>
+<li>
+<p>Click on your SLO entry in the SLO list - this will show an expanded view.
+Your SLO will likely show that you are already out of error budget. If not,
+wait a minute or two and refresh the page. Eventually, you will have burned
+through your error budget, as too many of the requests to
+this service will be hitting the new backend which has high latency.</p>
+<p><img alt="Error budget" src="https://cdn.qwiklabs.com/5%2B7eTo8%2BQoTt7q%2FBS3earFLUstt6Vr0y34arWAI70mc%3D"></p>
+</li>
+<li>
+<p>Click on <strong>Metrics</strong> on the left hand side to dig in a little deeper.
+Scroll down to the <strong>Latency</strong> section of the <strong>Metrics</strong> view and note
+that the service latency jumped up a few minutes ago, about the
+time you deployed the canary version of the service.</p>
+</li>
+<li>
+<p>From the <strong>Breakdown By</strong> dropdown, select pod. Which pods are
+showing high latency, and causing the overall failure to hit your
+SLO?</p>
+</li>
+<li>
+<p>Click on the Anthos Service Mesh logo in the upper left corner to
+return to the Service Mesh page. Note that it now shows 1 SLO
+out of error budget, and shows a warning indicator next to the
+problem service in the <strong>Services</strong> listing.</p>
+<p><img alt="Anthos Service Mesh dashboard" src="https://cdn.qwiklabs.com/t5UhW8HC9NtGGgPKHHLF21eR4MXNkua6dQ6Gfu9JSHU%3D"></p>
+</li>
+</ol>
+<ql-infobox>
+<p>
+  You have only defined a single SLO for a single service. In a real
+  production environment, you would likely have multiple SLOs for 
+  each service.
+</p>
+<p>
+  Also, you have not defined any alerting policy for your SLO.
+  You would likely have Cloud Monitoring execute an alert if you
+  are burning your error budget faster than expected.
+</p>
+</ql-infobox>
+<h3>Use Cloud Trace to better understand where the delay is</h3>
+<ol start="5">
+<li>
+<p>Return to <strong>Navigation &gt; Trace &gt; Trace List</strong>.</p>
+</li>
+<li>
+<p>Click on a dot that charts at around 3000ms; it should represent one of
+the requests to the product catalog service.</p>
+<p><img alt="Select a trace" src="https://cdn.qwiklabs.com/9HnuRvfgBUUcWMjWVgnxQqq07SKl%2B6rskXdZqS37RPI%3D"></p>
+</li>
+<li>
+<p>Note that all the time seems to be spent within the catalog service itself.
+While calls are made to other services, they all appear to return very
+quickly, and there's something within the product catalog service that
+is taking a long time.</p>
+<p><img alt="Trace details" src="https://cdn.qwiklabs.com/1MMvqITKNwfh0VUotkdRkecsLKSXKX7NEX2DKM5kmNM%3D"></p>
+</li>
+</ol>
+<ql-infobox>
+<p>
+  Anthos Service Mesh is automatically collecting information about network
+  calls within the mesh, and providing trace data that documents time spent
+  on these calls. This is immensely useful and required no extra developer
+  effort.
+  </p>
+<p>
+  However, how time is spent within the workload, in this case the product
+  catalog service pod, isn't instrumented directly by Istio. If needed, to get
+  this level of detail, the developer would add instrumentation logic within
+  the service itself.
+</p>
+</ql-infobox>
+<h2 id="step10">Task 8. Roll back the release and verify things are better</h2>
+<ol>
+<li>
+<p>In Cloud Shell, back out the canary release:</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">kubectl delete -f ~/istio-samples/istio-canary-gke/canary/destinationrule.yaml&#x000A;kubectl delete -f ~/istio-samples/istio-canary-gke/canary/productcatalog-v2.yaml&#x000A;kubectl delete -f ~/istio-samples/istio-canary-gke/canary/vs-split-traffic.yaml&#x000A;</code></pre>
+<ol start="2">
+<li>
+<p>In the console, return to the Anthos Service Mesh dashboard via
+<strong>Navigation &gt; Anthos &gt; Service Mesh</strong>.</p>
+</li>
+<li>
+<p>Click on <strong>productcatalogservice</strong>, and click on <strong>Health</strong>. Note the current
+compliance percentage.</p>
+</li>
+<li>
+<p>Click on <strong>Metrics</strong>. Check the latency chart and you should see that the
+latency series all show a dip that corresponds to when you rolled back the
+bad version of the workload.</p>
+<p><img alt="Latency dropping" src="https://cdn.qwiklabs.com/V8nbgJvsxXUi%2B6RYLLveTceO5Y8V9N9ksAmIHoQr2eI%3D"></p>
+</li>
+<li>
+<p>Return to the <strong>Health</strong> page. Compare the current compliance metric with the
+one you saw earlier. It should be higher now, reflecting the fact that
+you are no longer seeing high-latency requests.</p>
+</li>
+</ol>
+<h2 id="step11">Task 9. Visualize your mesh with the Anthos Service Mesh dashboard</h2>
+<ol>
+<li>
+<p>Select <strong>Navigation &gt; Anthos &gt; Service Mesh</strong> to return to the home page of
+the Anthos Service Mesh dashboard.</p>
+</li>
+<li>
+<p>Click on <strong>TOPOLOGY</strong> in the upper-right corner of the console window. You
+will see a chart representing your service mesh.</p>
+<p><img alt="Mesh chart" src="https://cdn.qwiklabs.com/g2Ae%2B7xebberDQw6QflXYEuAr8he9QlzMSwTP3k7Vio%3D"></p>
+<p>If you don't see a full topology chart like this, it's possible that not all
+the topology data has been collected. It can take 10+ minutes for this
+data to be reflected in the chart. You can always move on to the next
+section and return later to see the chart.</p>
+</li>
+<li>
+<p>Click on the <strong>frontend-external</strong> service node and note service metrics on
+the right.</p>
+<p><img alt="Service metrics" src="https://cdn.qwiklabs.com/gb0%2FzBS%2B405u3rL6U%2FuTm1ULiP3Ij6MkIHfOiVIEqQw%3D"></p>
+</li>
+<li>
+<p>Click on the frontend workload node and note the services called by that
+workload.</p>
+<p><img alt="Service dependencies" src="https://cdn.qwiklabs.com/6CSDnm4iaUVQzykc6j3wjqz9hlUHryfSjkNdgU6h6gA%3D"></p>
+</li>
+</ol>
+<p>Take a couple minutes to explore further, and better understand the architecture
+of the application. You can rearrange nodes, drill down into workloads to see
+constituent deployments and pods, change time spans, etc.</p>
+<ql-infobox>
+<p>
+<strong>Congratulations!</strong> You've used Google Cloud's operations suite
+  tooling to evaluate, troubleshoot, and improve service performance on your
+  Anthos managed cluster.
+</p>
+</ql-infobox>
+<h2 id="step12">Switching Gears - Working with popular on-prem observability tools</h2>
+<p>In the next several tasks, you will work with observability tools that you are
+likely to encounter when working with on-prem clusters. You can see
+how they handle logging, monitoring, and tracing relative to the Anthos tools
+you've just worked with.</p>
+<h2 id="step13">Task 10. Query Istio metrics with Prometheus</h2>
+<p>In this task, you will use <strong>Prometheus</strong> to view metrics for services as
+visualizations. This current installation of Istio with Prometheus includes many
+metrics already.</p>
+<h3>Verify that the prometheus service is running in the onprem cluster</h3>
+<ol>
+<li>
+<p>Switch your <code>kubectl</code> context to <code>onprem.k8s.local</code>, and check that
+prometheus is installed.</p>
+<pre><code class="language-bash prettyprint">kubectx onprem.k8s.local&#x000A;kubectl -n istio-system get svc prometheus&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code class="language-bash prettyprint">NAME         TYPE        CLUSTER-IP      ...&#x000A;prometheus   ClusterIP   10.43.253.195&#x000A;</code></pre>
+</li>
+</ol>
+<h3>Visualize existing metrics with Prometheus</h3>
+<p>Verify that metric values are being collected with <strong>Prometheus</strong>.</p>
+<ol start="2">
+<li>
+<p>In Cloud Shell, set up port-forwarding for Prometheus:</p>
+<pre><code class="language-bash prettyprint">kubectl -n istio-system port-forward \&#x000A;    $(kubectl -n istio-system get pod -l app=prometheus -o jsonpath='{.items[0].metadata.name}') 8080:9090&#x000A;</code></pre>
+<p>This leaves the port-forwarding command running in Cloud Shell.</p>
+</li>
+<li>
+<p>Open the Prometheus UI by clicking the Web preview button in the Cloud Shell
+toolbar and selecting <strong>Preview on port 8080</strong>.</p>
+</li>
+<li>
+<p>Create a graph for requests sent to the productcatalogservice service:</p>
+<p>This blank form is the new graph visualization editor.</p>
+<ul>
+<li>
+<p>Enter this <strong>Expression</strong> to show total requests to <strong>productcatalogservice</strong>:</p>
+</li>
+</ul>
+<pre><code class="language-bash prettyprint">istio_requests_total{destination_service="productcatalogservice.default.svc.cluster.local"}&#x000A;</code></pre>
+<ul>
+<li>Click <strong>Execute</strong>.</li>
+<li>Select the <strong>Graph</strong> tab below the <strong>Execute</strong> button.</li>
+</ul>
+<p>You should see the beginning of traffic in the mesh, and an increasing
+number of requests being recorded.</p>
+<p><img alt="Prometheus ProductServiceCatalog Requests" src="https://cdn.qwiklabs.com/I3HZDa9UuiG1uWxa1Skim4jaarw7EOMGWrvchASslTo%3D"></p>
+<p>If you have time, add more graphs, and try other expressions, like
+<code>rate(istio_requests_total[1m])</code>.</p>
+<p><img alt="Request rates" src="https://cdn.qwiklabs.com/oL772dJ6EMQ8xQ6gSBpnrSMqFQehBjWgnMafSzzxk3M%3D"></p>
+</li>
+</ol>
+<h2 id="step14">Task 11. Visualize Istio metrics with Grafana</h2>
+<p>In this task, you use <strong>Grafana</strong> to set up and use an Istio Dashboard to
+monitor mesh traffic. You will use the Grafana Istio add-on and the web-based
+interface for viewing service mesh traffic data.</p>
+<h3>Verify that the grafana service is running in the cluster</h3>
+<ol>
+<li>
+<p>In Cloud Shell, use <code>CTRL-C</code> to stop the port-forwarding to Prometheus.</p>
+</li>
+<li>
+<p>Verify that the grafana service is running in the cluster:</p>
+<pre><code class="language-bash prettyprint">kubectl -n istio-system get svc grafana&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code class="language-bash prettyprint">NAME      TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)&#x000A;grafana   ClusterIP   10.43.251.41   &lt;none&gt;        3000/TCP&#x000A;</code></pre>
+</li>
+</ol>
+<h3>Open the Istio Dashboard using the Grafana UI</h3>
+<ol start="3">
+<li>
+<p>Set up port-forwarding for Grafana:</p>
+<pre><code class="language-bash prettyprint">kubectl -n istio-system port-forward \&#x000A;    $(kubectl -n istio-system get pod -l app=grafana -o jsonpath='{.items[0].metadata.name}') 8080:3000&#x000A;</code></pre>
+<p>This leaves the port-forwarding command running in Cloud Shell.</p>
+</li>
+<li>
+<p>Open the Grafana UI by clicking the Web preview button in the Cloud Shell
+toolbar and selecting <strong>Preview on port 8080</strong>.</p>
+<p>You will see the Home Dashboard.</p>
+<p><img alt="Grafana Home Dashboard" src="https://cdn.qwiklabs.com/gAEk%2Bw%2Bl%2BEr8ZINH2d2UjoJJLxIalCKHubC1sn1VQ9s%3D"></p>
+</li>
+<li>
+<p>Navigate to the Istio Mesh Dashboard.</p>
+<ul>
+<li>Click <strong>Dashboards</strong> <img alt="Grafana Dashboards icon" src="https://cdn.qwiklabs.com/yKp6c%2FKoNXKC1VORPb1ljyKUjssRKasTsVw6e%2F5BAq0%3D">
+</li>
+<li>Click <strong>Manage</strong>
+</li>
+<li>Click the <strong>istio</strong> folder</li>
+<li>Click the <strong>Istio Mesh Dashboard</strong>
+</li>
+</ul>
+<p><img alt="Grafana IstioMesh Dashboard" src="https://cdn.qwiklabs.com/fFqBWoUsdvasN70uhimkyxRQY69kxhuRqX1p0ezQAh8%3D"></p>
+<p>This is a global view of the Mesh, along with services and workloads.
+Take a couple minutes to explore the dashboard.</p>
+</li>
+</ol>
+<h3>View Istio Services</h3>
+<p>The Istio Service Dashboard gives details about metrics for a selected service
+and related client workloads. Service workloads, selected by the <strong>Service</strong>
+dropdown, are workloads providing a service, while Client workloads are those
+calling this service.</p>
+<ol start="6">
+<li>
+<p>Navigate to the Istio Service Dashboard.</p>
+<ul>
+<li>Click <strong>Dashboards</strong> <img alt="Grafana Dashboards icon" src="https://cdn.qwiklabs.com/yKp6c%2FKoNXKC1VORPb1ljyKUjssRKasTsVw6e%2F5BAq0%3D">
+</li>
+<li>Click <strong>Manage</strong>
+</li>
+<li>Click the <strong>istio</strong> folder</li>
+<li>Click the <strong>Istio Service Dashboard</strong>
+</li>
+</ul>
+</li>
+<li>
+<p>Disregard the errors you see initially. From the Service dropdown, select
+<strong>productcatalogservice...</strong>.</p>
+<p><img alt="Choosing service in Grafana" src="https://cdn.qwiklabs.com/CCzk6gZ1t%2BCqN8kl9N8UkHF8GkjEZ6PFQo9yrCDTGmA%3D"></p>
+<p>Take a couple minutes to review the metrics presented in the dashboard.</p>
+<p><img alt="Grafana IstioService Dashboard" src="https://cdn.qwiklabs.com/x38oUpu0bFqvrc53eSkSmskncfWCDF21OWbcPyrtpsQ%3D"></p>
+<p>You can also click the <strong>Service</strong> dropdown and view other services.</p>
+</li>
+</ol>
+<h2 id="step15">Task 12. Generate and visualize traces with Jaeger</h2>
+<p>In this task, you learn how to use the <strong>Jaeger</strong> distributed tracing tools to
+review time-based trace data from your multi-service application. Jaeger can
+surface useful trace data for any service, regardless of the language,
+framework, or platform you use to build and host the service.</p>
+<p>Jaeger depends on Istio sampling your requests. Istio leverages Envoy’s
+distributed tracing feature to provide tracing integration out of the box.</p>
+<p>Istio captures a trace for <strong>all requests</strong> when installed with the <code>demo</code>
+configuration profile. When using the Bookinfo sample application, every time
+you access <code>/productcatalogservice</code>, you will see a corresponding trace in the
+dashboard. This sampling rate is only suitable for a <strong>test or low-traffic
+mesh</strong>. For a high traffic mesh, there are ways for you to lower the trace
+sampling rate.</p>
+<p>Request tracing works in partnership with metrics and logging, because when
+tracing identifies latency or broken flows, logs are needed to learn why. Unlike
+metrics, which tend to surface insights by aggregating data, tracing is more
+singular in purpose. Frequently, tracing is an added effort, engaged only when
+needed to troubleshoot issues surfaced by monitoring.</p>
+<p>This task uses the Bookinfo sample as the example application.</p>
+<h3>Open the Jaeger UI</h3>
+<ol>
+<li>
+<p>In Cloud Shell, use <code>CTRL-C</code> to stop the port-forwarding to Grafana.</p>
+</li>
+<li>
+<p>Set up port-forwarding for Jaeger:</p>
+<pre><code class="language-bash prettyprint">kubectl -n istio-system port-forward \&#x000A;    $(kubectl -n istio-system get pod -l app=jaeger -o jsonpath='{.items[0].metadata.name}') 8080:16686&#x000A;</code></pre>
+<p>This leaves the port-forwarding command running in Cloud Shell.</p>
+</li>
+<li>
+<p>Open the Jaeger UI.</p>
+<ul>
+<li>Click the Web preview button in the Cloud Shell toolbar, and
+select <strong>Preview on port 8080</strong>.</li>
+</ul>
+<p>You will see the Jaeger UI.</p>
+<p><img alt="Jaeger UI" src="https://cdn.qwiklabs.com/RSrdHn3%2FPxkqD7Frh5sOromE3gGNlHqFfmtYLifvPY0%3D"></p>
+</li>
+<li>
+<p>Review traces.</p>
+<ul>
+<li>On the <strong>Find Traces</strong> panel, <strong>Service</strong> dropdown, select
+<code>productcatalogservice.default</code>.</li>
+<li>Click the <strong>Find Traces</strong> button.</li>
+<li>In the trace timeline, top of page, click a recent trace
+(circle), on the right side of the graph,
+to see more details about the latest request to <code>/xxx</code>.</li>
+<li>Click spans to see more details.</li>
+</ul>
+<p><img alt="Jaeger trace selection" src="https://cdn.qwiklabs.com/rzcmnQSBlQsBJ2ccj3z5xZSinuYbvQSK%2FwPtXtHr3As%3D"></p>
+</li>
+</ol>
+<h2 id="step16">Task 13. Visualize your service Mesh with Kiali</h2>
+<p>In this task, you use <strong>Kiali</strong> to visualize different aspects of your Istio
+mesh.</p>
+<p>Kiali was installed using the Istio <code>demo</code> configuration profile. A default
+secret was also created, with a username of <code>admin</code>, and a passphrase of
+<code>admin</code>.</p>
+<h3>Open the Kiali UI</h3>
+<ol>
+<li>
+<p>In Cloud Shell, use <code>CTRL-C</code> to stop the port-forwarding to Grafana.</p>
+</li>
+<li>
+<p>Set up port-forwarding for Kiali:</p>
+<pre><code class="language-bash prettyprint">kubectl -n istio-system port-forward \&#x000A;    $(kubectl -n istio-system get pod -l app=kiali -o jsonpath='{.items[0].metadata.name}') 8080:20001&#x000A;</code></pre>
+<p>This leaves the port-forwarding command running in Cloud Shell.</p>
+</li>
+<li>
+<p>Open the Kiali UI by clicking the Web preview button in the Cloud Shell
+toolbar and selecting <strong>Preview on port 8080</strong>.</p>
+<p>You will see <strong>Log in Kiali</strong>.</p>
+<ul>
+<li>Click <strong>Log In</strong>
+</li>
+</ul>
+<p><img alt="Kiali Home" src="https://cdn.qwiklabs.com/4KNhEHONpGMmYyMKjOzEHPev532Tiq4mZPQQWf06oN8%3D"></p>
+<p>This is the <strong>Overview</strong> page of your mesh. This displays all the namespaces
+that have services in your mesh. You can adjust the <strong>time range for
+overview data</strong> by adjusting the dropdown at the top of the page that
+is initialized to <code>Last 1m</code>.</p>
+<p><img alt="Kiali Overview" src="https://cdn.qwiklabs.com/ztGXgmY392N66Q5oKQhfbqTinlIO4yFH%2Bz9ASO%2B9JrE%3D"></p>
+</li>
+</ol>
+<h3>View the default namespace service graph visualization</h3>
+<ol start="4">
+<li>
+<p>Click <strong>Graph</strong> on the left menu panel to view the service graph. Using
+the <code>Namespace</code> dropdown in the upper left corner of the interface,
+include the <strong>default</strong> namespace .</p>
+<p><img alt="Kiali services graph" src="https://cdn.qwiklabs.com/4HMbud25Z5OPqmkiWamrX93%2BH7BJE6Zd%2F%2BHyyEhP2iY%3D"></p>
+<p>You can use the bottom toolbar to resize the graph rendering.</p>
+</li>
+<li>
+<p>Notice that in addition to the service graph, <strong>HTTP Traffic</strong>, and
+<strong>HTTP - Total Request Traffic min / max</strong> graphs are rendered to the
+right across multiple tabs.</p>
+</li>
+<li>
+<p>Select any node or edge in the graph to display its metric details in the
+summary details panel on the right.</p>
+</li>
+<li>
+<p>To view your service mesh using different graph types, change the
+<strong>Graph Type</strong> dropdown menu, which defaults to <code>Versioned app graph</code>.</p>
+</li>
+<li>
+<p>Select the <strong>Display</strong> rop down, then choose <strong>Requests percentage</strong> under
+<strong>Show Edge Labels</strong>.</p>
+</li>
+<li>
+<p>Click the <strong>Display</strong> dropdown, and check the <strong>Traffic Animation</strong> box.</p>
+<p><img alt="Kiali animation" src="https://cdn.qwiklabs.com/4FISNr9b9zXKf40vqrYehuHZ82gutFGWtI3NM5nMzxs%3D"></p>
+</li>
+</ol>
+<h3>View added metrics for Applications, Workloads, and Services</h3>
+<ol start="10">
+<li>
+<p>Click each of <strong>Applications</strong>, <strong>Workloads</strong>, <strong>Services</strong>, and
+<strong>Istio Config</strong> on the left menu panel for additional metrics views.</p>
+</li>
+<li>
+<p>Select <strong>Workloads</strong>, then choose <strong>productcatalogservice</strong>.</p>
+</li>
+<li>
+<p>Notice additional visualization tabs for Traffic, Logs, Inbound Metrics,
+and Outbound Metrics.</p>
+</li>
+<li>
+<p>Click <strong>Inbound Metrics</strong>.</p>
+<p><img alt="Kiali productcatalogservice metrics" src="https://cdn.qwiklabs.com/EBjGbfifCZiHcfZNKeSOJ8gqHwCZRxHwk8pD0ucDIBI%3D"></p>
+</li>
+</ol>
+<h2 id="step17">Review</h2>
+<p>In this lab, you learned about logging, monitoring, and tracing using
+Google Cloud's operations suite and common tools used for on-prem clusters.</p>
+<h2 id="step18">End your lab</h2>
+<p>When you have completed your lab, click <strong>End Lab</strong>. Qwiklabs removes the resources you’ve used and cleans the account for you.</p>
+<p>You will be given an opportunity to rate the lab experience. Select the applicable number of stars, type a comment, and then click <strong>Submit</strong>.</p>
+<p>The number of stars indicates the following:</p>
+<ul>
+<li>1 star = Very dissatisfied</li>
+<li>2 stars = Dissatisfied</li>
+<li>3 stars = Neutral</li>
+<li>4 stars = Satisfied</li>
+<li>5 stars = Very satisfied</li>
+</ul>
+<p>You can close the dialog box if you don't want to provide feedback.</p>
+<p>For feedback, suggestions, or corrections, please use the <strong>Support</strong> tab.</p>
+
+<p>Copyright 2021 Google LLC All rights reserved. Google and the Google logo are trademarks of Google LLC. All other company and product names may be trademarks of the respective companies with which they are associated.</p>
+
+
+
+</div>
+</div>
+
+
+<div class='hidden js-end-lab-button-container lab-content__end-lab-button'>
+<ql-lab-control-button class='js-end-lab-button' running></ql-lab-control-button>
+</div>
+<!-- / TODO: Move recommendations into the end lab modal -->
+</ql-drawer-content>
+<ql-drawer end id='outline-drawer' open slot='drawer' width='320'>
+<div class='js-lab-content-outline lab-content__outline'>
+<a href='#step1'>Overview</a><a href='#step2'>Task 0. Lab Setup</a><a href='#step3'>Task 1. Install Anthos Service Mesh with tracing enabled</a><a href='#step4'>Task 2. Install Istio with Prometheus, Grafana, Jaeger, and Kiali enabled</a><a href='#step5'>Task 3. Install the microservices-demo application on both clusters</a><a href='#step6'>Task 4. Review Google Cloud's operations suite functionality</a><a href='#step7'>Task 5. Deploy a canary release that has high latency</a><a href='#step8'>Task 6. Define your Service Level Objective</a><a href='#step9'>Task 7. Diagnose the problem</a><a href='#step10'>Task 8. Roll back the release and verify things are better</a><a href='#step11'>Task 9. Visualize your mesh with the Anthos Service Mesh dashboard</a><a href='#step12'>Switching Gears - Working with popular on-prem observability tools</a><a href='#step13'>Task 10. Query Istio metrics with Prometheus</a><a href='#step14'>Task 11. Visualize Istio metrics with Grafana</a><a href='#step15'>Task 12. Generate and visualize traces with Jaeger</a><a href='#step16'>Task 13. Visualize your service Mesh with Kiali</a><a href='#step17'>Review</a><a href='#step18'>End your lab</a>
+</div>
+</ql-drawer>
+</ql-drawer-container>
+</ql-drawer-content>
+</ql-drawer-container>
+<div class='lab-introduction js-lab-introduction is-hidden'>
+<div class='lab-introduction__inner'>
+<h1 class='headline-1'>Welcome to Your First Lab!</h1>
+<ql-icon-button class='js-skip-button'>close</ql-icon-button>
+<div class='lab-introduction__video'>
+<iframe allow='autoplay; encrypted-media' allowfullscreen frameborder='0' id='lab-introduction' src='https://www.youtube.com/embed/yF7EDXKTmoQ?enablejsapi=1&amp;rel=0&amp;showinfo=0'></iframe>
+</div>
+<a class='js-skip-button button button--outline'>Skip this video</a>
+</div>
+</div>
+
+
+
+</div>
+</main>
+
+
+<div class='modal fade' id='lab-details-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<div class='modal-body'>
+<p class='l-mbm'>
+Architecting Hybrid Infrastructure with Anthos: Use Anthos Service Mesh with Google Cloud's operations suite, and the Anthos Service Mesh Dashboard
+</p>
+<p class='small-label l-mbs'>
+<strong>
+Duration:
+</strong>
+11m setup
+&middot;
+180m access
+&middot;
+180m completion
+</p>
+<p class='small-label l-mbs'>
+<span><strong>Levels: </strong>intermediate</span>
+</p>
+<p class='small-label'>
+<strong>
+Permalink:
+</strong>
+<a href="https://googlecoursera.qwiklabs.com/catalog_lab/2736">https://googlecoursera.qwiklabs.com/catalog_lab/2736</a>
+</p>
+</div>
+<div class='modal-actions'>
+<a class='button button--text' data-dismiss='modal'>
+Got It
+</a>
+</div>
+
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='modal fade' id='lab-review-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<form class="simple_form js-lab-review-form" id="edit_lab_review_12095078" action="/lab_reviews/12095078" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="_method" value="patch" /><div class='modal-body'>
+<p class='label'>
+How satisfied are you with this lab?*
+</p>
+<div class='rateit js-rateit' data-rateit-max='5' data-rateit-min='0' data-rateit-resetable='false' data-rateit-step='1' data-rateit-value='5'></div>
+<div class='l-mtm'>
+
+<div class="control-group hidden lab_review_user_id"><div class="controls"><input class="hidden" type="hidden" value="3894861" name="lab_review[user_id]" id="lab_review_user_id" /></div></div>
+<div class="control-group hidden lab_review_classroom_id"><div class="controls"><input class="hidden" type="hidden" name="lab_review[classroom_id]" id="lab_review_classroom_id" /></div></div>
+<div class="control-group hidden lab_review_lab_id"><div class="controls"><input class="hidden" type="hidden" value="2736" name="lab_review[lab_id]" id="lab_review_lab_id" /></div></div>
+<div class="control-group hidden lab_review_focus_id"><div class="controls"><input class="hidden" type="hidden" name="lab_review[focus_id]" id="lab_review_focus_id" /></div></div>
+<div class="control-group hidden lab_review_rating"><div class="controls"><input class="hidden js-rating-input" type="hidden" value="2" name="lab_review[rating]" id="lab_review_rating" /></div></div>
+<div class="control-group text optional lab_review_comment"><label class="text optional control-label" for="lab_review_comment">Comment</label><div class="controls"><textarea class="text optional" name="lab_review[comment]" id="lab_review_comment">
+</textarea></div></div>
+</div>
+</div>
+<div class='modal-actions'>
+<a class='button button--text' data-dismiss='modal'>
+Cancel
+</a>
+<input type="submit" name="commit" value="Submit" disabled="disabled" id="submit" data-disabled="false" class="button" data-disable-with="Submit" />
+</div>
+</form>
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+
+
+<script>
+  $( function() {
+    ql.initMaterialInputs();
+    initChosen();
+    initSearch();
+    initTabs();
+    ql.list.init();
+    ql.favoriting.init();
+    ql.header.myAccount.init();
+    initTooltips();
+    ql.autocomplete.init();
+    ql.modals.init();
+    ql.toggleButtons.init();
+    ql.analytics.init();
+    ql.labControlPanel.addRecaptchaErrorHandler();
+  initLabContent();
+  ql.labOutline.links.init();
+  initLabReviewModal();
+  ql.labAssessment.init();
+  ql.labIntroduction.init( true );
+  ql.labData.init();
+  initLabTranslations( {"are_you_sure":"All done? If you end this lab, you will lose all your work. You may not be able to restart the lab if there is a quota limit. Are you sure you want to end this lab?\n","in_progress":"*In Progress*","ending":"*Ending*","starting":"*Starting, please wait*","end_concurrent_labs":"Sorry, you can only run one lab at a time. To start this lab, please confirm that you want all of your existing labs to end.\n","copied":"Copied","no_resource":"Error retrieving resource.","no_support":"No Support","mac_press":"Press ⌘-C to copy","thanks_review":"Thanks for reviewing this lab.","windows_press":"Press Ctrl-C to copy","days":"days"} );
+  ql.labRun.init();
+  ql.chat.init();
+  ql.initHeader();
+  ql.navigation.init();
+  ql.navPanel.init();
+  ql.navigation.init();
+  
+  });
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,1212 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title>Creating Services and Ingress Resources | Qwiklabs</title>
+<script>
+//<![CDATA[
+window.gon={};gon.current_user={"firstname":"DANIEL","lastname":"ENRIQUE SANDOVAL SANCHEZ","fullname":"DANIEL ENRIQUE SANDOVAL SANCHEZ","company":"Coursera","email":"desandovals@liverpool.com.mx","origin":"googlecoursera-run, lti-coursera","subscriptions":0,"id":"40414ff5fc280f833d9acca966912f93","qlCreatedAt":"2020-11-17 20:45:59 UTC","optIn":null,"current_organization_id":null,"current_organization_role":null};gon.segment="j4Im8pqIko0Lxq4wVVZWMPMM0EroHUvb";gon.deployment="googlecoursera-run";gon.content={"type":"Lab","id":2302,"name":"Creating Services and Ingress Resources"};
+//]]>
+</script>
+<script>
+  dataLayer = [
+    {user: gon.current_user},
+    {content: gon.content}
+  ];
+</script>
+<script>
+  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer',"GTM-TQR88QK");
+</script>
+<script>
+  EVENT_SOURCE_BASE_URL = "https://googlecoursera-run.qwiklabs.com/nchan-sub?id=";
+</script>
+<script src="https://cdn.qwiklabs.com/assets/hallofmirrors/polyfills/webcomponents-loader-408088dc333247a761de5f2b2a4ba1cabd2bc36579f83ba92a559eb3682a9b77.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/vendor-45d462772c30000424907184f70c7157e95fb6227698d1671c5051818a6f60d8.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/application-6874b164d8346f46605fc772a6f7375a39626ffc9f6d168e23a3a8c40bb6fd28.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/hallofmirrors/hallofmirrors-b7ff781d00ceebdf75589f58475cea695bafd8d5cc1f3eb4baf6122ed4a4b736.js"></script>
+<!--[if lt IE 9]>
+<script src='http://html5shim.googlecode.com/svn/trunk/html5.js' type='text/javascript'></script>
+<![endif]-->
+<!--[endif]>  <![endif]-->
+<script type='application/ld+json'>
+{
+  "@context": "http://schema.org",
+  "@type": "WebSite",
+  "url": "https://www.qwiklabs.com/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://www.qwiklabs.com/catalog?keywords={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script id='ze-snippet' src='https://static.zdassets.com/ekr/snippet.js?key=511e4158-0aec-4e3c-b2e6-4daa1769f51e'></script>
+
+
+<meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="l1BLLREg9ubVgmkxKlCsrHc8CkZKB4hKJ0Akat5vkmF6tEhg6PJdWYu8d5L9Ps5V87Z2ovUdsAXd6CAzKadNpw==" />
+<meta content='width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0' name='viewport'>
+<meta content='1rRsY0INj8RvwB5EF5pwdxt2A2P9aDgAlsICaJ0d5w0' name='google-site-verification'>
+<meta content='#3681E4' property='msapplication-TileColor'>
+<meta content='/favicon-144.png' property='msapplication-TileImage'>
+<meta content='[{&quot;id&quot;:&quot;recaptcha_experiment&quot;,&quot;optimize_id&quot;:&quot;dpViOcLkT3qS4TvL2mRojA&quot;,&quot;title&quot;:&quot;No Recaptcha shown for trusted users&quot;,&quot;variant_index&quot;:0,&quot;variant&quot;:&quot;original&quot;}]' name='active-experiments'>
+<meta content='{&quot;userId&quot;:3894861}' name='help-api-product-data'>
+<meta content='Architecting with Google Kubernetes Engine: Creating Services and Ingress Resources' name='description'>
+<meta content='Qwiklabs' name='author'>
+<meta content='Creating Services and Ingress Resources | Qwiklabs' property='og:title'>
+<meta content='website' property='og:type'>
+<meta content='/favicon-144.png' property='og:image'>
+<meta content='Qwiklabs' property='og:site_name'>
+<meta content='Architecting with Google Kubernetes Engine: Creating Services and Ingress Resources' property='og:description'>
+<meta content='/qwiklabs_logo_900x887.png' property='og:logo' size='900x887'>
+<meta content='/qwiklabs_logo_994x187.png' property='og:logo' size='994x187'>
+
+
+<link href='/favicon-32.png' rel='shortcut icon'>
+<link color='#3681E4' href='/favicon-svg.svg' rel='mask-icon'>
+<link href='/favicon-180.png' rel='apple-touch-icon-precomposed'>
+
+
+
+<link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css?family=Oswald:400|Roboto+Mono:400,700|Roboto:300,400,500,700|Google+Sans:300,400,500,700|Google+Sans+Display:400|Material+Icons|Google+Material+Icons" />
+
+
+<link rel="stylesheet" media="all" href="https://cdn.qwiklabs.com/assets/application-cf67fd00dd904ecce1e24779d7504aefc7fbd5d00696246fa80212743a81bf07.css" />
+
+
+
+</head>
+<body class='lab-show l-full no-nav application-new focuses focuses-show lab-show l-full no-nav '>
+<noscript>
+<iframe height='0' src='https://www.googletagmanager.com/ns.html?id=GTM-TQR88QK' style='display:none;visibility:hidden;' width='0'></iframe>
+</noscript>
+<span class='hidden' id='flash-sibling-before'></span>
+
+<div class='header-container'>
+<div class='header'>
+<ql-icon-button class='js-nav-toggle header__nav-panel-button l-mrm'>menu</ql-icon-button>
+<div class='header__title'>
+<ql-icon-button label="Back" href="https://www.coursera.org/" id="4c9d71d2c2216345" target="_self">arrow_back</ql-icon-button><div class="mdl-tooltip" data-mdl-for="4c9d71d2c2216345">Back</div>
+
+<h1 class='headline-5'>
+Creating Services and Ingress Resources
+</h1>
+</div>
+<div class='header__actions'>
+<ql-icon-button class='header__button--search js-header-search-bar-button'>search</ql-icon-button>
+<ql-icon-button id='control-panel-target' style='display: none;'>
+dashboard
+</ql-icon-button>
+<ql-menu for='control-panel-target' id='control-panel-menu'></ql-menu>
+
+<ql-icon-button id='help-menu-button'>help</ql-icon-button>
+<div class='mdl-tooltip js-tooltip' data-mdl-for='help-menu-button'>
+Help
+</div>
+<ql-menu for='help-menu-button' id='help-menu'>
+<ql-menu-item>
+<ql-help context='lab' data-analytics-action='opened_help' data-analytics-label='lab' productdata='{&quot;userId&quot;:3894861}'>
+Help Center
+</ql-help>
+</ql-menu-item>
+<ql-menu-item>
+<a target="_blank" class="ql-body-1" href="https://support.google.com/qwiklabs/contact/contact_us">Email support</a>
+</ql-menu-item>
+<ql-menu-item>
+<a class='ql-body-1' onClick='ql.chat.open()'>Chat support</a>
+</ql-menu-item>
+</ql-menu>
+
+<ql-icon-button id='language'>language</ql-icon-button>
+<div class='mdl-menu mdl-menu__bottom-right mdl-js-menu elevation-3' for='language'>
+<a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ar" href="/focuses/15531525?locale=ar&amp;parent=lti_session">العربية‬‎
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="de" href="/focuses/15531525?locale=de&amp;parent=lti_session">Deutsch
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="en" href="/focuses/15531525?locale=en&amp;parent=lti_session">English
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="es" href="/focuses/15531525?locale=es&amp;parent=lti_session">español (Latinoamérica)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="fr" href="/focuses/15531525?locale=fr&amp;parent=lti_session">français
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="id" href="/focuses/15531525?locale=id&amp;parent=lti_session">bahasa Indonesia
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="it" href="/focuses/15531525?locale=it&amp;parent=lti_session">Italiano
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ja" href="/focuses/15531525?locale=ja&amp;parent=lti_session">日本語
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ko" href="/focuses/15531525?locale=ko&amp;parent=lti_session">한국어
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pl" href="/focuses/15531525?locale=pl&amp;parent=lti_session">Polski
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pt_BR" href="/focuses/15531525?locale=pt_BR&amp;parent=lti_session">português (Brasil)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pt_PT" href="/focuses/15531525?locale=pt_PT&amp;parent=lti_session">português (Portugal)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ru" href="/focuses/15531525?locale=ru&amp;parent=lti_session">русский
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="tr" href="/focuses/15531525?locale=tr&amp;parent=lti_session">Türkçe
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="zh" href="/focuses/15531525?locale=zh&amp;parent=lti_session">简体中文
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="zh_TW" href="/focuses/15531525?locale=zh_TW&amp;parent=lti_session">繁體中文
+</a></div>
+<button class='icon-button' id='my_account'>
+<ql-avatar></ql-avatar>
+</button>
+<ql-menu for='my_account' open>
+<div class='my-account-menu'>
+<ql-avatar class='l-mtl l-mbl' size='120'></ql-avatar>
+<div class='my-account-menu__user-info l-mbl'>
+<h4 class='ql-subhead-1'>DANIEL ENRIQUE SANDOVAL SANCHEZ</h4>
+<p class='ql-body-2 text--light'>desandovals@liverpool.com.mx</p>
+<p class='ql-body-2 text--light'>
+</p>
+<a class="text--green ql-subhead-2" href="/my_account/payments"><ql-chip positive>
+0 Credits
+</ql-chip>
+</a></div>
+<div class='buttons l-mbl'>
+<a class="button button--hairline" id="settings" href="/my_account/profile">Settings</a>
+</div>
+<hr>
+<ql-button data-analytics-action='clicked_sign_out' href='/users/sign_out' method='delete'>
+Sign Out
+</ql-button>
+<div class='privacy l-mtl'>
+<a class="ql-caption text--light" href="/privacy_policy">Privacy</a>
+<span class='ql-caption text--light l-mls l-mrs'>&middot;</span>
+<a class="ql-caption text--light" href="/terms_of_service">Terms</a>
+</div>
+</div>
+</ql-menu>
+
+</div>
+</div>
+<div class='header__search-bar js-header-search-bar'>
+<form class="js-search-form-mobile" onsubmit="ql.searchFilter(); return false;" action="/searches/elasticsearch" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="n/1039DD9+YWb9Xx2wzSpoFpjM8ewJ8bTKHfpRrJXTdyGXeSKRFcWUhRy1IMYrBfBePwK6Hap1S2Cdv87QGC8Q==" />
+<input type="text" name="keywords" id="keywords" placeholder="Search" maxlength="255" aria-label="catalog search bar" />
+</form>
+
+<ql-icon-button class='js-close-search-bar'>close</ql-icon-button>
+</div>
+</div>
+
+<nav class='nav-bar'>
+<a class="nav-bar__item js-navigation-button" href="/"><ql-icon class='nav-bar__item__icon'>
+home
+</ql-icon>
+<span class='nav-bar__item__label'>
+Home
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="/catalog"><ql-icon class='nav-bar__item__icon'>
+school
+</ql-icon>
+<span class='nav-bar__item__label'>
+Catalog
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="/my_learning"><ql-icon class='nav-bar__item__icon'>
+event_note
+</ql-icon>
+<span class='nav-bar__item__label'>
+My Learning
+</span>
+</a>
+</nav>
+
+<nav class='nav-panel js-nav-panel'>
+<div class='nav-panel__logo'>
+<div class='logo logo--blue'></div>
+</div>
+<a title="Home" tabindex="-1" class="nav-panel__item js-navigation-button" href="/"><ql-icon class='nav-panel__item__icon'>
+home
+</ql-icon>
+<div class='nav-panel__item__label'>
+Home
+</div>
+</a>
+<a title="Catalog" tabindex="-1" class="nav-panel__item js-navigation-button" href="/catalog"><ql-icon class='nav-panel__item__icon'>
+school
+</ql-icon>
+<div class='nav-panel__item__label'>
+Catalog
+</div>
+</a>
+<a title="My Learning" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_learning"><ql-icon class='nav-panel__item__icon'>
+event_note
+</ql-icon>
+<div class='nav-panel__item__label'>
+My Learning
+</div>
+</a>
+<div class='nav-panel__spacer'></div>
+<a title="Profile" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/profile"><ql-icon class='nav-panel__item__icon'>
+account_circle
+</ql-icon>
+<div class='nav-panel__item__label'>
+Profile
+</div>
+</a>
+<a title="Credits &amp; Subscriptions" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/credits"><ql-icon class='nav-panel__item__icon'>
+money
+</ql-icon>
+<div class='nav-panel__item__label'>
+Credits &amp; Subscriptions
+</div>
+</a>
+<a title="Security" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/security"><ql-icon class='nav-panel__item__icon'>
+security
+</ql-icon>
+<div class='nav-panel__item__label'>
+Security
+</div>
+</a>
+<div class='nav-panel__spacer'></div>
+<a class="nav-panel__item" tabindex="-1" href="#"><ql-help>
+<div class='nav-panel__help-item'>
+<ql-icon class='nav-panel__item__icon'>help</ql-icon>
+<div class='nav-panel__item__label'>
+Help
+</div>
+</div>
+</ql-help>
+</a><div class='nav-panel__small-links'>
+<a tabindex="-1" href="/privacy_policy">Privacy</a>
+<a tabindex="-1" href="/terms_of_service">Terms</a>
+</div>
+</nav>
+<div class='nav-panel__overlay js-nav-toggle'></div>
+
+<main class='js-main'>
+<div class='l-main-wrapper' id='main-wrapper'>
+
+
+
+
+
+
+
+<div class='lab-assessment__tab js-open-lab-assessment-panel'>
+<h6 class='js-lab-assessment-total-score'>
+&mdash;/30
+</h6>
+</div>
+<div class='lab-assessment__panel js-lab-assessment-panel'>
+<div class='lab-assessment__panel__header'>
+<h4>Checkpoints</h4>
+<ql-icon-button class='js-close-lab-assessment-panel'>arrow_forward</ql-icon-button>
+</div>
+<div class='lab-assessment__step'>
+<p class='lab-assessment__step__title'>
+Create Pods and services to test DNS resolution
+</p>
+<div class='lab-assessment__step__action'>
+<a class='button js-show-run-step-button' step_no='1'>
+Check my progress
+</a>
+<p class='lab-assessment__step__score'>
+<span class='js-assessment-step-score-1'>
+</span>
+/ 5
+</p>
+</div>
+</div>
+
+<div class='lab-assessment__step'>
+<p class='lab-assessment__step__title'>
+Deploy a sample workload and a ClusterIP service
+</p>
+<div class='lab-assessment__step__action'>
+<a class='button js-show-run-step-button' step_no='2'>
+Check my progress
+</a>
+<p class='lab-assessment__step__score'>
+<span class='js-assessment-step-score-2'>
+</span>
+/ 5
+</p>
+</div>
+</div>
+
+<div class='lab-assessment__step'>
+<p class='lab-assessment__step__title'>
+Convert the service to use NodePort
+</p>
+<div class='lab-assessment__step__action'>
+<a class='button js-show-run-step-button' step_no='3'>
+Check my progress
+</a>
+<p class='lab-assessment__step__score'>
+<span class='js-assessment-step-score-3'>
+</span>
+/ 5
+</p>
+</div>
+</div>
+
+<div class='lab-assessment__step'>
+<p class='lab-assessment__step__title'>
+Create static public IP addresses using GCP Networking
+</p>
+<div class='lab-assessment__step__action'>
+<a class='button js-show-run-step-button' step_no='4'>
+Check my progress
+</a>
+<p class='lab-assessment__step__score'>
+<span class='js-assessment-step-score-4'>
+</span>
+/ 5
+</p>
+</div>
+</div>
+
+<div class='lab-assessment__step'>
+<p class='lab-assessment__step__title'>
+Deploy a new set of Pods and a LoadBalancer service
+</p>
+<div class='lab-assessment__step__action'>
+<a class='button js-show-run-step-button' step_no='5'>
+Check my progress
+</a>
+<p class='lab-assessment__step__score'>
+<span class='js-assessment-step-score-5'>
+</span>
+/ 5
+</p>
+</div>
+</div>
+
+<div class='lab-assessment__step'>
+<p class='lab-assessment__step__title'>
+Deploy an Ingress resource
+</p>
+<div class='lab-assessment__step__action'>
+<a class='button js-show-run-step-button' step_no='6'>
+Check my progress
+</a>
+<p class='lab-assessment__step__score'>
+<span class='js-assessment-step-score-6'>
+</span>
+/ 5
+</p>
+</div>
+</div>
+
+</div>
+<ql-drawer-container class='js-lab-state' data-analytics-payload='{&quot;label&quot;:&quot;Creating Services and Ingress Resources&quot;,&quot;lab_name&quot;:&quot;Creating Services and Ingress Resources&quot;,&quot;classroom_name&quot;:null,&quot;deployment&quot;:&quot;googlecoursera-run&quot;}' data-focus-id='15531525' data-lab-billing-limit='0.0' data-lab-duration='3600' data-parent='lti_session' data-recaptcha-enabled id='lab-container'>
+<ql-drawer id='terminal-drawer' slot='drawer' style='width: calc(100% - 480px)'>
+<iframe allow='clipboard-read' class='terminal' id='embedded-resource'></iframe>
+</ql-drawer>
+<ql-drawer-content class='js-lab-wrapper' id='lab-content' slot='drawer-content'>
+<ql-drawer-container id='lab-content-container'>
+<ql-drawer id='control-panel-drawer' open slot='drawer' width='320'>
+<ql-lab-control-panel class='ql-lab-control-panel__max-height control-panel js-lab-control-panel' connectionFiles='[]' labControlButton='{&quot;disabled&quot;:false,&quot;pending&quot;:false,&quot;running&quot;:false}' labDetails='[]' labTimer='{&quot;ticking&quot;:false,&quot;secondsRemaining&quot;:3600}' studentResources='[]'>
+<script src="https://www.recaptcha.net/recaptcha/api.js?render=6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr"   ></script>
+        <script>
+          // Define function so that we can call it again later if we need to reset it
+          // This executes reCAPTCHA and then calls our callback.
+          function executeRecaptchaForStartLab() {
+            grecaptcha.ready(function() {
+              grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}).then(function(token) {
+                setInputWithRecaptchaResponseTokenForStartLab('g-recaptcha-response-data-start-lab', token)
+              });
+            });
+          };
+          // Invoke immediately
+          executeRecaptchaForStartLab()
+
+          // Async variant so you can await this function from another async function (no need for
+          // an explicit callback function then!)
+          // Returns a Promise that resolves with the response token.
+          async function executeRecaptchaForStartLabAsync() {
+            return new Promise((resolve, reject) => {
+              grecaptcha.ready(async function() {
+                resolve(await grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}))
+              });
+            })
+          };
+
+                    var setInputWithRecaptchaResponseTokenForStartLab = function(id, token) {
+            var element = document.getElementById(id);
+            element.value = token;
+          }
+
+        </script>
+<input type="hidden" name="g-recaptcha-response-data[start_lab]" id="g-recaptcha-response-data-start-lab" data-sitekey="6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr" class="g-recaptcha g-recaptcha-response "/>
+
+<div class='hidden' id='recaptcha-v2-start-lab' slot='recaptcha'>
+<script src="https://www.recaptcha.net/recaptcha/api.js" async defer ></script>
+<div data-sitekey="6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV" data-callback="recaptchaComplete" data-expired-callback="expireV2Token" class="g-recaptcha "></div>
+          <noscript>
+            <div>
+              <div style="width: 302px; height: 422px; position: relative;">
+                <div style="width: 302px; height: 422px; position: absolute;">
+                  <iframe
+                    src="https://www.recaptcha.net/recaptcha/api/fallback?k=6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV"
+                    name="ReCAPTCHA"
+                    style="width: 302px; height: 422px; border-style: none; border: 0; overflow: hidden;">
+                  </iframe>
+                </div>
+              </div>
+              <div style="width: 300px; height: 60px; border-style: none;
+                bottom: 12px; left: 25px; margin: 0px; padding: 0px; right: 25px;
+                background: #f9f9f9; border: 1px solid #c1c1c1; border-radius: 3px;">
+                <textarea id="g-recaptcha-response" name="g-recaptcha-response"
+                  class="g-recaptcha-response"
+                  style="width: 250px; height: 40px; border: 1px solid #c1c1c1;
+                  margin: 10px 25px; padding: 0px; resize: none;">
+                </textarea>
+              </div>
+            </div>
+          </noscript>
+
+</div>
+</ql-lab-control-panel>
+</ql-drawer>
+<ql-drawer-content id='lab-instructions' slot='drawer-content'>
+<div class='alert alert--fake js-alert'>
+<p class='alert__message js-alert-message'></p>
+<a class='alert__close js-alert-close'>
+<i class='fa fa-times'></i>
+</a>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='js-lab-content lab-content__renderable-instructions'>
+<div class='lab-preamble'>
+<h1 class='lab-preamble__title'>
+Creating Services and Ingress Resources
+</h1>
+<div class='lab-preamble__details subtitle-headline-1'>
+<span>1 hour </span>
+<span>Free</span>
+<div class='lab__rating'>
+<a href="/focuses/15531525/reviews?parent=lti_session"><div class='rateit' data-rateit-readonly='true' data-rateit-value='4.4119'></div>
+
+</a><a data-target='#lab-review-modal' data-toggle='modal'>
+Rate Lab
+</a>
+</div>
+</div>
+</div>
+
+<div class='js-markdown-instructions markdown-lab-instructions' id='markdown-lab-instructions'>
+
+
+
+<h2 id="step1">Overview</h2>
+<p>In this lab, you will create two deployments of Pods and work with three different types of services, including the Ingress resource, and explore how Kubernetes services in GKE are associated with Google Cloud Network Load Balancers.</p>
+<h2 id="step2">Objectives</h2>
+<p>In this lab, you learn how to perform the following tasks:</p>
+<ul>
+<li>
+<p>Observe Kubernetes DNS in action.</p>
+</li>
+<li>
+<p>Define various service types (ClusterIP, NodePort, LoadBalancer) in manifests along with label selectors to connect to existing labeled Pods and deployments, deploy those to a  cluster, and test connectivity.</p>
+</li>
+<li>
+<p>Deploy an Ingress resource that connects clients to two different services based on the URL path entered.</p>
+</li>
+<li>
+<p>Verify Google Cloud  network load balancer creation for type=LoadBalancer services.</p>
+</li>
+</ul>
+<h2 id="step3">Task 0. Lab Setup</h2>
+<h3><strong>Access Qwiklabs</strong></h3>
+<p>For each lab, you get a new GCP project and set of resources for a fixed time at no cost.</p>
+<ol>
+<li>
+<p>Make sure you signed into Qwiklabs using an <strong>incognito window</strong>.</p>
+</li>
+<li>
+<p>Note the lab's access time (for example, <img alt="img/time.png" src="https://cdn.qwiklabs.com/aZQJ4BT7uCmM9XR6BTXgTRP1Hfu1T7q6V%2BcnbdEsbpU%3D"> and make sure you can finish in that time block.</p>
+</li>
+</ol>
+<aside> <p>
+  There is no pause feature. You can restart if needed, but you have to start at the beginning.
+  </p>
+
+</aside>
+<ol start="3">
+<li>
+<p>When ready, click <img alt="img/start_lab.png" src="https://cdn.qwiklabs.com/XE8x7uvQokyubNwnYKKc%2BvBBNrMlo5iNZiDDzQQ3Ddo%3D">.</p>
+</li>
+<li>
+<p>Note your lab credentials. You will use them to sign in to Cloud Platform Console.
+<img alt="img/open_google_console.png" src="https://cdn.qwiklabs.com/0d78dhX6IVMVWmixCPPSBbmi5O2GPokCXf1Ps1AkTgI%3D"></p>
+</li>
+<li>
+<p>Click <strong>Open Google Console</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Use another account</strong> and copy/paste credentials for <strong>this</strong> lab into the prompts.</p>
+</li>
+</ol>
+<aside class="warning"><p>
+  If you use other credentials, you'll get errors or <strong>incur charges</strong>.
+  </p>
+</aside>
+<ol start="7">
+<li>Accept the terms and skip the recovery resource page.</li>
+</ol>
+<aside class="warning"><p>
+  Do not click <strong>End Lab</strong> unless you are finished with the lab or want to restart it. This clears your work and removes the project.
+  </p>
+</aside>
+
+<p>After you complete the initial sign-in steps, the project dashboard appears.</p>
+<h3><strong>Open Cloud Shell</strong></h3>
+<p>You will do most of the work for this lab in  <a href="https://cloud.google.com/developer-shell/#how_do_i_get_started" target="_blank">Cloud Shell</a>.</p>
+<ol>
+<li>On the Google Cloud Console title bar, click <strong>Activate Cloud Shell (</strong> <img alt="e92fcd01cbb5e0ff.png" src="https://cdn.qwiklabs.com/G2OU7QatKvkGgxCZRcv3IFJd8GvwHIJz6JhAtOMT5cg%3D"><strong>)</strong>.</li>
+<li>Click <strong>Start Cloud Shell</strong>.</li>
+</ol>
+<p>After a moment of provisioning, the Cloud Shell prompt appears:</p>
+<h2 id="step4">Task 1. Connect to the lab GKE cluster and test DNS</h2>
+<p>In this task, you connect to the lab GKE cluster and create a deployment manifest for a set of Pods within the cluster that you will then use to test DNS resolution of Pod and service names.</p>
+<h3><strong>Connect to the lab GKE cluster</strong></h3>
+<ol>
+<li>
+<p>In Cloud Shell, type the following command to create environment variables for the Google Cloud zone and cluster name that will be used to create the cluster for this lab.</p>
+</li>
+</ol>
+<pre><code>export my_zone=us-central1-a&#x000A;export my_cluster=standard-cluster-1&#x000A;</code></pre>
+<ol start="2">
+<li>
+<p>Configure tab completion for the  kubectl command-line tool.</p>
+</li>
+</ol>
+<pre><code>source &lt;(kubectl completion bash)&#x000A;</code></pre>
+<ol start="3">
+<li>
+<p>Configure access to your cluster for kubectl:</p>
+</li>
+</ol>
+<pre><code>gcloud container clusters get-credentials $my_cluster --zone $my_zone&#x000A;</code></pre>
+<h2 id="step5">Task 2. Create Pods and services to test DNS resolution</h2>
+<p>You will create a service called <code>dns-demo</code> with two sample application Pods called <code>dns-demo-1</code> and <code>dns-demo-2</code>.</p>
+<h3><strong>Clone the source file repository and deploy the sample application pods</strong></h3>
+<p>The pods that you will use to test network connectivity via Kubernetes services are deployed using the <code>dns-demo.yaml</code> manifest file that has been provided for you in the source repository. You will use these pods later to test connectivity via various services from systems inside your Kubernetes cluster. You will also test connectivity from external addresses using the Cloud Shell. You can use the Cloud Shell for this because it is on a network that is completely separate to your Kubernetes cluster networks.</p>
+<pre><code>apiVersion: v1&#x000A;kind: Service&#x000A;metadata:&#x000A;  name: dns-demo&#x000A;spec:&#x000A;  selector:&#x000A;    name: dns-demo&#x000A;  clusterIP: None&#x000A;  ports:&#x000A;  - name: dns-demo&#x000A;    port: 1234&#x000A;    targetPort: 1234&#x000A;---&#x000A;apiVersion: v1&#x000A;kind: Pod&#x000A;metadata:&#x000A;  name: dns-demo-1&#x000A;  labels:&#x000A;    name: dns-demo&#x000A;spec:&#x000A;  hostname: dns-demo-1&#x000A;  subdomain: dns-demo&#x000A;  containers:&#x000A;  - name: nginx&#x000A;    image: nginx&#x000A;---&#x000A;apiVersion: v1&#x000A;kind: Pod&#x000A;metadata:&#x000A;  name: dns-demo-2&#x000A;  labels:&#x000A;    name: dns-demo&#x000A;spec:&#x000A;  hostname: dns-demo-2&#x000A;  subdomain: dns-demo&#x000A;  containers:&#x000A;  - name: nginx&#x000A;    image: nginx&#x000A;</code></pre>
+<ol>
+<li>
+<p>In Cloud Shell enter the following command  to clone the repository to the lab Cloud Shell.</p>
+</li>
+</ol>
+<pre><code>git clone https://github.com/GoogleCloudPlatform/training-data-analyst&#x000A;</code></pre>
+<ol start="2">
+<li>
+<p>Create a soft link as a shortcut to the working directory.</p>
+</li>
+</ol>
+<pre><code>ln -s ~/training-data-analyst/courses/ak8s/v1.1 ~/ak8s&#x000A;</code></pre>
+<ol start="3">
+<li>
+<p>Change to the directory that contains the sample files for this lab.</p>
+</li>
+</ol>
+<pre><code>cd ~/ak8s/GKE_Services/&#x000A;</code></pre>
+<ol start="4">
+<li>
+<p>Create the service and Pods.</p>
+</li>
+</ol>
+<pre><code>kubectl apply -f dns-demo.yaml&#x000A;</code></pre>
+<ol start="5">
+<li>
+<p>Verify that your Pods are running.</p>
+</li>
+</ol>
+<pre><code>kubectl get pods&#x000A;</code></pre>
+<p>The output should look like this example.</p>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>NAME                        READY     STATUS    RESTARTS   AGE&#x000A;dns-demo-1                  1/1       Running   0          8s&#x000A;dns-demo-2                  1/1       Running   0          8s&#x000A;</code></pre>
+<p>Click <em>Check my progress</em> to verify the objective.
+<ql-activity-tracking step="1">
+Create Pods and services to test DNS resolution
+</ql-activity-tracking></p>
+<ol start="6">
+<li>
+<p>To get inside the cluster, open an interactive session to <code>bash</code> running from dns-demo-1.</p>
+</li>
+</ol>
+<pre><code>kubectl exec -it dns-demo-1 -- /bin/bash&#x000A;</code></pre>
+<p>Now that you are inside a container in the cluster, subsequent commands will run from that context and you will use this to test network connectivity by pinging various targets in later tasks. However, you don't have a tool to ping in this container, so you need to install the <code>ping</code> command first.</p>
+<ol start="7">
+<li>
+<p>Update <code>apt-get</code> and install a <code>ping</code> tool.</p>
+</li>
+</ol>
+<pre><code>apt-get update&#x000A;apt-get install -y iputils-ping&#x000A;</code></pre>
+<ol start="8">
+<li>
+<p>Ping dns-demo-2:</p>
+</li>
+</ol>
+<pre><code>ping dns-demo-2.dns-demo.default.svc.cluster.local&#x000A;</code></pre>
+<p>This ping should succeed and report that the target has the ip-address you found earlier for the <code>dns-demo-2</code> Pod.</p>
+<ol start="9">
+<li>
+<p>Press Ctrl+C to abort the ping command.</p>
+</li>
+<li>
+<p>Ping the <code>dns-demo</code> service's FQDN, instead of a specific Pod inside the service:</p>
+</li>
+</ol>
+<pre><code>ping dns-demo.default.svc.cluster.local&#x000A;</code></pre>
+<p>This ping should also succeed but it will return a response from the FQDN of one of the two demo-dns Pods. This Pod might be either <code>demo-dns-1</code> or <code>demo-dns-2</code>.</p>
+<ol start="11">
+<li>Press Ctrl+C to abort the ping command.</li>
+</ol>
+<p>When you deploy applications, your application code runs inside a container in the cluster, and thus your code can access other services by using the FQDNs of those services from inside that cluster. This approach is simpler than using IP addresses or even Pod names, because those are more likely to change.</p>
+<ol start="12">
+<li>
+<p>Leave the interactive shell on dns-demo-1 running.</p>
+</li>
+</ol>
+<h2 id="step6">Task 3. Deploy a sample workload and a ClusterIP service</h2>
+<p>In this task, you create a deployment manifest for a set of Pods within the cluster and then expose them using a ClusterIP service.</p>
+<h3><strong>Deploy a sample web application to your Kubernetes Engine cluster</strong></h3>
+<p>In this task you will deploy a sample web application container image that listens on an HTTP server on port 8080 using the following manifest that has already been created for you in the <code>hello-v1.yaml</code> manifest file.</p>
+<pre><code>apiVersion: apps/v1&#x000A;kind: Deployment&#x000A;metadata:&#x000A;  name: hello-v1&#x000A;spec:&#x000A;  replicas: 3&#x000A;  selector:&#x000A;    matchLabels:&#x000A;      run: hello-v1&#x000A;  template:&#x000A;    metadata:&#x000A;      labels:&#x000A;        run: hello-v1&#x000A;        name: hello-v1&#x000A;    spec:&#x000A;      containers:&#x000A;      - image: gcr.io/google-samples/hello-app:1.0&#x000A;        name: hello-v1&#x000A;        ports:&#x000A;        - containerPort: 8080&#x000A;          protocol: TCP&#x000A;</code></pre>
+<ol>
+<li>In the Cloud Shell menu bar, click the plus sign (+) icon to start a new Cloud Shell session.</li>
+</ol>
+<p><img alt="e3d2a2da3b8828e1.png" src="https://cdn.qwiklabs.com/3tl%2B7EegXlbDuEdmjEdQmjfkI2RCCXhUFfkY%2FtbE8jg%3D"></p>
+<p>A second Cloud Shell session appears in your Cloud Shell window. You can switch sessions by clicking them in the menu bar.</p>
+<ol start="2">
+<li>
+<p>In the second Cloud Shell tab, change to the directory that contains the sample files for this lab.</p>
+</li>
+</ol>
+<pre><code>cd ~/ak8s/GKE_Services/&#x000A;</code></pre>
+<ol start="3">
+<li>
+<p>To create a deployment from the <code>hello-v1.yaml</code> file, execute the following command:</p>
+</li>
+</ol>
+<pre><code>kubectl create -f hello-v1.yaml&#x000A;</code></pre>
+<ol start="4">
+<li>
+<p>To view a list of deployments, execute the following command:</p>
+</li>
+</ol>
+<pre><code>kubectl get deployments&#x000A;</code></pre>
+<p>The output should look like this example.</p>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>NAME       READY    UP-TO-DATE   AVAILABLE   AGE&#x000A;hello-v1   3/3      3            3           14s&#x000A;</code></pre>
+<h3><strong>Define service types in the manifest</strong></h3>
+<p>In this task you will deploy a Service using a ClusterIP using the <code>hello-svc.yaml</code> sample manifest that has already been created for you.</p>
+<pre><code>apiVersion: v1&#x000A;kind: Service&#x000A;metadata:&#x000A;  name: hello-svc&#x000A;spec:&#x000A;  type: ClusterIP&#x000A;  selector:&#x000A;    name: hello-v1&#x000A;  ports:&#x000A;  - protocol: TCP&#x000A;    port: 80&#x000A;    targetPort: 8080&#x000A;</code></pre>
+<ol>
+<li>
+<p>To deploy the ClusterIP service, execute the following command:</p>
+</li>
+</ol>
+<pre><code>kubectl apply -f ./hello-svc.yaml&#x000A;</code></pre>
+<p>This manifest defines a ClusterIP service and applies it to Pods that correspond to the selector. In this case, the manifest is applied to the hello-v1 Pods that you deployed. This service will automatically be applied to any other deployments with the <code>name: hello-v1</code> label.</p>
+<ol start="2">
+<li>
+<p>Verify that the service was created and that a Cluster-IP was allocated:</p>
+</li>
+</ol>
+<pre><code>kubectl get service hello-svc&#x000A;</code></pre>
+<p>Your IP address might be different from the example output.</p>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>NAME        TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE&#x000A;hello-svc   ClusterIP   10.11.253.203   &lt;none&gt;        80/TCP    20s&#x000A;</code></pre>
+<p>No external IP is allocated for this service. Because the Kubernetes Cluster IP addresses are not externally accessible by default, creating this service does not make your application accessible outside of the cluster.</p>
+<p>Click <em>Check my progress</em> to verify the objective.
+<ql-activity-tracking step="2">
+Deploy a sample workload and a ClusterIP service
+</ql-activity-tracking></p>
+<h3><strong>Test your application</strong></h3>
+<ol>
+<li>
+<p>In the Cloud Shell, attempt to open an HTTP session to the new service using the following command:</p>
+</li>
+</ol>
+<pre><code>curl hello-svc.default.svc.cluster.local&#x000A;</code></pre>
+<p>The connection should fail because that service is not exposed outside of the cluster.</p>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>curl: (6) Could not resolve host: hello-svc.default.svc.cluster.local&#x000A;</code></pre>
+<p>Now  you will test the service from inside the cluster using the interactive shell you have running on the <code>dns-demo-1</code> Pod.</p>
+<ol start="2">
+<li>
+<p>Return to your first Cloud Shell window, which is currently redirecting the stdin and stdout of the <code>dns-demo-1</code> Pod.</p>
+</li>
+<li>
+<p>Install <code>curl</code> so you can make calls to web services from the command line.</p>
+</li>
+</ol>
+<pre><code>apt-get install -y curl&#x000A;</code></pre>
+<ol start="4">
+<li>
+<p>Use the following command to test the HTTP connection between the Pods.</p>
+</li>
+</ol>
+<pre><code>curl hello-svc.default.svc.cluster.local&#x000A;</code></pre>
+<p>This connection should succeed and provide a response similar to the output below. Your hostname might be different from the example output.</p>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>root@dns-demo-1:/# curl hello-svc.default.svc.cluster.local&#x000A;Hello, world!&#x000A;Version: 1.0.0&#x000A;Hostname: hello-v1-85b99869f-mp4vd&#x000A;root@dns-demo-1:/#&#x000A;</code></pre>
+<p>This connection works because the clusterIP can be resolved using the internal DNS within the Kubernetes Engine cluster.</p>
+<h2 id="step7">Task 4. Convert the service to use NodePort</h2>
+<p>In this task, you will convert your existing ClusterIP service to a NodePort service and then retest access to the service from inside and outside the cluster.</p>
+<p>A modified version of the hello-svc.yaml file called <code>hello-nodeport-svc.yaml</code> that changes the service type to NodePort has already been created for you.</p>
+<pre><code>apiVersion: v1&#x000A;kind: Service&#x000A;metadata:&#x000A;  name: hello-svc&#x000A;spec:&#x000A;  type: NodePort&#x000A;  selector:&#x000A;    name: hello-v1&#x000A;  ports:&#x000A;  - protocol: TCP&#x000A;    port: 80&#x000A;    targetPort: 8080&#x000A;    nodePort: 30100&#x000A;</code></pre>
+<ol>
+<li>
+<p>Return to your second Cloud Shell window. This is the window NOT connected to the stdin and stdout of the dns-test Pod.</p>
+</li>
+<li>
+<p>To deploy the manifest that changes the service type for the <code>hello-svc</code> to NodePort , execute the following command:</p>
+</li>
+</ol>
+<pre><code>kubectl apply -f ./hello-nodeport-svc.yaml&#x000A;</code></pre>
+<p>This manifest redefines <code>hello-svc</code> as a NodePort service and assigns the service port 30100 on each node of the cluster for that service.</p>
+<ol start="3">
+<li>
+<p>Enter the following command to verify that the service type has changed to NodePort:</p>
+</li>
+</ol>
+<pre><code>kubectl get service hello-svc&#x000A;</code></pre>
+<p>Your IP address might be different from the example output.</p>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>NAME        TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE&#x000A;hello-svc   NodePort   10.11.253.203   &lt;none&gt;        80:30100/TCP   59m&#x000A;</code></pre>
+<p>Note that there is still no external IP allocated for this service.</p>
+<p>Click <em>Check my progress</em> to verify the objective.
+<ql-activity-tracking step="3">
+Convert the service to use NodePort
+</ql-activity-tracking></p>
+<h3><strong>Test your application</strong></h3>
+<ol>
+<li>
+<p>In the Cloud Shell, attempt to open an HTTP session to the new service using the following command:</p>
+</li>
+</ol>
+<pre><code>curl hello-svc.default.svc.cluster.local&#x000A;</code></pre>
+<p>The connection should fail because that service is not exposed outside of the cluster.</p>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>curl: (6) Could not resolve host: hello-svc.default.svc.cluster.local&#x000A;</code></pre>
+<p>Now  you will test the service from another Pod.</p>
+<ol start="2">
+<li>
+<p>Return to your first Cloud Shell window, which is currently redirecting the stdin and stdout of the dns-test Pod.</p>
+</li>
+<li>
+<p>Use the following command to test the HTTP connection between the Pods.</p>
+</li>
+</ol>
+<pre><code>curl hello-svc.default.svc.cluster.local&#x000A;</code></pre>
+<p>This connection should succeed and provide a response similar to the output below. Your hostname might be different from the example output.</p>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>root@dns-demo-1:/# curl hello-svc.default.svc.cluster.local&#x000A;Hello, world!&#x000A;Version: 1.0.0&#x000A;Hostname: hello-v1-85b99869f-mp4vd&#x000A;root@dns-demo-1:/#&#x000A;</code></pre>
+<p>This connection works because the clusterIP can be resolved using the internal DNS within the GKE cluster.</p>
+<h2 id="step8">Task 5. Create static public IP addresses using Google Cloud Networking</h2>
+<h3><strong>Reserve Google Cloud Networking Static IP Addreesses</strong></h3>
+<ol>
+<li>
+<p>In the Google Cloud Console navigation menu, navigate to <strong>Networking</strong> &gt; <strong>VPC Network</strong> &gt; <strong>External IP Addresses</strong>.</p>
+</li>
+<li>
+<p>Click <strong>+ Reserve Static Address</strong>.</p>
+</li>
+<li>
+<p>Enter <code>regional-loadbalancer</code> for the <strong>Name</strong>.</p>
+</li>
+<li>
+<p>Explore the options but leave the remaining settings at their defaults. Note that the default type is <strong>Regional</strong>.</p>
+</li>
+</ol>
+<p>Note that the default region must match the region where you have deployed your GKE cluster. If this is not the case then change the region here to match the region you used to create your cluster. If you accepted the lab defaults then that should be the us-central1 (Iowa) region.</p>
+<ol start="5">
+<li>
+<p>Click <strong>Reserve</strong>.</p>
+</li>
+<li>
+<p>Make a note of the external ip-address called <code>regional-loadbalancer</code>. You will use this in a later task.</p>
+</li>
+<li>
+<p>Click <strong>+ Reserve Static Address</strong>.</p>
+</li>
+<li>
+<p>Enter <code>global-ingress</code> for the <strong>Name</strong>.</p>
+</li>
+<li>
+<p>Change the Type to <strong>Global</strong>.</p>
+</li>
+<li>
+<p>Leave the remaining settings at their defaults.</p>
+</li>
+<li>
+<p>Click <strong>Reserve</strong>.</p>
+</li>
+<li>
+<p>Make a note of the external ip-address called <code>global-ingress</code>. You will use this in a later task.</p>
+</li>
+</ol>
+<p>Click <em>Check my progress</em> to verify the objective.
+<ql-activity-tracking step="4">
+Create static public IP addresses using Google Cloud Networking
+</ql-activity-tracking></p>
+<h2 id="step9">Task 6. Deploy a new set of Pods and a LoadBalancer service</h2>
+<p>You will now deploy a new set of Pods running a different version of the application so that you can easily differentiate the two services. You will then expose the new Pods as a LoadBalancer service and access the service from outside the cluster.</p>
+<p>A second Deployment manifest called <code>hello-v2.yaml</code> has been created for you that  creates a new deployment that runs version 2 of the sample hello application on port 8080.</p>
+<pre><code>apiVersion: apps/v1&#x000A;kind: Deployment&#x000A;metadata:&#x000A;  name: hello-v2&#x000A;spec:&#x000A;  replicas: 3&#x000A;  selector:&#x000A;    matchLabels:&#x000A;      run: hello-v2&#x000A;  template:&#x000A;    metadata:&#x000A;      labels:&#x000A;        run: hello-v2&#x000A;        name: hello-v2&#x000A;    spec:&#x000A;      containers:&#x000A;      - image: gcr.io/google-samples/hello-app:2.0&#x000A;        name: hello-v2&#x000A;        ports:&#x000A;        - containerPort: 8080&#x000A;          protocol: TCP&#x000A;</code></pre>
+<ol>
+<li>
+<p>Return to your second Cloud Shell window. This is the window NOT connected to the stdin and stdout of the dns-test Pod.</p>
+</li>
+<li>
+<p>To deploy the manifest that creates the <code>hello-v2</code> deployment execute the following command:</p>
+</li>
+</ol>
+<pre><code>kubectl create -f hello-v2.yaml&#x000A;</code></pre>
+<ol start="3">
+<li>
+<p>To view a list of deployments, execute the following command:</p>
+</li>
+</ol>
+<pre><code>kubectl get deployments&#x000A;</code></pre>
+<p>The output should look like this example.</p>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>NAME       READY   UP-TO-DATE   AVAILABLE   AGE&#x000A;hello-v1   3/3     3            3           18m&#x000A;hello-v2   3/3     3            3           7s&#x000A;</code></pre>
+<h3><strong>Define service types in the manifest</strong></h3>
+<p>In this task you will deploy a LoadBalancer Service using the <code>hello-lb-svc.yaml</code> sample manifest that has already been created for you.</p>
+<p>You will use the sed command to replace the 10.10.10.10 placeholder address in the load balancer yaml file with the static address you reserved earlier for the load balancer.</p>
+<pre><code>apiVersion: v1&#x000A;kind: Service&#x000A;metadata:&#x000A;  name: hello-lb-svc&#x000A;spec:&#x000A;  type: LoadBalancer&#x000A;  loadBalancerIP: 10.10.10.10&#x000A;  selector:&#x000A;    name: hello-v2&#x000A;  ports:&#x000A;  - protocol: TCP&#x000A;    port: 80&#x000A;    targetPort: 8080&#x000A;</code></pre>
+<ol>
+<li>
+<p>Make sure you are still in the second Cloud Shell window. This is the window NOT connected to the stdin and stdout of the dns-test Pod.</p>
+</li>
+<li>
+<p>Enter the following command in the Cloud Shell to save the regional static IP-address you created earlier into an environment variable.</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">export STATIC_LB=$(gcloud compute addresses describe regional-loadbalancer --region us-central1 --format json | jq -r '.address')&#x000A;</code></pre>
+<ol start="3">
+<li>
+<p>Enter the following command in the Cloud Shell to replace the placeholder address with the regional static IP-address.</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">sed -i "s/10\.10\.10\.10/$STATIC_LB/g" hello-lb-svc.yaml&#x000A;&#x000A;</code></pre>
+<ol start="4">
+<li>
+<p>To check that the external ip-address has been replaced correctly enter the following command in the Cloud shell.</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">cat hello-lb-svc.yaml&#x000A;&#x000A;</code></pre>
+<p>The <code>loadBalancerIP</code> should match the address you recorded earlier for the <code>regional-loadbalancer</code> reserved static ip-address.</p>
+<ol start="5">
+<li>
+<p>To deploy your LoadBalancer service manifest, execute the following command:</p>
+</li>
+</ol>
+<pre><code>kubectl apply -f ./hello-lb-svc.yaml&#x000A;</code></pre>
+<p>This manifest defines a LoadBalancer service, which deploys a Google Cloud Network Load Balancer to provide external access to the service. This service is only applied to the Pods with the <code>name: hello-v2</code> selector.</p>
+<ol start="6">
+<li>
+<p>Verify that the service was created and that a node port was allocated:</p>
+</li>
+</ol>
+<pre><code>kubectl get services&#x000A;</code></pre>
+<p>Your IP address might be different from the example output.</p>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>NAME         TYPE          CLUSTER-IP     EXTERNAL-IP    PORT(S)        AGE&#x000A;dns-demo     ClusterIP     None           &lt;none&gt;         1234/TCP       1h&#x000A;hello-lb-svc LoadBalancer  10.11.253.48   35.184.45.240  80:30103/TCP   2m&#x000A;hello-svc    NodePort      10.11.253.203  &lt;none&gt;         80:30100/TCP   1h&#x000A;kubernetes   ClusterIP     10.11.240.1    &lt;none&gt;         443/TCP        2h&#x000A;</code></pre>
+<p>Notice that the new LoadBalancer service lists the <code>regional-loadbalancer</code> reserved address as its external IP address. In GKE environments the external load balancer for the LoadBalancer service type is implemented using a Google Cloud load balancer and will take a few minutes to create. This external IP address makes the service accessible from outside the cluster.</p>
+<h3><strong>Confirm that a Regional Google Cloud Load Balancer has been created</strong></h3>
+<ol>
+<li>
+<p>In the Google Cloud Console Navigate to <strong>Networking</strong> &gt; <strong>Network Services</strong> &gt; <strong>Load Balancing</strong></p>
+</li>
+<li>
+<p>You should see a TCP Load Balancer listed with 1 target pool backend and 2 instances. Click the name to open the details page.</p>
+</li>
+<li>
+<p>The details should show that it is a regional TCP load balancer using the static IP address you called <code>regional-loadbalancer</code> when you reserved it earlier.</p>
+</li>
+</ol>
+<p>Click <em>Check my progress</em> to verify the objective.
+<ql-activity-tracking step="5">
+Deploy a new set of Pods and a LoadBalancer service
+</ql-activity-tracking></p>
+<h3><strong>Test your application</strong></h3>
+<ol>
+<li>
+<p>In the Cloud Shell, attempt to open an HTTP session to the new service using the following command:</p>
+</li>
+</ol>
+<pre><code>curl hello-lb-svc.default.svc.cluster.local&#x000A;</code></pre>
+<p>The connection should fail because that service name is not exposed outside of the cluster.</p>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>curl: (6) Could not resolve host: hello-lb-svc.default.svc.cluster.local&#x000A;</code></pre>
+<p>This occurs because the external IP address is not registered with this hostname..</p>
+<ol start="2">
+<li>
+<p>Try the connection again using the External IP address associated with the REgional Load Balancer service. Type the following command and substitute <code>[external_IP]</code> with your service's external IP address.</p>
+</li>
+</ol>
+<pre><code>curl [external_IP]&#x000A;</code></pre>
+<p><strong>Example (do not copy)</strong></p>
+<pre><code>curl 35.184.45.240&#x000A;</code></pre>
+<p>This time the connection does not fail because the LoadBalancer's external ip-address can be reached from outside Google Cloud.</p>
+<ql-infobox><strong>Note:</strong> This may take up to 5 minutes to become available.</ql-infobox>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>Hello, world!&#x000A;Version: 2.0.0&#x000A;Hostname: hello-v2-59c99d8b65-jrx2d&#x000A;</code></pre>
+<ol start="3">
+<li>
+<p>Return to your first Cloud Shell window, which is currently redirecting the stdin and stdout of the <code>dns-demo-1</code> Pod.</p>
+</li>
+<li>
+<p>Use the following command to test the HTTP connection between the Pods.</p>
+</li>
+</ol>
+<pre><code>curl hello-lb-svc.default.svc.cluster.local&#x000A;</code></pre>
+<p>This connection should succeed and provide a response similar to the output below. Your hostname will be different from the example output.</p>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>root@dns-demo-1:/# curl hello-lb-svc.default.svc.cluster.local&#x000A;Hello, world!&#x000A;Version: 2.0.0&#x000A;Hostname: hello-v2-59c99d8b65-78ggz&#x000A;root@dns-demo-1:/#&#x000A;</code></pre>
+<p>The internal DNS name works within the Pod, and you can see that you are accessing the same v2 version of the application as you were from outside of the cluster using the external ip address.</p>
+<ol start="5">
+<li>
+<p>Try the connection again within the Pod using the External IP address associated with the service. Type the following command and substitute <code>[external_IP]</code> with your service's external IP address.</p>
+</li>
+</ol>
+<pre><code>curl [external_IP]&#x000A;</code></pre>
+<p><strong>Example (do not copy)</strong></p>
+<pre><code>curl 35.184.45.240&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>root@dns-demo-1:/# curl 35.184.45.240&#x000A;Hello, world!&#x000A;Version: 2.0.0&#x000A;Hostname: hello-v2-59c99d8b65-jrx2d&#x000A;root@dns-demo-1:/#&#x000A;</code></pre>
+<p>The external IP also works from inside Pods running in the cluster, and returns a result from the same v2 version of the applications.</p>
+<ol start="4">
+<li>
+<p>Exit the console redirection session to the Pod by typing exit.</p>
+</li>
+</ol>
+<pre><code>exit&#x000A;</code></pre>
+<p>This will return you to the Cloud Shell command prompt.</p>
+<h2 id="step10">Task 7. Deploy an Ingress resource</h2>
+<p>You have two services in your cluster for the hello application. One service is hosting version 1.0 via a NodePort service, while the other service is hosting version 2.0 via a LoadBalancer service. You will now deploy an Ingress resource that will direct traffic to both services based on the URL entered by the user.</p>
+<h3><strong>Create an ingress resource</strong></h3>
+<p>Ingress is a Kubernetes resource that encapsulates a collection of rules and configuration for routing external HTTP(S) traffic to internal services.</p>
+<p>On GKE, Ingress is implemented using Cloud Load Balancing. When you create an ingress resource in your cluster, GKE creates an HTTP(S) load balancer and configures it to route traffic to your application.</p>
+<p>A sample manifest called <code>hello-ingress.yaml</code> that will configure an ingress resource has been created for you.</p>
+<pre><code>apiVersion: app/v1&#x000A;kind: Ingress&#x000A;metadata:&#x000A;  name: hello-ingress&#x000A;  annotations:&#x000A;    nginx.ingress.kubernetes.io/rewrite-target: /&#x000A;    kubernetes.io/ingress.global-static-ip-name: "global-ingress"&#x000A;&#x000A;spec:&#x000A;  rules:&#x000A;  - http:&#x000A;      Paths:&#x000A;     - path: /v1&#x000A;        backend:&#x000A;          serviceName: hello-svc&#x000A;          servicePort: 80&#x000A;      - path: /v2&#x000A;        backend:&#x000A;          serviceName: hello-lb-svc&#x000A;          servicePort: 80&#x000A;</code></pre>
+<p>This configuration file defines an ingress resource that will attach to the <code>global-ingress</code> static ip-address you created in a previous step. This ingress resource will create a global HTTP(S) load balancer that directs traffic to your web services based on the path entered.</p>
+<p>The <code>kubernetes.io/ingress.global-static-ip-name</code> annotation allows you to specify a named resxerved ip-address that the Ingress resource will use when creating the Google Cloud Global HTTP(S) load balancer for the Ingress resource.</p>
+<ol>
+<li>
+<p>To deploy this ingress resource, execute the following command:</p>
+</li>
+</ol>
+<pre><code>kubectl apply -f hello-ingress.yaml&#x000A;</code></pre>
+<p>When you deploy this manifest, Kubernetes creates an ingress resource on your cluster. The ingress controller running in your cluster is responsible for creating an HTTP(S) load balancer to route all external HTTP traffic (on port 80) to the web NodePort service and the LoadBalancer service that you exposed.</p>
+<h3><strong>Confirm that a Global HTTP(S) Load Balancer has been created</strong></h3>
+<ol>
+<li>
+<p>In the Google Cloud Console Navigate to <strong>Networking</strong> &gt; <strong>Network Services</strong> &gt; <strong>Load Balancing</strong></p>
+</li>
+<li>
+<p>You should now also see a HTTP(S) Load Balancer listed. Click the name to open the details page.</p>
+</li>
+<li>
+<p>The details should show that it is a global HTTP(S) load balancer using the static IP address you called <code>global-ingress</code> when you reserved it earlier.</p>
+</li>
+</ol>
+<p>Click <em>Check my progress</em> to verify the objective.
+<ql-activity-tracking step="6">
+Deploy an Ingress resource
+</ql-activity-tracking></p>
+<h3><strong>Test your application</strong></h3>
+<ol>
+<li>
+<p>To get the external IP address of the load balancer serving your application, execute the following command:</p>
+</li>
+</ol>
+<pre><code>kubectl describe ingress hello-ingress&#x000A;</code></pre>
+<p><strong>Partial output (do not copy)</strong></p>
+<pre><code>Name:             hello-ingress&#x000A;Namespace:        default&#x000A;Address:          35.244.173.44&#x000A;Default backend:  default-http-backend:80 (10.8.2.5:8080)&#x000A;Rules:&#x000A;  Host  Path  Backends&#x000A;  ----  ----  --------&#x000A; *&#x000A;        /v1   hello-svc:80 (&lt;none&gt;)&#x000A;        /v2   hello-lb-svc:80 (&lt;none&gt;)&#x000A;[...]&#x000A;  ingress.kubernetes.io/backends:{"k8s-[...]"HEALTHY"[...]}&#x000A;[...]&#x000A;&#x000A;Events:&#x000A; Type   Reason Age From                    Message&#x000A; ----   ------ --- ----                    -------&#x000A; Normal ADD    5m  loadbalancer-controller default/hello-ingress&#x000A; Normal CREATE 5m  loadbalancer-controller ip: 35.244.173.44&#x000A;</code></pre>
+<ql-infobox><strong>Note:</strong> You need to wait for a few minutes for the load balancer to become active, and for the health checks to succeed, before the external address will be displayed.</ql-infobox>
+<p>Repeat the command every few minutes to check if the Ingress resource has finished initializing. When the Google Cloud global HTTP(S) load balancer has been created and initialized the command will report the external ip-address which will match the global static ip-address you reserved earlier that you called <code>global-ingress</code>.</p>
+<ol start="2">
+<li>
+<p>Use the External IP address associated with the Ingress resource, and type the following command, substituting <code>[external_IP]</code> with the Ingress resource's external IP address. Be sure to include the /v1 in the URL path.</p>
+</li>
+</ol>
+<pre><code>curl http://[external_IP]/v1&#x000A;</code></pre>
+<p><strong>Example (do not copy)</strong></p>
+<pre><code>curl http://35.201.92.69/v1&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>Hello, world!&#x000A;Version: 1.0.0&#x000A;Hostname: hello-v1-85b99869f-4rmqw&#x000A;</code></pre>
+<p>The v1 URL is configured in  <code>hello-ingress.yaml</code> to point to the <code>hello-svc</code> NodePort service that directs traffic to the v1 application Pods. .</p>
+<aside class="special"><p><strong>Note: </strong>GKE might take a few minutes to set up forwarding rules until the Global load balancer used for the Ingress resource is ready to serve your application. In the meantime, you might get errors such as HTTP 404 or HTTP 500 until the load balancer configuration is propagated across the globe.</p>
+</aside>
+<ol start="3">
+<li>
+<p>Now test the v2 URL path from Cloud Shell. Use the External IP address associated with the Ingress resource, and type the following command, substituting <code>[external_IP]</code> with the Ingress resource's external IP address. Be sure to include the /v2 in the URL path.</p>
+</li>
+</ol>
+<pre><code>curl http://[external_IP]/v2&#x000A;</code></pre>
+<p>The v2 URL is configured in  <code>hello-ingress.yaml</code> to point to the <code>hello-lb-svc</code> LoadBalancer service that directs traffic to the v2 application Pods.</p>
+<p><strong>Example (do not copy)</strong></p>
+<pre><code>curl http://35.201.92.69/v2&#x000A;</code></pre>
+<p><strong>Output (do not copy)</strong></p>
+<pre><code>Hello, world!&#x000A;Version: 2.0.0&#x000A;Hostname: hello-v2-59c99d8b65-jrx2d&#x000A;</code></pre>
+<h3><strong>Inspect the changes to your networking resources in the Google Cloud Console</strong></h3>
+<ol>
+<li>In Google Cloud Console, on the <strong>Navigation menu</strong> , click <strong>Networking</strong> &gt; <strong>Network services</strong>&gt; <strong>Load balancing</strong>.</li>
+</ol>
+<p>There are now two load balancers listed:</p>
+<p>There is the initial regional load balancer for the <code>hello-lb-svc</code> service. This has a UID style name and is configured to load balance TCP port 80 traffic to the cluster nodes.</p>
+<p>The second was created for the Ingress object and is a full HTTP(S) load balancer that includes host and path rules that match the Ingress configuration. This will have <code>hello-ingress</code> in its name.</p>
+<ol start="2">
+<li>Click the load balancer with <code>hello-ingress</code> in the name.</li>
+</ol>
+<p>This will display the summary information about the protocols, ports, paths and backend services of the Google Cloud Global HTTP(S) load balancer created for your Ingress resource.</p>
+<h2 id="step11">End your lab</h2>
+<p>When you have completed your lab, click <strong>End Lab</strong>. Qwiklabs removes the resources you’ve used and cleans the account for you.</p>
+<p>You will be given an opportunity to rate the lab experience. Select the applicable number of stars, type a comment, and then click <strong>Submit</strong>.</p>
+<p>The number of stars indicates the following:</p>
+<ul>
+<li>1 star = Very dissatisfied</li>
+<li>2 stars = Dissatisfied</li>
+<li>3 stars = Neutral</li>
+<li>4 stars = Satisfied</li>
+<li>5 stars = Very satisfied</li>
+</ul>
+<p>You can close the dialog box if you don't want to provide feedback.</p>
+<p>For feedback, suggestions, or corrections, please use the <strong>Support</strong> tab.</p>
+
+<p>Copyright 2021 Google LLC All rights reserved. Google and the Google logo are trademarks of Google LLC. All other company and product names may be trademarks of the respective companies with which they are associated.</p>
+
+
+
+</div>
+</div>
+
+
+<div class='hidden js-end-lab-button-container lab-content__end-lab-button'>
+<ql-lab-control-button class='js-end-lab-button' running></ql-lab-control-button>
+</div>
+<!-- / TODO: Move recommendations into the end lab modal -->
+</ql-drawer-content>
+<ql-drawer end id='outline-drawer' open slot='drawer' width='320'>
+<div class='js-lab-content-outline lab-content__outline'>
+<a href='#step1'>Overview</a><a href='#step2'>Objectives</a><a href='#step3'>Task 0. Lab Setup</a><a href='#step4'>Task 1. Connect to the lab GKE cluster and test DNS</a><a href='#step5'>Task 2. Create Pods and services to test DNS resolution</a><a href='#step6'>Task 3. Deploy a sample workload and a ClusterIP service</a><a href='#step7'>Task 4. Convert the service to use NodePort</a><a href='#step8'>Task 5. Create static public IP addresses using Google Cloud Networking</a><a href='#step9'>Task 6. Deploy a new set of Pods and a LoadBalancer service</a><a href='#step10'>Task 7. Deploy an Ingress resource</a><a href='#step11'>End your lab</a>
+</div>
+</ql-drawer>
+</ql-drawer-container>
+</ql-drawer-content>
+</ql-drawer-container>
+<div class='lab-introduction js-lab-introduction is-hidden'>
+<div class='lab-introduction__inner'>
+<h1 class='headline-1'>Welcome to Your First Lab!</h1>
+<ql-icon-button class='js-skip-button'>close</ql-icon-button>
+<div class='lab-introduction__video'>
+<iframe allow='autoplay; encrypted-media' allowfullscreen frameborder='0' id='lab-introduction' src='https://www.youtube.com/embed/yF7EDXKTmoQ?enablejsapi=1&amp;rel=0&amp;showinfo=0'></iframe>
+</div>
+<a class='js-skip-button button button--outline'>Skip this video</a>
+</div>
+</div>
+
+
+
+</div>
+</main>
+
+
+<div class='modal fade' id='lab-details-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<div class='modal-body'>
+<p class='l-mbm'>
+Architecting with Google Kubernetes Engine: Creating Services and Ingress Resources
+</p>
+<p class='small-label l-mbs'>
+<strong>
+Duration:
+</strong>
+3m setup
+&middot;
+60m access
+&middot;
+60m completion
+</p>
+<p class='small-label l-mbs'>
+<span><strong>Levels: </strong>fundamental</span>
+</p>
+<p class='small-label'>
+<strong>
+Permalink:
+</strong>
+<a href="https://googlecoursera.qwiklabs.com/catalog_lab/2302">https://googlecoursera.qwiklabs.com/catalog_lab/2302</a>
+</p>
+</div>
+<div class='modal-actions'>
+<a class='button button--text' data-dismiss='modal'>
+Got It
+</a>
+</div>
+
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='modal fade' id='lab-review-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<form class="simple_form js-lab-review-form" id="edit_lab_review_11167552" action="/lab_reviews/11167552" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="_method" value="patch" /><div class='modal-body'>
+<p class='label'>
+How satisfied are you with this lab?*
+</p>
+<div class='rateit js-rateit' data-rateit-max='5' data-rateit-min='0' data-rateit-resetable='false' data-rateit-step='1' data-rateit-value='5'></div>
+<div class='l-mtm'>
+
+<div class="control-group hidden lab_review_user_id"><div class="controls"><input class="hidden" type="hidden" value="3894861" name="lab_review[user_id]" id="lab_review_user_id" /></div></div>
+<div class="control-group hidden lab_review_classroom_id"><div class="controls"><input class="hidden" type="hidden" name="lab_review[classroom_id]" id="lab_review_classroom_id" /></div></div>
+<div class="control-group hidden lab_review_lab_id"><div class="controls"><input class="hidden" type="hidden" value="2302" name="lab_review[lab_id]" id="lab_review_lab_id" /></div></div>
+<div class="control-group hidden lab_review_focus_id"><div class="controls"><input class="hidden" type="hidden" name="lab_review[focus_id]" id="lab_review_focus_id" /></div></div>
+<div class="control-group hidden lab_review_rating"><div class="controls"><input class="hidden js-rating-input" type="hidden" value="2" name="lab_review[rating]" id="lab_review_rating" /></div></div>
+<div class="control-group text optional lab_review_comment"><label class="text optional control-label" for="lab_review_comment">Comment</label><div class="controls"><textarea class="text optional" name="lab_review[comment]" id="lab_review_comment">
+</textarea></div></div>
+</div>
+</div>
+<div class='modal-actions'>
+<a class='button button--text' data-dismiss='modal'>
+Cancel
+</a>
+<input type="submit" name="commit" value="Submit" disabled="disabled" id="submit" data-disabled="false" class="button" data-disable-with="Submit" />
+</div>
+</form>
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+
+
+<script>
+  $( function() {
+    ql.initMaterialInputs();
+    initChosen();
+    initSearch();
+    initTabs();
+    ql.list.init();
+    ql.favoriting.init();
+    ql.header.myAccount.init();
+    initTooltips();
+    ql.autocomplete.init();
+    ql.modals.init();
+    ql.toggleButtons.init();
+    ql.analytics.init();
+    ql.labControlPanel.addRecaptchaErrorHandler();
+  initLabContent();
+  ql.labOutline.links.init();
+  initLabReviewModal();
+  ql.labAssessment.init();
+  ql.labIntroduction.init( true );
+  ql.labData.init();
+  initLabTranslations( {"are_you_sure":"All done? If you end this lab, you will lose all your work. You may not be able to restart the lab if there is a quota limit. Are you sure you want to end this lab?\n","in_progress":"*In Progress*","ending":"*Ending*","starting":"*Starting, please wait*","end_concurrent_labs":"Sorry, you can only run one lab at a time. To start this lab, please confirm that you want all of your existing labs to end.\n","copied":"Copied","no_resource":"Error retrieving resource.","no_support":"No Support","mac_press":"Press ⌘-C to copy","thanks_review":"Thanks for reviewing this lab.","windows_press":"Press Ctrl-C to copy","days":"days"} );
+  ql.labRun.init();
+  ql.chat.init();
+  ql.initHeader();
+  ql.navigation.init();
+  ql.navPanel.init();
+  ql.navigation.init();
+  
+  });
+</script>
+
+</body>
+</html>
+

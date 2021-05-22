@@ -1,0 +1,816 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title>Google Cloud Application Debugging | Qwiklabs</title>
+<script>
+//<![CDATA[
+window.gon={};gon.current_user={"firstname":"DANIEL","lastname":"ENRIQUE SANDOVAL SANCHEZ","fullname":"DANIEL ENRIQUE SANDOVAL SANCHEZ","company":"Coursera","email":"desandovals@liverpool.com.mx","origin":"googlecoursera-run, lti-coursera","subscriptions":0,"id":"40414ff5fc280f833d9acca966912f93","qlCreatedAt":"2020-11-17 20:45:59 UTC","optIn":null,"current_organization_id":null,"current_organization_role":null};gon.segment="j4Im8pqIko0Lxq4wVVZWMPMM0EroHUvb";gon.deployment="googlecoursera-run";gon.content={"type":"Lab","id":2652,"name":"Google Cloud Application Debugging"};
+//]]>
+</script>
+<script>
+  dataLayer = [
+    {user: gon.current_user},
+    {content: gon.content}
+  ];
+</script>
+<script>
+  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer',"GTM-TQR88QK");
+</script>
+<script>
+  EVENT_SOURCE_BASE_URL = "https://googlecoursera-run.qwiklabs.com/nchan-sub?id=";
+</script>
+<script src="https://cdn.qwiklabs.com/assets/hallofmirrors/polyfills/webcomponents-loader-408088dc333247a761de5f2b2a4ba1cabd2bc36579f83ba92a559eb3682a9b77.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/vendor-45d462772c30000424907184f70c7157e95fb6227698d1671c5051818a6f60d8.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/application-3dfa6f42878108faa67e402d63d13af381e12f274396d44b394f4514363fd8da.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/hallofmirrors/hallofmirrors-3564ac3aa9042171d24a2ef751f254df3bdb94c1066367b8fbbe97b27d1af3bb.js"></script>
+<!--[if lt IE 9]>
+<script src='http://html5shim.googlecode.com/svn/trunk/html5.js' type='text/javascript'></script>
+<![endif]-->
+<!--[endif]>  <![endif]-->
+<script type='application/ld+json'>
+{
+  "@context": "http://schema.org",
+  "@type": "WebSite",
+  "url": "https://www.qwiklabs.com/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://www.qwiklabs.com/catalog?keywords={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script id='ze-snippet' src='https://static.zdassets.com/ekr/snippet.js?key=511e4158-0aec-4e3c-b2e6-4daa1769f51e'></script>
+
+
+<meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="1k8vwzyFBzAhF5yY+pVn4j663qgVPDtgLZXp1MQyTkM+HW0uXR+U43rQC18xrvyO+1r6nqX/gIwCY8UadT2W7g==" />
+<meta content='width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0' name='viewport'>
+<meta content='1rRsY0INj8RvwB5EF5pwdxt2A2P9aDgAlsICaJ0d5w0' name='google-site-verification'>
+<meta content='#3681E4' property='msapplication-TileColor'>
+<meta content='/favicon-144.png' property='msapplication-TileImage'>
+<meta content='[{&quot;id&quot;:&quot;recaptcha_experiment&quot;,&quot;optimize_id&quot;:&quot;dpViOcLkT3qS4TvL2mRojA&quot;,&quot;title&quot;:&quot;No Recaptcha shown for trusted users&quot;,&quot;variant_index&quot;:0,&quot;variant&quot;:&quot;original&quot;}]' name='active-experiments'>
+<meta content='{&quot;userId&quot;:3894861}' name='help-api-product-data'>
+<meta content='Use the Debugger to find a bug in an application running in Google Cloud' name='description'>
+<meta content='Qwiklabs' name='author'>
+<meta content='Google Cloud Application Debugging | Qwiklabs' property='og:title'>
+<meta content='website' property='og:type'>
+<meta content='/favicon-144.png' property='og:image'>
+<meta content='Qwiklabs' property='og:site_name'>
+<meta content='Use the Debugger to find a bug in an application running in Google Cloud' property='og:description'>
+<meta content='/qwiklabs_logo_900x887.png' property='og:logo' size='900x887'>
+<meta content='/qwiklabs_logo_994x187.png' property='og:logo' size='994x187'>
+
+
+<link href='/favicon-32.png' rel='shortcut icon'>
+<link color='#3681E4' href='/favicon-svg.svg' rel='mask-icon'>
+<link href='/favicon-180.png' rel='apple-touch-icon-precomposed'>
+
+
+
+<link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css?family=Oswald:400|Roboto+Mono:400,700|Roboto:300,400,500,700|Google+Sans:300,400,500,700|Google+Sans+Display:400|Material+Icons|Google+Material+Icons" />
+
+
+<link rel="stylesheet" media="all" href="https://cdn.qwiklabs.com/assets/application-bae2b36b94b311cc71dbebd59e2bab166740d7f59597282509f008eded4d3481.css" />
+
+
+
+</head>
+<body class='lab-show l-full no-nav application-new focuses focuses-show lab-show l-full no-nav '>
+<noscript>
+<iframe height='0' src='https://www.googletagmanager.com/ns.html?id=GTM-TQR88QK' style='display:none;visibility:hidden;' width='0'></iframe>
+</noscript>
+<span class='hidden' id='flash-sibling-before'></span>
+
+<div class='header-container'>
+<div class='header'>
+<ql-icon-button class='js-nav-toggle header__nav-panel-button l-mrm'>menu</ql-icon-button>
+<div class='header__title'>
+<ql-icon-button label="Back" href="https://www.coursera.org/" id="01b78315419e7295" target="_self">arrow_back</ql-icon-button><div class="mdl-tooltip" data-mdl-for="01b78315419e7295">Back</div>
+
+<h1 class='headline-5'>
+Google Cloud Application Debugging
+</h1>
+</div>
+<div class='header__actions'>
+<ql-icon-button class='header__button--search js-header-search-bar-button'>search</ql-icon-button>
+<ql-icon-button id='control-panel-target' style='display: none;'>
+dashboard
+</ql-icon-button>
+<ql-menu for='control-panel-target' id='control-panel-menu'></ql-menu>
+
+<ql-icon-button id='help-menu-button'>help</ql-icon-button>
+<div class='mdl-tooltip js-tooltip' data-mdl-for='help-menu-button'>
+Help
+</div>
+<ql-menu for='help-menu-button' id='help-menu'>
+<ql-menu-item>
+<ql-help context='lab' data-analytics-action='opened_help' data-analytics-label='lab' productdata='{&quot;userId&quot;:3894861}'>
+Help Center
+</ql-help>
+</ql-menu-item>
+<ql-menu-item>
+<a target="_blank" class="ql-body-1" href="https://support.google.com/qwiklabs/contact/contact_us">Email support</a>
+</ql-menu-item>
+<ql-menu-item>
+<a class='ql-body-1' onClick='ql.chat.open()'>Chat support</a>
+</ql-menu-item>
+</ql-menu>
+
+<ql-icon-button id='language'>language</ql-icon-button>
+<div class='mdl-menu mdl-menu__bottom-right mdl-js-menu elevation-3' for='language'>
+<a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ar" href="/focuses/15405652?locale=ar&amp;parent=lti_session">العربية‬‎
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="de" href="/focuses/15405652?locale=de&amp;parent=lti_session">Deutsch
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="en" href="/focuses/15405652?locale=en&amp;parent=lti_session">English
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="es" href="/focuses/15405652?locale=es&amp;parent=lti_session">español (Latinoamérica)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="fr" href="/focuses/15405652?locale=fr&amp;parent=lti_session">français
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="id" href="/focuses/15405652?locale=id&amp;parent=lti_session">bahasa Indonesia
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="it" href="/focuses/15405652?locale=it&amp;parent=lti_session">Italiano
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ja" href="/focuses/15405652?locale=ja&amp;parent=lti_session">日本語
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ko" href="/focuses/15405652?locale=ko&amp;parent=lti_session">한국어
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pl" href="/focuses/15405652?locale=pl&amp;parent=lti_session">Polski
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pt_BR" href="/focuses/15405652?locale=pt_BR&amp;parent=lti_session">português (Brasil)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pt_PT" href="/focuses/15405652?locale=pt_PT&amp;parent=lti_session">português (Portugal)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ru" href="/focuses/15405652?locale=ru&amp;parent=lti_session">русский
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="tr" href="/focuses/15405652?locale=tr&amp;parent=lti_session">Türkçe
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="zh" href="/focuses/15405652?locale=zh&amp;parent=lti_session">简体中文
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="zh_TW" href="/focuses/15405652?locale=zh_TW&amp;parent=lti_session">繁體中文
+</a></div>
+<button class='icon-button' id='my_account'>
+<ql-avatar></ql-avatar>
+</button>
+<ql-menu for='my_account' open>
+<div class='my-account-menu'>
+<ql-avatar class='l-mtl l-mbl' size='120'></ql-avatar>
+<div class='my-account-menu__user-info l-mbl'>
+<h4 class='ql-subhead-1'>DANIEL ENRIQUE SANDOVAL SANCHEZ</h4>
+<p class='ql-body-2 text--light'>desandovals@liverpool.com.mx</p>
+<p class='ql-body-2 text--light'>
+</p>
+<a class="text--green ql-subhead-2" href="/my_account/payments"><ql-chip positive>
+0 Credits
+</ql-chip>
+</a></div>
+<div class='buttons l-mbl'>
+<a class="button button--hairline" id="settings" href="/my_account/profile">Settings</a>
+</div>
+<hr>
+<ql-button data-analytics-action='clicked_sign_out' href='/users/sign_out' method='delete'>
+Sign Out
+</ql-button>
+<div class='privacy l-mtl'>
+<a class="ql-caption text--light" href="/privacy_policy">Privacy</a>
+<span class='ql-caption text--light l-mls l-mrs'>&middot;</span>
+<a class="ql-caption text--light" href="/terms_of_service">Terms</a>
+</div>
+</div>
+</ql-menu>
+
+</div>
+</div>
+<div class='header__search-bar js-header-search-bar'>
+<form class="js-search-form-mobile" onsubmit="ql.searchFilter(); return false;" action="/searches/elasticsearch" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="c72HYbWX81xooipWy3wsXpMPMXFTHIuANfZKqSyMI36b78WM1A1gjzNlvZEAR7cyVu8VR+PfMGwaAGZnnYP70w==" />
+<input type="text" name="keywords" id="keywords" placeholder="Search" maxlength="255" aria-label="catalog search bar" />
+</form>
+
+<ql-icon-button class='js-close-search-bar'>close</ql-icon-button>
+</div>
+</div>
+
+<nav class='nav-bar'>
+<a class="nav-bar__item js-navigation-button" href="/"><ql-icon class='nav-bar__item__icon'>
+home
+</ql-icon>
+<span class='nav-bar__item__label'>
+Home
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="/catalog"><ql-icon class='nav-bar__item__icon'>
+school
+</ql-icon>
+<span class='nav-bar__item__label'>
+Catalog
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="/my_learning"><ql-icon class='nav-bar__item__icon'>
+event_note
+</ql-icon>
+<span class='nav-bar__item__label'>
+My Learning
+</span>
+</a>
+</nav>
+
+<nav class='nav-panel js-nav-panel'>
+<div class='nav-panel__logo'>
+<div class='logo logo--blue'></div>
+</div>
+<a title="Home" tabindex="-1" class="nav-panel__item js-navigation-button" href="/"><ql-icon class='nav-panel__item__icon'>
+home
+</ql-icon>
+<div class='nav-panel__item__label'>
+Home
+</div>
+</a>
+<a title="Catalog" tabindex="-1" class="nav-panel__item js-navigation-button" href="/catalog"><ql-icon class='nav-panel__item__icon'>
+school
+</ql-icon>
+<div class='nav-panel__item__label'>
+Catalog
+</div>
+</a>
+<a title="My Learning" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_learning"><ql-icon class='nav-panel__item__icon'>
+event_note
+</ql-icon>
+<div class='nav-panel__item__label'>
+My Learning
+</div>
+</a>
+<div class='nav-panel__spacer'></div>
+<a title="Profile" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/profile"><ql-icon class='nav-panel__item__icon'>
+account_circle
+</ql-icon>
+<div class='nav-panel__item__label'>
+Profile
+</div>
+</a>
+<a title="Credits &amp; Subscriptions" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/credits"><ql-icon class='nav-panel__item__icon'>
+money
+</ql-icon>
+<div class='nav-panel__item__label'>
+Credits &amp; Subscriptions
+</div>
+</a>
+<a title="Security" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/security"><ql-icon class='nav-panel__item__icon'>
+security
+</ql-icon>
+<div class='nav-panel__item__label'>
+Security
+</div>
+</a>
+<div class='nav-panel__spacer'></div>
+<a class="nav-panel__item" tabindex="-1" href="#"><ql-help>
+<div class='nav-panel__help-item'>
+<ql-icon class='nav-panel__item__icon'>help</ql-icon>
+<div class='nav-panel__item__label'>
+Help
+</div>
+</div>
+</ql-help>
+</a><div class='nav-panel__small-links'>
+<a tabindex="-1" href="/privacy_policy">Privacy</a>
+<a tabindex="-1" href="/terms_of_service">Terms</a>
+</div>
+</nav>
+<div class='nav-panel__overlay js-nav-toggle'></div>
+
+<main class='js-main'>
+<div class='l-main-wrapper' id='main-wrapper'>
+
+
+
+
+
+
+
+<ql-drawer-container class='js-lab-state' data-analytics-payload='{&quot;label&quot;:&quot;Google Cloud Application Debugging&quot;,&quot;lab_name&quot;:&quot;Google Cloud Application Debugging&quot;,&quot;classroom_name&quot;:null,&quot;deployment&quot;:&quot;googlecoursera-run&quot;}' data-focus-id='15405652' data-lab-billing-limit='0.0' data-lab-duration='7200' data-parent='lti_session' data-recaptcha-enabled id='lab-container'>
+<ql-drawer id='terminal-drawer' slot='drawer' style='width: calc(100% - 480px)'>
+<iframe allow='clipboard-read' class='terminal' id='embedded-resource'></iframe>
+</ql-drawer>
+<ql-drawer-content class='js-lab-wrapper' id='lab-content' slot='drawer-content'>
+<ql-drawer-container id='lab-content-container'>
+<ql-drawer id='control-panel-drawer' open slot='drawer' width='320'>
+<ql-lab-control-panel class='ql-lab-control-panel__max-height control-panel js-lab-control-panel' connectionFiles='[]' labControlButton='{&quot;disabled&quot;:false,&quot;pending&quot;:false,&quot;running&quot;:false}' labDetails='[]' labTimer='{&quot;ticking&quot;:false,&quot;secondsRemaining&quot;:7200}' studentResources='[]'>
+<script src="https://www.recaptcha.net/recaptcha/api.js?render=6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr"   ></script>
+        <script>
+          // Define function so that we can call it again later if we need to reset it
+          // This executes reCAPTCHA and then calls our callback.
+          function executeRecaptchaForStartLab() {
+            grecaptcha.ready(function() {
+              grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}).then(function(token) {
+                setInputWithRecaptchaResponseTokenForStartLab('g-recaptcha-response-data-start-lab', token)
+              });
+            });
+          };
+          // Invoke immediately
+          executeRecaptchaForStartLab()
+
+          // Async variant so you can await this function from another async function (no need for
+          // an explicit callback function then!)
+          // Returns a Promise that resolves with the response token.
+          async function executeRecaptchaForStartLabAsync() {
+            return new Promise((resolve, reject) => {
+              grecaptcha.ready(async function() {
+                resolve(await grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}))
+              });
+            })
+          };
+
+                    var setInputWithRecaptchaResponseTokenForStartLab = function(id, token) {
+            var element = document.getElementById(id);
+            element.value = token;
+          }
+
+        </script>
+<input type="hidden" name="g-recaptcha-response-data[start_lab]" id="g-recaptcha-response-data-start-lab" data-sitekey="6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr" class="g-recaptcha g-recaptcha-response "/>
+
+<div class='hidden' id='recaptcha-v2-start-lab' slot='recaptcha'>
+<script src="https://www.recaptcha.net/recaptcha/api.js" async defer ></script>
+<div data-sitekey="6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV" data-callback="recaptchaComplete" data-expired-callback="expireV2Token" class="g-recaptcha "></div>
+          <noscript>
+            <div>
+              <div style="width: 302px; height: 422px; position: relative;">
+                <div style="width: 302px; height: 422px; position: absolute;">
+                  <iframe
+                    src="https://www.recaptcha.net/recaptcha/api/fallback?k=6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV"
+                    name="ReCAPTCHA"
+                    style="width: 302px; height: 422px; border-style: none; border: 0; overflow: hidden;">
+                  </iframe>
+                </div>
+              </div>
+              <div style="width: 300px; height: 60px; border-style: none;
+                bottom: 12px; left: 25px; margin: 0px; padding: 0px; right: 25px;
+                background: #f9f9f9; border: 1px solid #c1c1c1; border-radius: 3px;">
+                <textarea id="g-recaptcha-response" name="g-recaptcha-response"
+                  class="g-recaptcha-response"
+                  style="width: 250px; height: 40px; border: 1px solid #c1c1c1;
+                  margin: 10px 25px; padding: 0px; resize: none;">
+                </textarea>
+              </div>
+            </div>
+          </noscript>
+
+</div>
+</ql-lab-control-panel>
+</ql-drawer>
+<ql-drawer-content id='lab-instructions' slot='drawer-content'>
+<div class='alert alert--fake js-alert'>
+<p class='alert__message js-alert-message'></p>
+<a class='alert__close js-alert-close'>
+<i class='fa fa-times'></i>
+</a>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='js-lab-content lab-content__renderable-instructions'>
+<div class='lab-preamble'>
+<h1 class='lab-preamble__title'>
+Google Cloud Application Debugging
+</h1>
+<div class='lab-preamble__details subtitle-headline-1'>
+<span>2 hours </span>
+<span>Free</span>
+<div class='lab__rating'>
+<a href="/focuses/15405652/reviews?parent=lti_session"><div class='rateit' data-rateit-readonly='true' data-rateit-value='4.417'></div>
+
+</a><a data-target='#lab-review-modal' data-toggle='modal'>
+Rate Lab
+</a>
+</div>
+</div>
+</div>
+
+<div class='js-markdown-instructions markdown-lab-instructions' id='markdown-lab-instructions'>
+
+
+
+<h2 id="step1">Overview</h2>
+<p>In this lab, you will use the Google Cloud Debugger service to track down a bug in an application deployed to App Engine. You will see how to create breakpoints, inspect values, and dynamically add logging information to a running Google Cloud application.</p>
+<h3>Objectives</h3>
+<p>In this lab, you will learn how to perform the following tasks:</p>
+<ul>
+<li>
+<p>Download a sample app from GitHub</p>
+</li>
+<li>
+<p>Deploy an application to App Engine</p>
+</li>
+<li>
+<p>Debug your app using the Google Cloud Debugger</p>
+</li>
+<li>
+<p>Adding Log Data</p>
+</li>
+<li>
+<p>Fix the bug and deploy a new version</p>
+</li>
+</ul>
+<h2 id="step2">Task 0. Lab Setup</h2>
+<p>In this task, you use Qwiklabs and perform initialization steps for your lab.</p>
+<h3>Access Qwiklabs</h3>
+<p>For each lab, you get a new GCP project and set of resources for a fixed time at no cost.</p>
+<ol>
+<li>
+<p>Make sure you signed into Qwiklabs using an <strong>incognito window</strong>.</p>
+</li>
+<li>
+<p>Note the lab's access time (for example, <img alt="img/time.png" src="https://cdn.qwiklabs.com/aZQJ4BT7uCmM9XR6BTXgTRP1Hfu1T7q6V%2BcnbdEsbpU%3D"> and make sure you can finish in that time block.</p>
+</li>
+</ol>
+<aside> <p>
+  There is no pause feature. You can restart if needed, but you have to start at the beginning.
+  </p>
+
+</aside>
+<ol start="3">
+<li>
+<p>When ready, click <img alt="img/start_lab.png" src="https://cdn.qwiklabs.com/XE8x7uvQokyubNwnYKKc%2BvBBNrMlo5iNZiDDzQQ3Ddo%3D">.</p>
+</li>
+<li>
+<p>Note your lab credentials. You will use them to sign in to Cloud Platform Console.
+<img alt="img/open_google_console.png" src="https://cdn.qwiklabs.com/0d78dhX6IVMVWmixCPPSBbmi5O2GPokCXf1Ps1AkTgI%3D"></p>
+</li>
+<li>
+<p>Click <strong>Open Google Console</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Use another account</strong> and copy/paste credentials for <strong>this</strong> lab into the prompts.</p>
+</li>
+</ol>
+<aside class="warning"><p>
+  If you use other credentials, you'll get errors or <strong>incur charges</strong>.
+  </p>
+</aside>
+<ol start="7">
+<li>Accept the terms and skip the recovery resource page.</li>
+</ol>
+<aside class="warning"><p>
+  Do not click <strong>End Lab</strong> unless you are finished with the lab or want to restart it. This clears your work and removes the project.
+  </p>
+</aside>
+
+<p>After you complete the initial sign-in steps, the project dashboard appears.</p>
+<p><img alt="GCP Project Dashboard" src="https://cdn.qwiklabs.com/dxfeoOcn1ObyC0BYyoqqqSi4rO%2FeMdbWPFjoK6C0YYk%3D"></p>
+<p>Click <strong>Select a project</strong>, highlight your <em>GCP Project ID</em>, and click
+<strong>OPEN</strong> to select your project.</p>
+<h3>Activate Google Cloud Shell</h3>
+<p>Google Cloud Shell is a virtual machine that is loaded with development tools. It offers a persistent 5GB home directory and runs on the Google Cloud.
+Google Cloud Shell provides command-line access to your GCP resources.</p>
+<ol>
+<li>
+<p>In GCP console, on the top right toolbar, click the Open Cloud Shell button.</p>
+<p><img alt="Cloud Shell icon" src="https://cdn.qwiklabs.com/vdY5e%2Fan9ZGXw5a%2FZMb1agpXhRGozsOadHURcR8thAQ%3D"></p>
+</li>
+<li>
+<p>Click <strong>Continue</strong>.
+<img alt="cloudshell_continue.png" src="https://cdn.qwiklabs.com/lr3PBRjWIrJ%2BMQnE8kCkOnRQQVgJnWSg4UWk16f0s%2FA%3D"></p>
+</li>
+</ol>
+<p>It takes a few moments to provision and connect to the environment. When you are connected, you are already authenticated, and the project is set to your <em>PROJECT_ID</em>. For example:</p>
+<p><img alt="Cloud Shell Terminal" src="https://cdn.qwiklabs.com/hmMK0W41Txk%2B20bQyuDP9g60vCdBajIS%2B52iI2f4bYk%3D"></p>
+<p><strong>gcloud</strong> is the command-line tool for Google Cloud Platform. It comes pre-installed on Cloud Shell and supports tab-completion.</p>
+<p>You can list the active account name with this command:</p>
+<pre><code>gcloud auth list&#x000A;</code></pre>
+<p>Output:</p>
+<pre><code class="language-output prettyprint">Credentialed accounts:&#x000A; - &lt;myaccount&gt;@&lt;mydomain&gt;.com (active)&#x000A;</code></pre>
+<p>Example output:</p>
+<pre><code class="language-Output prettyprint">Credentialed accounts:&#x000A; - google1623327_student@qwiklabs.net&#x000A;</code></pre>
+<p>You can list the project ID with this command:</p>
+<pre><code>gcloud config list project&#x000A;</code></pre>
+<p>Output:</p>
+<pre><code class="language-output prettyprint">[core]&#x000A;project = &lt;project_ID&gt;&#x000A;</code></pre>
+<p>Example output:</p>
+<pre><code class="language-Output prettyprint">[core]&#x000A;project = qwiklabs-gcp-44776a13dea667a6&#x000A;</code></pre>
+<ql-infobox>
+  Full documentation of <strong>gcloud</strong> is available on
+  <a href="https://cloud.google.com/sdk/gcloud" target="_blank">
+    Google Cloud gcloud Overview
+  </a>.
+</ql-infobox>
+
+<h2 id="step3">Task 1. Download a sample app from GitHub</h2>
+<p>In the first task, you will clone a simple Python Flask application from GitHub, explore the application's code, and run the application in Cloud Shell.</p>
+<ol>
+<li>
+<p>Switch to or open your Cloud Shell window.</p>
+</li>
+<li>
+<p>Clone the <code>drehnstrom/gcp-debugging</code> repository from GitHub into your Cloud Shell instance.</p>
+</li>
+</ol>
+<pre><code>git clone https://github.com/drehnstrom/gcp-debugging&#x000A;</code></pre>
+<ol>
+<li>
+<p>Change into the 'gcp-debugging' folder containing our sample app.</p>
+</li>
+</ol>
+<pre><code>cd ~/gcp-debugging&#x000A;</code></pre>
+<ol>
+<li>
+<p>Use the following command to open <code>main.py</code> in the Cloud Shell Editor.</p>
+</li>
+</ol>
+<pre><code>edit main.py&#x000A;</code></pre>
+<ol>
+<li>
+<p>Take a moment and explore the code. This is a simple Python Flask web app. Initially the app displays a basic home page. When you click <code>Convert Temp</code>, you are sent to the <code>/temp</code> endpoint and the GET request will present a "Convert Fahrenheit to Celsius" page, prompting you for a temperature value. Submitting the form POSTs back to the same <code>/temp</code> endpoint. The code then returns a page displaying the converted value. Both pages are built from templates found in the <code>templates</code> folder.</p>
+</li>
+<li>
+<p>Before deploying the application to the cloud, let's test it locally in Cloud Shell. First, install the application dependencies using the Python <code>requirements.txt</code> file. Then execute <code>main.py</code>.</p>
+</li>
+</ol>
+<pre><code>sudo pip3 install -r requirements.txt&#x000A;python3 main.py&#x000A;</code></pre>
+<ol>
+<li>You'll see that the terminal window is in a hold mode as the application runs in the background. To see the program running, click the <strong>Web Preview</strong> button in the toolbar of Google Cloud Shell. Then, select <strong>Preview on port 8080</strong>.</li>
+</ol>
+<p><img alt="Web Preview" src="https://cdn.qwiklabs.com/8rE%2Fz5TD4tZmrL1ttQgU%2F9V7T%2BjG7BGAuKgXzItjbIQ%3D"></p>
+<ol>
+<li>At the top of the page, click the <strong>Convert Temp</strong> link. The following screen should be displayed.</li>
+</ol>
+<p><img alt="Convert Page" src="https://cdn.qwiklabs.com/lKBqSth3tDEEIKLd0KFmgq10aOZhCVSCc3bMLOe2hVQ%3D"></p>
+<ol>
+<li>
+<p>Delete the text in the text box, enter 212, and click the <strong>To Celsius</strong> button. The result should be 100.</p>
+</li>
+<li>
+<p>Now, enter some garbage text like “foo”. How does the application handle this?</p>
+</li>
+<li>
+<p>Close the browser tab for the running application and switch back to Cloud Shell. Press <strong>Ctrl-C</strong> to stop the Flask application.</p>
+</li>
+</ol>
+<p><img alt="temp() Code" src="https://cdn.qwiklabs.com/lNtCM3JMuXCfwR3o8v16V7IT2hRqb9KxGEbnfgT8hl8%3D"></p>
+<ol>
+<li>
+<p>Take a moment to re-examine the above code, specifically the <code>temp()</code> function. When the button on the Convert Temp page is pressed a POST is made. That is handled by the if block starting at line 20. At line 23 the user input is retrieved; this is the temperature in Fahrenheit. Notice below that the isnumeric() function is used to ensure a number was entered. If the input is valid, the conversion to celsius is done. If not, an error message is returned.</p>
+</li>
+</ol>
+<h2 id="step4">Task 2. Deploy the application to App Engine</h2>
+<p>The code is working, but only locally on the Cloud Shell VM. To test our code in a more production-like environment, let's deploy it to Google's fully-managed App Engine. Cloud Run, which we used in earlier exercises, would also make a great deployment platform.</p>
+<ol>
+<li>
+<p>Open <code>app.yaml</code> in the Cloud Shell Editor.</p>
+</li>
+</ol>
+<pre><code>edit app.yaml&#x000A;</code></pre>
+<ol>
+<li>
+<p>Take a moment to explore the file. This is a configuration file telling App Engine the type of environment our code will need when it runs.</p>
+</li>
+<li>
+<p>App Engine needs an application created before it can be used. This is done just once using the <code>gcloud app create</code> command and specifying the region where you want the app to be created. This command will take a minute or so. Please wait for it to complete before moving on.</p>
+</li>
+</ol>
+<pre><code>gcloud app create --region=us-central&#x000A;</code></pre>
+<ol>
+<li>
+<p>Deploy the Flask application into App Engine. This command will take a minute or three to complete. Please wait for it before moving on.</p>
+</li>
+</ol>
+<pre><code>gcloud app deploy --version=one --quiet&#x000A;</code></pre>
+<ol>
+<li>
+<p>In the Google Cloud Console window, use the hamburger menu to navigate to <strong>App Engine | Dashboard</strong>.</p>
+</li>
+<li>
+<p>In the upper-right corner of the dashboard, click the link (<code>qwiklabs-gcp-???????.appspot.com</code>) to your application.</p>
+</li>
+<li>
+<p>Like before, click the <strong>Convert Temp</strong> link and enter 212 in the text box. Click the button and it should return 100.</p>
+</li>
+</ol>
+<h2 id="step5">Task 3. Debug the application</h2>
+<p>Even after all of our "thorough" testing, users have reported that our program doesn’t always return the correct answer. Let’s use Google Clouds Debugging to investigate.</p>
+<ol>
+<li>
+<p>Take a moment and test the application with various possible numeric temperature values. Can you find any that won't work? If not, don't let that keep you from moving to the next step.</p>
+</li>
+<li>
+<p>In the Google Cloud Console, use the hamburger menu to navigate to <strong>Debugger</strong>.</p>
+</li>
+<li>
+<p>Since the Debugger is tightly integrated with App Engine, it already has a copy of your application code and should have your application selected by default. In the left-hand tree, select <strong>main.py</strong>.</p>
+</li>
+<li>
+<p>Let's add a breakpoint so we have a snapshot of our application at the moment in time when it returns the temperature page. Locate the line which returns the rendered <code>temp.html</code> page (around line 34). Click in the grey area next to code line number to set a breakpoint.:</p>
+</li>
+</ol>
+<p><img alt="Add Breakpoint" src="https://cdn.qwiklabs.com/HOcytuNqlpRiN%2BSqYNOfNr55tcksP%2BqQAO0iLFYhnbQ%3D"></p>
+<ol>
+<li>Notice the window to the right of the debugger. We could set a condition that would need to be met before a snapshot is taken. At the bottom, we see a message that the Debugger is waiting to take a snapshot.</li>
+</ol>
+<p><img alt="Snapshot Condition Pane" src="https://cdn.qwiklabs.com/RNwhjwxBDyGtGXwG%2F%2BUUP9h5nEdBdkNIUyVslOjlv6s%3D"></p>
+<ol>
+<li>
+<p>Go back to the temperature converter page and convert 212 (this should work). Switch back to the Debug screen and check the results.</p>
+</li>
+<li>
+<p>Take a moment to explore the data available in the snapshot. The <code>input</code> was the string ‘212’. That was converted to the numeric <code>fahrenheit</code> 212.0. The calculation was correct and resulted in the 100.0 in <code>celsius</code>.</p>
+</li>
+</ol>
+<p><img alt="Snapshot 212 to 100" src="https://cdn.qwiklabs.com/hDMuvfhEmJceoXr6rJIe13EGy728m6eQo89xmumgm5Y%3D"></p>
+<ol>
+<li>In the Snapshot window, click the camera icon to re-enable the breakpoint.</li>
+</ol>
+<p><img alt="Re-enable Snapshot" src="https://cdn.qwiklabs.com/7LME1XbkWObcrLEYfk6NKQvWhYntk67G5nnfLjUo344%3D"></p>
+<ol>
+<li>Go back to your app converter page, enter -40 in the text box, and click the button. Then, switch back to the Debugger and investigate the results.</li>
+</ol>
+<p><img alt="Bug Snapshot" src="https://cdn.qwiklabs.com/9JahG80Ba01lous7jZSwrI8B38BN3cs6RhFtQDHvAD0%3D"></p>
+<ol>
+<li>
+<p>Notice that the input was correct, the string ‘-40’, but clearly the value was not converted correctly to a number. The '-40' indicates that it's still in a string format. Take a look at the code lines 20 through 34 and speculate what might be wrong.</p>
+</li>
+</ol>
+<h2 id="step6">Task 4. Adding log data</h2>
+<p>In addition to seeing the code and current variable values using Debugger snapshots, it's also possible to easily add free-form logging information using Logpoints. Let's add some Logpoints to further explore our code.</p>
+<ol>
+<li>I suspect the <code>isnumeric()</code> function is not working correctly. In the upper-right corner of the Debug screen, click the <strong>Logpoint</strong> link.</li>
+</ol>
+<p><img alt="Logpoint Link" src="https://cdn.qwiklabs.com/oI%2Fmt2dnYSXO0yhTexedhK2VbBwxG%2BnVE%2B00PyKfVQE%3D"></p>
+<ol>
+<li>Now click next to line 31 and a logpoint form will appear.</li>
+</ol>
+<p><img alt="New Logpoint" src="https://cdn.qwiklabs.com/0eXctIDSxAgI%2FjjvUlqTFnVMVlODCmbh6BvNRZjQGNI%3D"></p>
+<ol>
+<li>Set the log level from Info to <strong>Warning</strong>, then change the <code>var = {var}</code> placeholder to: <code>{input} was cast to {fahrenheit}</code>, and hit the <strong>Add</strong> button.</li>
+</ol>
+<p><img alt="Set Logpoint Value" src="https://cdn.qwiklabs.com/OZ8czxuEfHI2VrhsL3PWyfbFt6TPxNyOcajcPdihd2o%3D"></p>
+<ol>
+<li>
+<p>Go back to your app converter page, test the values 212, 32, -40, and 98.6.</p>
+</li>
+<li>
+<p>Return to the Debugger screen and click the <strong>View logs</strong> link in the Logpoints window.</p>
+</li>
+</ol>
+<p><img alt="View Logpoint Logs" src="https://cdn.qwiklabs.com/86zuLsIcj3U8Fz1dtk2KBTVK88ruHw8Zw25IynRZuws%3D"></p>
+<ol>
+<li>Take a moment and explore the log values. It appears that the <code>isnumeric()</code> function, used in the test on line 24, is returning a <code>false</code> for negative numbers and numbers with a decimal. That isn't right.</li>
+</ol>
+<p><img alt="Logpoint Log Values" src="https://cdn.qwiklabs.com/TTf%2F02FfYDRLVjF3Pm%2FGqerx7MLBG0F02gtEZh%2BXKSs%3D"></p>
+<h2 id="step7">Task 5. Fix the bug and deploy a new version</h2>
+<p>Now that we have a fairly good idea where the bug is, let's fix the code, deploy a new version of our application, and test to make sure the bug is actually resolved.</p>
+<ol>
+<li>
+<p>Return to your Cloud Shell window, find the <code>main.py</code> file in the <code>gcp-debugging</code> folder, and open it in the Cloud Shell Editor.</p>
+</li>
+<li>
+<p>If you’re highly motivated (and a coder), try to fix the code yourself. If not, replace if-else block on lines 24 through 29 with the following try-catch block. This is Python, so please make sure you get the spacing correct.</p>
+</li>
+</ol>
+<pre><code>        try:&#x000A;            fahrenheit = float(input)&#x000A;            celsius = int((fahrenheit - 32.0) * 5.0 / 9.0)&#x000A;        except ValueError:&#x000A;            fahrenheit = 'Enter a number'&#x000A;            celsius = 'Invalid Input'&#x000A;</code></pre>
+<ol>
+<li>Make sure your finished code resembles the following screenshot:</li>
+</ol>
+<p><img alt="Fixed Code" src="https://cdn.qwiklabs.com/JTWKayy7X0T8EDKq1Fa%2BLcdIYBmO5Z9A7RryN5%2FoJAk%3D"></p>
+<ol>
+<li>
+<p>In the Cloud Shell terminal window, change into the <code>~/gcp-debugging</code> directory and deploy a new version of the application to App Engine. It will take a few moments for this to complete, don't move on until it does.</p>
+</li>
+</ol>
+<pre><code>cd ~/gcp-debugging&#x000A;gcloud app deploy --version=two --quiet&#x000A;</code></pre>
+<ol>
+<li>
+<p>After the command completes, go back to your temperature converter web page and test it. It should work now.</p>
+</li>
+</ol>
+<h2 id="step8">Review</h2>
+<aside><p><strong>Congratulations!</strong></p>
+</aside>
+<p>In this lab, you used the Google Cloud Debugger service to track down a bug in an application deployed to the cloud. You saw how to create breakpoints, inspect values in a running application, and dynamically added logging information to a running application. All without interrupting production code.</p>
+
+
+</div>
+</div>
+
+
+<div class='hidden js-end-lab-button-container lab-content__end-lab-button'>
+<ql-lab-control-button class='js-end-lab-button' running></ql-lab-control-button>
+</div>
+<!-- / TODO: Move recommendations into the end lab modal -->
+</ql-drawer-content>
+<ql-drawer end id='outline-drawer' open slot='drawer' width='320'>
+<div class='js-lab-content-outline lab-content__outline'>
+<a href='#step1'>Overview</a><a href='#step2'>Task 0. Lab Setup</a><a href='#step3'>Task 1. Download a sample app from GitHub</a><a href='#step4'>Task 2. Deploy the application to App Engine</a><a href='#step5'>Task 3. Debug the application</a><a href='#step6'>Task 4. Adding log data</a><a href='#step7'>Task 5. Fix the bug and deploy a new version</a><a href='#step8'>Review</a>
+</div>
+</ql-drawer>
+</ql-drawer-container>
+</ql-drawer-content>
+</ql-drawer-container>
+<div class='lab-introduction js-lab-introduction is-hidden'>
+<div class='lab-introduction__inner'>
+<h1 class='headline-1'>Welcome to Your First Lab!</h1>
+<ql-icon-button class='js-skip-button'>close</ql-icon-button>
+<div class='lab-introduction__video'>
+<iframe allow='autoplay; encrypted-media' allowfullscreen frameborder='0' id='lab-introduction' src='https://www.youtube.com/embed/yF7EDXKTmoQ?enablejsapi=1&amp;rel=0&amp;showinfo=0'></iframe>
+</div>
+<a class='js-skip-button button button--outline'>Skip this video</a>
+</div>
+</div>
+
+
+
+</div>
+</main>
+
+
+<div class='modal fade' id='lab-details-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<div class='modal-body'>
+<p class='l-mbm'>
+Use the Debugger to find a bug in an application running in Google Cloud
+</p>
+<p class='small-label l-mbs'>
+<strong>
+Duration:
+</strong>
+0m setup
+&middot;
+120m access
+&middot;
+45m completion
+</p>
+<p class='small-label l-mbs'>
+<span><strong>Levels: </strong>intermediate</span>
+</p>
+<p class='small-label'>
+<strong>
+Permalink:
+</strong>
+<a href="https://googlecoursera.qwiklabs.com/catalog_lab/2652">https://googlecoursera.qwiklabs.com/catalog_lab/2652</a>
+</p>
+</div>
+<div class='modal-actions'>
+<a class='button button--text' data-dismiss='modal'>
+Got It
+</a>
+</div>
+
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='modal fade' id='lab-review-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<form class="simple_form js-lab-review-form" id="edit_lab_review_11979726" action="/lab_reviews/11979726" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="_method" value="patch" /><div class='modal-body'>
+<p class='label'>
+How satisfied are you with this lab?*
+</p>
+<div class='rateit js-rateit' data-rateit-max='5' data-rateit-min='0' data-rateit-resetable='false' data-rateit-step='1' data-rateit-value='5'></div>
+<div class='l-mtm'>
+
+<div class="control-group hidden lab_review_user_id"><div class="controls"><input class="hidden" type="hidden" value="3894861" name="lab_review[user_id]" id="lab_review_user_id" /></div></div>
+<div class="control-group hidden lab_review_classroom_id"><div class="controls"><input class="hidden" type="hidden" name="lab_review[classroom_id]" id="lab_review_classroom_id" /></div></div>
+<div class="control-group hidden lab_review_lab_id"><div class="controls"><input class="hidden" type="hidden" value="2652" name="lab_review[lab_id]" id="lab_review_lab_id" /></div></div>
+<div class="control-group hidden lab_review_focus_id"><div class="controls"><input class="hidden" type="hidden" name="lab_review[focus_id]" id="lab_review_focus_id" /></div></div>
+<div class="control-group hidden lab_review_rating"><div class="controls"><input class="hidden js-rating-input" type="hidden" value="2" name="lab_review[rating]" id="lab_review_rating" /></div></div>
+<div class="control-group text optional lab_review_comment"><label class="text optional control-label" for="lab_review_comment">Comment</label><div class="controls"><textarea class="text optional" name="lab_review[comment]" id="lab_review_comment">
+</textarea></div></div>
+</div>
+</div>
+<div class='modal-actions'>
+<a class='button button--text' data-dismiss='modal'>
+Cancel
+</a>
+<input type="submit" name="commit" value="Submit" disabled="disabled" id="submit" data-disabled="false" class="button" data-disable-with="Submit" />
+</div>
+</form>
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+
+
+<script>
+  $( function() {
+    ql.initMaterialInputs();
+    initChosen();
+    initSearch();
+    initTabs();
+    ql.list.init();
+    ql.favoriting.init();
+    ql.header.myAccount.init();
+    initTooltips();
+    ql.autocomplete.init();
+    ql.modals.init();
+    ql.toggleButtons.init();
+    ql.analytics.init();
+    ql.labControlPanel.addRecaptchaErrorHandler();
+  initLabContent();
+  ql.labOutline.links.init();
+  initLabReviewModal();
+  ql.labAssessment.init();
+  ql.labIntroduction.init( true );
+  ql.labData.init();
+  initLabTranslations( {"are_you_sure":"All done? If you end this lab, you will lose all your work. You may not be able to restart the lab if there is a quota limit. Are you sure you want to end this lab?\n","in_progress":"*In Progress*","ending":"*Ending*","starting":"*Starting, please wait*","end_concurrent_labs":"Sorry, you can only run one lab at a time. To start this lab, please confirm that you want all of your existing labs to end.\n","copied":"Copied","no_resource":"Error retrieving resource.","no_support":"No Support","mac_press":"Press ⌘-C to copy","thanks_review":"Thanks for reviewing this lab.","windows_press":"Press Ctrl-C to copy","days":"days"} );
+  ql.labRun.init();
+  ql.chat.init();
+  ql.initHeader();
+  ql.navigation.init();
+  ql.navPanel.init();
+  ql.navigation.init();
+  
+  });
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,933 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title>Compute Logging and Monitoring | Qwiklabs</title>
+<script>
+//<![CDATA[
+window.gon={};gon.current_user={"firstname":"DANIEL","lastname":"ENRIQUE SANDOVAL SANCHEZ","fullname":"DANIEL ENRIQUE SANDOVAL SANCHEZ","company":"Coursera","email":"desandovals@liverpool.com.mx","origin":"googlecoursera-run, lti-coursera","subscriptions":0,"id":"40414ff5fc280f833d9acca966912f93","qlCreatedAt":"2020-11-17 20:45:59 UTC","optIn":null,"current_organization_id":null,"current_organization_role":null};gon.segment="j4Im8pqIko0Lxq4wVVZWMPMM0EroHUvb";gon.deployment="googlecoursera-run";gon.content={"type":"Lab","id":2648,"name":"Compute Logging and Monitoring"};
+//]]>
+</script>
+<script>
+  dataLayer = [
+    {user: gon.current_user},
+    {content: gon.content}
+  ];
+</script>
+<script>
+  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer',"GTM-TQR88QK");
+</script>
+<script>
+  EVENT_SOURCE_BASE_URL = "https://googlecoursera-run.qwiklabs.com/nchan-sub?id=";
+</script>
+<script src="https://cdn.qwiklabs.com/assets/hallofmirrors/polyfills/webcomponents-loader-408088dc333247a761de5f2b2a4ba1cabd2bc36579f83ba92a559eb3682a9b77.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/vendor-45d462772c30000424907184f70c7157e95fb6227698d1671c5051818a6f60d8.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/application-3dfa6f42878108faa67e402d63d13af381e12f274396d44b394f4514363fd8da.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/hallofmirrors/hallofmirrors-3564ac3aa9042171d24a2ef751f254df3bdb94c1066367b8fbbe97b27d1af3bb.js"></script>
+<!--[if lt IE 9]>
+<script src='http://html5shim.googlecode.com/svn/trunk/html5.js' type='text/javascript'></script>
+<![endif]-->
+<!--[endif]>  <![endif]-->
+<script type='application/ld+json'>
+{
+  "@context": "http://schema.org",
+  "@type": "WebSite",
+  "url": "https://www.qwiklabs.com/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://www.qwiklabs.com/catalog?keywords={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script id='ze-snippet' src='https://static.zdassets.com/ekr/snippet.js?key=511e4158-0aec-4e3c-b2e6-4daa1769f51e'></script>
+
+
+<meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="tbkh3eYOPlP+aK6hEUf6BM7+y+WZ/BEqMBVsuHv0zBeWanlqaIxSvP6yNLIOmmhyqyeXLTI6Dl4W+3sz9KchCw==" />
+<meta content='width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0' name='viewport'>
+<meta content='1rRsY0INj8RvwB5EF5pwdxt2A2P9aDgAlsICaJ0d5w0' name='google-site-verification'>
+<meta content='#3681E4' property='msapplication-TileColor'>
+<meta content='/favicon-144.png' property='msapplication-TileImage'>
+<meta content='[{&quot;id&quot;:&quot;recaptcha_experiment&quot;,&quot;optimize_id&quot;:&quot;dpViOcLkT3qS4TvL2mRojA&quot;,&quot;title&quot;:&quot;No Recaptcha shown for trusted users&quot;,&quot;variant_index&quot;:0,&quot;variant&quot;:&quot;original&quot;}]' name='active-experiments'>
+<meta content='{&quot;userId&quot;:3894861}' name='help-api-product-data'>
+<meta content='In this exercise you will install the logging and monitoring agents into a GCE VM running NGINX, and examine monitoring on GKE' name='description'>
+<meta content='Qwiklabs' name='author'>
+<meta content='Compute Logging and Monitoring | Qwiklabs' property='og:title'>
+<meta content='website' property='og:type'>
+<meta content='/favicon-144.png' property='og:image'>
+<meta content='Qwiklabs' property='og:site_name'>
+<meta content='In this exercise you will install the logging and monitoring agents into a GCE VM running NGINX, and examine monitoring on GKE' property='og:description'>
+<meta content='/qwiklabs_logo_900x887.png' property='og:logo' size='900x887'>
+<meta content='/qwiklabs_logo_994x187.png' property='og:logo' size='994x187'>
+
+
+<link href='/favicon-32.png' rel='shortcut icon'>
+<link color='#3681E4' href='/favicon-svg.svg' rel='mask-icon'>
+<link href='/favicon-180.png' rel='apple-touch-icon-precomposed'>
+
+
+
+<link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css?family=Oswald:400|Roboto+Mono:400,700|Roboto:300,400,500,700|Google+Sans:300,400,500,700|Google+Sans+Display:400|Material+Icons|Google+Material+Icons" />
+
+
+<link rel="stylesheet" media="all" href="https://cdn.qwiklabs.com/assets/application-bae2b36b94b311cc71dbebd59e2bab166740d7f59597282509f008eded4d3481.css" />
+
+
+
+</head>
+<body class='lab-show l-full no-nav application-new focuses focuses-show lab-show l-full no-nav '>
+<noscript>
+<iframe height='0' src='https://www.googletagmanager.com/ns.html?id=GTM-TQR88QK' style='display:none;visibility:hidden;' width='0'></iframe>
+</noscript>
+<span class='hidden' id='flash-sibling-before'></span>
+
+<div class='header-container'>
+<div class='header'>
+<ql-icon-button class='js-nav-toggle header__nav-panel-button l-mrm'>menu</ql-icon-button>
+<div class='header__title'>
+<ql-icon-button label="Back" href="https://www.coursera.org/" id="716f556b26dd9ed3" target="_self">arrow_back</ql-icon-button><div class="mdl-tooltip" data-mdl-for="716f556b26dd9ed3">Back</div>
+
+<h1 class='headline-5'>
+Compute Logging and Monitoring
+</h1>
+</div>
+<div class='header__actions'>
+<ql-icon-button class='header__button--search js-header-search-bar-button'>search</ql-icon-button>
+<ql-icon-button id='control-panel-target' style='display: none;'>
+dashboard
+</ql-icon-button>
+<ql-menu for='control-panel-target' id='control-panel-menu'></ql-menu>
+
+<ql-icon-button id='help-menu-button'>help</ql-icon-button>
+<div class='mdl-tooltip js-tooltip' data-mdl-for='help-menu-button'>
+Help
+</div>
+<ql-menu for='help-menu-button' id='help-menu'>
+<ql-menu-item>
+<ql-help context='lab' data-analytics-action='opened_help' data-analytics-label='lab' productdata='{&quot;userId&quot;:3894861}'>
+Help Center
+</ql-help>
+</ql-menu-item>
+<ql-menu-item>
+<a target="_blank" class="ql-body-1" href="https://support.google.com/qwiklabs/contact/contact_us">Email support</a>
+</ql-menu-item>
+<ql-menu-item>
+<a class='ql-body-1' onClick='ql.chat.open()'>Chat support</a>
+</ql-menu-item>
+</ql-menu>
+
+<ql-icon-button id='language'>language</ql-icon-button>
+<div class='mdl-menu mdl-menu__bottom-right mdl-js-menu elevation-3' for='language'>
+<a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ar" href="/focuses/15405466?locale=ar&amp;parent=lti_session">العربية‬‎
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="de" href="/focuses/15405466?locale=de&amp;parent=lti_session">Deutsch
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="en" href="/focuses/15405466?locale=en&amp;parent=lti_session">English
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="es" href="/focuses/15405466?locale=es&amp;parent=lti_session">español (Latinoamérica)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="fr" href="/focuses/15405466?locale=fr&amp;parent=lti_session">français
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="id" href="/focuses/15405466?locale=id&amp;parent=lti_session">bahasa Indonesia
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="it" href="/focuses/15405466?locale=it&amp;parent=lti_session">Italiano
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ja" href="/focuses/15405466?locale=ja&amp;parent=lti_session">日本語
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ko" href="/focuses/15405466?locale=ko&amp;parent=lti_session">한국어
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pl" href="/focuses/15405466?locale=pl&amp;parent=lti_session">Polski
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pt_BR" href="/focuses/15405466?locale=pt_BR&amp;parent=lti_session">português (Brasil)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pt_PT" href="/focuses/15405466?locale=pt_PT&amp;parent=lti_session">português (Portugal)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ru" href="/focuses/15405466?locale=ru&amp;parent=lti_session">русский
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="tr" href="/focuses/15405466?locale=tr&amp;parent=lti_session">Türkçe
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="zh" href="/focuses/15405466?locale=zh&amp;parent=lti_session">简体中文
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="zh_TW" href="/focuses/15405466?locale=zh_TW&amp;parent=lti_session">繁體中文
+</a></div>
+<button class='icon-button' id='my_account'>
+<ql-avatar></ql-avatar>
+</button>
+<ql-menu for='my_account' open>
+<div class='my-account-menu'>
+<ql-avatar class='l-mtl l-mbl' size='120'></ql-avatar>
+<div class='my-account-menu__user-info l-mbl'>
+<h4 class='ql-subhead-1'>DANIEL ENRIQUE SANDOVAL SANCHEZ</h4>
+<p class='ql-body-2 text--light'>desandovals@liverpool.com.mx</p>
+<p class='ql-body-2 text--light'>
+</p>
+<a class="text--green ql-subhead-2" href="/my_account/payments"><ql-chip positive>
+0 Credits
+</ql-chip>
+</a></div>
+<div class='buttons l-mbl'>
+<a class="button button--hairline" id="settings" href="/my_account/profile">Settings</a>
+</div>
+<hr>
+<ql-button data-analytics-action='clicked_sign_out' href='/users/sign_out' method='delete'>
+Sign Out
+</ql-button>
+<div class='privacy l-mtl'>
+<a class="ql-caption text--light" href="/privacy_policy">Privacy</a>
+<span class='ql-caption text--light l-mls l-mrs'>&middot;</span>
+<a class="ql-caption text--light" href="/terms_of_service">Terms</a>
+</div>
+</div>
+</ql-menu>
+
+</div>
+</div>
+<div class='header__search-bar js-header-search-bar'>
+<form class="js-search-form-mobile" onsubmit="ql.searchFilter(); return false;" action="/searches/elasticsearch" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="Ku8k7kRXYVWtsjmEVYOnU0d4/doJI0kTpg6JQCyu9mgJPHxZytUNuq1oo5dKXjUlIqGhEqLlVmeA4J7Lo/0bdA==" />
+<input type="text" name="keywords" id="keywords" placeholder="Search" maxlength="255" aria-label="catalog search bar" />
+</form>
+
+<ql-icon-button class='js-close-search-bar'>close</ql-icon-button>
+</div>
+</div>
+
+<nav class='nav-bar'>
+<a class="nav-bar__item js-navigation-button" href="/"><ql-icon class='nav-bar__item__icon'>
+home
+</ql-icon>
+<span class='nav-bar__item__label'>
+Home
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="/catalog"><ql-icon class='nav-bar__item__icon'>
+school
+</ql-icon>
+<span class='nav-bar__item__label'>
+Catalog
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="/my_learning"><ql-icon class='nav-bar__item__icon'>
+event_note
+</ql-icon>
+<span class='nav-bar__item__label'>
+My Learning
+</span>
+</a>
+</nav>
+
+<nav class='nav-panel js-nav-panel'>
+<div class='nav-panel__logo'>
+<div class='logo logo--blue'></div>
+</div>
+<a title="Home" tabindex="-1" class="nav-panel__item js-navigation-button" href="/"><ql-icon class='nav-panel__item__icon'>
+home
+</ql-icon>
+<div class='nav-panel__item__label'>
+Home
+</div>
+</a>
+<a title="Catalog" tabindex="-1" class="nav-panel__item js-navigation-button" href="/catalog"><ql-icon class='nav-panel__item__icon'>
+school
+</ql-icon>
+<div class='nav-panel__item__label'>
+Catalog
+</div>
+</a>
+<a title="My Learning" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_learning"><ql-icon class='nav-panel__item__icon'>
+event_note
+</ql-icon>
+<div class='nav-panel__item__label'>
+My Learning
+</div>
+</a>
+<div class='nav-panel__spacer'></div>
+<a title="Profile" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/profile"><ql-icon class='nav-panel__item__icon'>
+account_circle
+</ql-icon>
+<div class='nav-panel__item__label'>
+Profile
+</div>
+</a>
+<a title="Credits &amp; Subscriptions" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/credits"><ql-icon class='nav-panel__item__icon'>
+money
+</ql-icon>
+<div class='nav-panel__item__label'>
+Credits &amp; Subscriptions
+</div>
+</a>
+<a title="Security" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/security"><ql-icon class='nav-panel__item__icon'>
+security
+</ql-icon>
+<div class='nav-panel__item__label'>
+Security
+</div>
+</a>
+<div class='nav-panel__spacer'></div>
+<a class="nav-panel__item" tabindex="-1" href="#"><ql-help>
+<div class='nav-panel__help-item'>
+<ql-icon class='nav-panel__item__icon'>help</ql-icon>
+<div class='nav-panel__item__label'>
+Help
+</div>
+</div>
+</ql-help>
+</a><div class='nav-panel__small-links'>
+<a tabindex="-1" href="/privacy_policy">Privacy</a>
+<a tabindex="-1" href="/terms_of_service">Terms</a>
+</div>
+</nav>
+<div class='nav-panel__overlay js-nav-toggle'></div>
+
+<main class='js-main'>
+<div class='l-main-wrapper' id='main-wrapper'>
+
+
+
+
+
+
+
+<ql-drawer-container class='js-lab-state' data-analytics-payload='{&quot;label&quot;:&quot;Compute Logging and Monitoring&quot;,&quot;lab_name&quot;:&quot;Compute Logging and Monitoring&quot;,&quot;classroom_name&quot;:null,&quot;deployment&quot;:&quot;googlecoursera-run&quot;}' data-focus-id='15405466' data-lab-billing-limit='0.0' data-lab-duration='7200' data-parent='lti_session' data-recaptcha-enabled id='lab-container'>
+<ql-drawer id='terminal-drawer' slot='drawer' style='width: calc(100% - 480px)'>
+<iframe allow='clipboard-read' class='terminal' id='embedded-resource'></iframe>
+</ql-drawer>
+<ql-drawer-content class='js-lab-wrapper' id='lab-content' slot='drawer-content'>
+<ql-drawer-container id='lab-content-container'>
+<ql-drawer id='control-panel-drawer' open slot='drawer' width='320'>
+<ql-lab-control-panel class='ql-lab-control-panel__max-height control-panel js-lab-control-panel' connectionFiles='[]' labControlButton='{&quot;disabled&quot;:false,&quot;pending&quot;:false,&quot;running&quot;:false}' labDetails='[]' labTimer='{&quot;ticking&quot;:false,&quot;secondsRemaining&quot;:7200}' studentResources='[]'>
+<script src="https://www.recaptcha.net/recaptcha/api.js?render=6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr"   ></script>
+        <script>
+          // Define function so that we can call it again later if we need to reset it
+          // This executes reCAPTCHA and then calls our callback.
+          function executeRecaptchaForStartLab() {
+            grecaptcha.ready(function() {
+              grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}).then(function(token) {
+                setInputWithRecaptchaResponseTokenForStartLab('g-recaptcha-response-data-start-lab', token)
+              });
+            });
+          };
+          // Invoke immediately
+          executeRecaptchaForStartLab()
+
+          // Async variant so you can await this function from another async function (no need for
+          // an explicit callback function then!)
+          // Returns a Promise that resolves with the response token.
+          async function executeRecaptchaForStartLabAsync() {
+            return new Promise((resolve, reject) => {
+              grecaptcha.ready(async function() {
+                resolve(await grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}))
+              });
+            })
+          };
+
+                    var setInputWithRecaptchaResponseTokenForStartLab = function(id, token) {
+            var element = document.getElementById(id);
+            element.value = token;
+          }
+
+        </script>
+<input type="hidden" name="g-recaptcha-response-data[start_lab]" id="g-recaptcha-response-data-start-lab" data-sitekey="6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr" class="g-recaptcha g-recaptcha-response "/>
+
+<div class='hidden' id='recaptcha-v2-start-lab' slot='recaptcha'>
+<script src="https://www.recaptcha.net/recaptcha/api.js" async defer ></script>
+<div data-sitekey="6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV" data-callback="recaptchaComplete" data-expired-callback="expireV2Token" class="g-recaptcha "></div>
+          <noscript>
+            <div>
+              <div style="width: 302px; height: 422px; position: relative;">
+                <div style="width: 302px; height: 422px; position: absolute;">
+                  <iframe
+                    src="https://www.recaptcha.net/recaptcha/api/fallback?k=6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV"
+                    name="ReCAPTCHA"
+                    style="width: 302px; height: 422px; border-style: none; border: 0; overflow: hidden;">
+                  </iframe>
+                </div>
+              </div>
+              <div style="width: 300px; height: 60px; border-style: none;
+                bottom: 12px; left: 25px; margin: 0px; padding: 0px; right: 25px;
+                background: #f9f9f9; border: 1px solid #c1c1c1; border-radius: 3px;">
+                <textarea id="g-recaptcha-response" name="g-recaptcha-response"
+                  class="g-recaptcha-response"
+                  style="width: 250px; height: 40px; border: 1px solid #c1c1c1;
+                  margin: 10px 25px; padding: 0px; resize: none;">
+                </textarea>
+              </div>
+            </div>
+          </noscript>
+
+</div>
+</ql-lab-control-panel>
+</ql-drawer>
+<ql-drawer-content id='lab-instructions' slot='drawer-content'>
+<div class='alert alert--fake js-alert'>
+<p class='alert__message js-alert-message'></p>
+<a class='alert__close js-alert-close'>
+<i class='fa fa-times'></i>
+</a>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='js-lab-content lab-content__renderable-instructions'>
+<div class='lab-preamble'>
+<h1 class='lab-preamble__title'>
+Compute Logging and Monitoring
+</h1>
+<div class='lab-preamble__details subtitle-headline-1'>
+<span>2 hours </span>
+<span>Free</span>
+<div class='lab__rating'>
+<a href="/focuses/15405466/reviews?parent=lti_session"><div class='rateit' data-rateit-readonly='true' data-rateit-value='4.177'></div>
+
+</a><a data-target='#lab-review-modal' data-toggle='modal'>
+Rate Lab
+</a>
+</div>
+</div>
+</div>
+
+<div class='js-markdown-instructions markdown-lab-instructions' id='markdown-lab-instructions'>
+
+
+
+<h2 id="step1">Overview</h2>
+<p>Google Cloud has a number of compute-related resources including Compute Engine, Kubernetes, and Cloud Run. In this exercise, you install the logging and monitoring agents into a VM running a Nginx server to maximize the metrics to easily view. You also set up a Kubernetes cluster and monitor an application deployed into it.</p>
+<h3>Objectives</h3>
+<p>In this lab, you learn how to perform the following tasks:</p>
+<ul>
+<li>
+<p>Set up a VM and a GKE cluster.</p>
+</li>
+<li>
+<p>Install and use the logging and monitoring agents for Compute Engine.</p>
+</li>
+<li>
+<p>Add a service to the GKE cluster and examine its logs and metrics.</p>
+</li>
+</ul>
+<h2 id="step2">Task 0. Lab Setup</h2>
+<h3>Access Qwiklabs</h3>
+<p>For each lab, you get a new GCP project and set of resources for a fixed time at no cost.</p>
+<ol>
+<li>
+<p>Make sure you signed into Qwiklabs using an <strong>incognito window</strong>.</p>
+</li>
+<li>
+<p>Note the lab's access time (for example, <img alt="img/time.png" src="https://cdn.qwiklabs.com/aZQJ4BT7uCmM9XR6BTXgTRP1Hfu1T7q6V%2BcnbdEsbpU%3D"> and make sure you can finish in that time block.</p>
+</li>
+</ol>
+<aside> <p>
+  There is no pause feature. You can restart if needed, but you have to start at the beginning.
+  </p>
+
+</aside>
+<ol start="3">
+<li>
+<p>When ready, click <img alt="img/start_lab.png" src="https://cdn.qwiklabs.com/XE8x7uvQokyubNwnYKKc%2BvBBNrMlo5iNZiDDzQQ3Ddo%3D">.</p>
+</li>
+<li>
+<p>Note your lab credentials. You will use them to sign in to Cloud Platform Console.
+<img alt="img/open_google_console.png" src="https://cdn.qwiklabs.com/0d78dhX6IVMVWmixCPPSBbmi5O2GPokCXf1Ps1AkTgI%3D"></p>
+</li>
+<li>
+<p>Click <strong>Open Google Console</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Use another account</strong> and copy/paste credentials for <strong>this</strong> lab into the prompts.</p>
+</li>
+</ol>
+<aside class="warning"><p>
+  If you use other credentials, you'll get errors or <strong>incur charges</strong>.
+  </p>
+</aside>
+<ol start="7">
+<li>Accept the terms and skip the recovery resource page.</li>
+</ol>
+<aside class="warning"><p>
+  Do not click <strong>End Lab</strong> unless you are finished with the lab or want to restart it. This clears your work and removes the project.
+  </p>
+</aside>
+
+<p>After you complete the initial sign-in steps, the project dashboard appears.</p>
+<p><img alt="Google Cloud Project Dashboard" src="https://cdn.qwiklabs.com/dxfeoOcn1ObyC0BYyoqqqSi4rO%2FeMdbWPFjoK6C0YYk%3D"></p>
+<h3>Activate Google Cloud Shell</h3>
+<p>Google Cloud Shell is a virtual machine that is loaded with development tools. It offers a persistent 5GB home directory and runs on the Google Cloud.
+Google Cloud Shell provides command-line access to your GCP resources.</p>
+<ol>
+<li>
+<p>In GCP console, on the top right toolbar, click the Open Cloud Shell button.</p>
+<p><img alt="Cloud Shell icon" src="https://cdn.qwiklabs.com/vdY5e%2Fan9ZGXw5a%2FZMb1agpXhRGozsOadHURcR8thAQ%3D"></p>
+</li>
+<li>
+<p>Click <strong>Continue</strong>.
+<img alt="cloudshell_continue.png" src="https://cdn.qwiklabs.com/lr3PBRjWIrJ%2BMQnE8kCkOnRQQVgJnWSg4UWk16f0s%2FA%3D"></p>
+</li>
+</ol>
+<p>It takes a few moments to provision and connect to the environment. When you are connected, you are already authenticated, and the project is set to your <em>PROJECT_ID</em>. For example:</p>
+<p><img alt="Cloud Shell Terminal" src="https://cdn.qwiklabs.com/hmMK0W41Txk%2B20bQyuDP9g60vCdBajIS%2B52iI2f4bYk%3D"></p>
+<p><strong>gcloud</strong> is the command-line tool for Google Cloud Platform. It comes pre-installed on Cloud Shell and supports tab-completion.</p>
+<p>You can list the active account name with this command:</p>
+<pre><code>gcloud auth list&#x000A;</code></pre>
+<p>Output:</p>
+<pre><code class="language-output prettyprint">Credentialed accounts:&#x000A; - &lt;myaccount&gt;@&lt;mydomain&gt;.com (active)&#x000A;</code></pre>
+<p>Example output:</p>
+<pre><code class="language-Output prettyprint">Credentialed accounts:&#x000A; - google1623327_student@qwiklabs.net&#x000A;</code></pre>
+<p>You can list the project ID with this command:</p>
+<pre><code>gcloud config list project&#x000A;</code></pre>
+<p>Output:</p>
+<pre><code class="language-output prettyprint">[core]&#x000A;project = &lt;project_ID&gt;&#x000A;</code></pre>
+<p>Example output:</p>
+<pre><code class="language-Output prettyprint">[core]&#x000A;project = qwiklabs-gcp-44776a13dea667a6&#x000A;</code></pre>
+<ql-infobox>
+  Full documentation of <strong>gcloud</strong> is available on
+  <a href="https://cloud.google.com/sdk/gcloud" target="_blank">
+    Google Cloud gcloud Overview
+  </a>.
+</ql-infobox>
+
+<h2 id="step3">Task 1. Set up a VM and a GKE cluster</h2>
+<p>In this task, you:</p>
+<ul>
+<li>
+<p>Set up a VM running Nginx.</p>
+</li>
+<li>
+<p>Create a GKE cluster.</p>
+</li>
+</ul>
+<h3>Set up a VM to host Nginx</h3>
+<ol>
+<li>
+<p>Open the Google Cloud <strong>Navigation menu</strong> (<img alt="Navigation menu" src="https://cdn.qwiklabs.com/tkgw1TDgj4Q%2BYKQUW4jUFd0O5OEKlUMBRYbhlCrF0WY%3D" title="Navigation menu">) in the upper-left corner of the console, then click the link to the <strong>Compute Engine</strong>.</p>
+</li>
+<li>
+<p>Create a new VM instance. Give it the name <strong>web-server-vm</strong> and tick the box to <strong>Allow HTTP traffic</strong>. <strong>Create</strong> and then move onto the next step.</p>
+</li>
+</ol>
+<h3>Create a GKE cluster</h3>
+<p>To explore a little of what Google Kubernetes Engine offers in the way of logging and monitoring, let's add a cluster, which will come with logging and monitoring enabled by default.</p>
+<ol start="3">
+<li>
+<p>Use the <strong>Navigation menu</strong> to navigate to the <strong>Kubernetes Engine</strong> &gt; <strong>Clusters</strong> page.</p>
+</li>
+<li>
+<p>Select <strong>Create</strong> and then click on the <strong>Configure</strong> button for <strong>Standard</strong> option.</p>
+</li>
+<li>
+<p>Set the <code>Name</code> to <strong>gke-cluster</strong>, then under the <strong>Cluster</strong> settings on the left, select <strong>Features</strong>.</p>
+</li>
+<li>
+<p>Verify that <code>Enable Cloud Operations for GKE</code> is <strong>Checked</strong> and that the choice in the dropbox is set to <strong>System and workload logging and monitoring</strong>, and then press <strong>Create</strong>.</p>
+</li>
+<li>
+<p>Once you see the cluster creation start, move on to the next step.</p>
+</li>
+</ol>
+<h3>Install Nginx</h3>
+<ol start="8">
+<li>
+<p>Switch back to <strong>Compute Engine</strong> and <strong>SSH</strong> in to the <code>web-server-vm</code>.</p>
+</li>
+<li>
+<p>Use APT to install Nginx.</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">sudo apt-get update&#x000A;sudo apt-get install nginx&#x000A;</code></pre>
+<ol start="10">
+<li>
+<p>Verify that Nginx installed and is running.</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">sudo nginx -v&#x000A;</code></pre>
+<ol start="11">
+<li>
+<p>Switch back to <strong>Compute Engine</strong> and if you enabled the HTTP access firewall rule, then you should be able to click the external IP. Do so and make sure the Nginx server is up and running. Copy the URL to the server.</p>
+</li>
+<li>
+<p>Change to the Cloud Shell terminal window. Create a URL environmental variable and set it equal to the URL to your server.</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">URL=URL_to_your_server&#x000A;</code></pre>
+<ol start="13">
+<li>
+<p>Use a bash <code>while</code> loop to place some load on the server. Make sure you are seeing the <code>Welcome to nginx</code> responses.</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">while true; do curl -s $URL | grep -oP "&lt;title&gt;.*&lt;/title&gt;"; \&#x000A;sleep .1s;done&#x000A;</code></pre>
+<h2 id="step4">Task 2. Install and use the logging and monitoring agents for Compute Engine</h2>
+<p>In this task, you:</p>
+<ul>
+<li>
+<p>Examine the logs and see some data that isn't included.</p>
+</li>
+<li>
+<p>Install the logging and monitoring agents in the Compute Engine instance.</p>
+</li>
+<li>
+<p>Re-examine the logs to see the new data.</p>
+</li>
+</ul>
+<h3>Examine the logs and see some data that isn't included</h3>
+<p>A standard Debian Linux image from Google will not have the logging or monitoring agents installed, so you won't have access to metrics from googleapis.com/nginx/ such as:</p>
+<ul>
+<li>
+<p>connections/accepted_count</p>
+</li>
+<li>
+<p>connections/current</p>
+</li>
+<li>
+<p>connections/handled_count</p>
+</li>
+<li>
+<p>request_count</p>
+</li>
+</ul>
+<ol>
+<li>
+<p>Switch to the Google Console window and navigate to <strong>Monitoring</strong> &gt; <strong>Overview</strong>. Wait for the monitoring workspace to create, and then navigate to <strong>Metrics explorer</strong>.</p>
+</li>
+<li>
+<p>Set the Metrics explorer <code>Resource type</code> to <strong>VM Instance</strong>, the Metric to <strong>CPU utilization</strong>, and the <code>Filter</code> to <strong>instance name = web-server-vm</strong></p>
+</li>
+<li>
+<p>You may not see a spike when you applied the load, since it's not a big load, but you are able to access the metric.</p>
+</li>
+<li>
+<p>Delete the Filter and the Metric.</p>
+</li>
+<li>
+<p>In the <code>Select a metric</code> box, enter <strong>nginx</strong> and select <strong>Requests</strong>.</p>
+</li>
+</ol>
+<p>Why is there no data?</p>
+<h3>Install the logging and monitoring agents in the Compute Engine instance</h3>
+<p>The data for Nginx requests is missing because without the logging and monitoring agents being installed, the best Google Cloud can do is black-box monitoring. If you want to see more details, then you need to enable white-box monitoring by installing the agents.</p>
+<ol start="6">
+<li>
+<p>Use the <strong>Navigation menu</strong> to navigate to <strong>Compute Engine</strong> &gt; <strong>VM instances</strong>.</p>
+</li>
+<li>
+<p>Click the <strong>SSH</strong> link for the <code>web-server-vm</code></p>
+</li>
+<li>
+<p>Check to see if the logging agent is installed/running.</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">sudo service google-fluentd status&#x000A;sudo service stackdriver-agent status&#x000A;</code></pre>
+<ol start="9">
+<li>
+<p>Not surprisingly, the services could not be found. Check to make sure you have the requisite scopes to perform logging and monitoring.</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">curl --silent --connect-timeout 1 -f -H "Metadata-Flavor: Google" \&#x000A;http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/scopes&#x000A;</code></pre>
+<ol start="10">
+<li>
+<p>Note in the response the <code>logging.write</code> and <code>monitoring.write</code> scopes.</p>
+</li>
+<li>
+<p>Download the script, add the monitoring agent repo to apt, and install the agent.</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">curl -sSO https://dl.google.com/cloudagents/add-monitoring-agent-repo.sh&#x000A;sudo bash add-monitoring-agent-repo.sh&#x000A;</code></pre>
+<pre><code class="language-bash prettyprint">sudo apt-get update&#x000A;sudo apt-get install stackdriver-agent&#x000A;</code></pre>
+<ol start="12">
+<li>
+<p>Start the monitoring agent.</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">sudo service stackdriver-agent start&#x000A;</code></pre>
+<ol start="13">
+<li>
+<p>Install the logging agent.</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">curl -sSO https://dl.google.com/cloudagents/install-logging-agent.sh&#x000A;sudo bash install-logging-agent.sh&#x000A;</code></pre>
+<ol start="14">
+<li>
+<p>Retest the two agents again and verify they are both active. If you see any "can not take infinite value" warnings, ignore them and if the status is <strong>active (running)</strong>, press Crtl+c and move on to the next step.</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">sudo service google-fluentd status&#x000A;</code></pre>
+<pre><code class="language-bash prettyprint">sudo service stackdriver-agent status&#x000A;</code></pre>
+<ol start="15">
+<li>
+<p>To fully integrate the server, you enable the status information handler in Nginx by adding a configuration file to the Nginx configuration directory.</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">(cd /etc/nginx/conf.d/ &amp;&amp; sudo curl -O https://raw.githubusercontent.com/Stackdriver/stackdriver-agent-service-configs/master/etc/nginx/conf.d/status.conf)&#x000A;</code></pre>
+<ol start="16">
+<li>
+<p>Reload the Nginx service.</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">sudo service nginx reload&#x000A;</code></pre>
+<ol start="17">
+<li>
+<p>Enable the Nginx monitoring plugin.</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">(cd /opt/stackdriver/collectd/etc/collectd.d/ &amp;&amp; sudo curl -O https://raw.githubusercontent.com/Stackdriver/stackdriver-agent-service-configs/master/etc/collectd.d/nginx.conf)&#x000A;</code></pre>
+<ol start="18">
+<li>
+<p>Restart the monitoring agent.</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">sudo service stackdriver-agent restart&#x000A;</code></pre>
+<h3>Re-examine the metrics to see the new data</h3>
+<p>Now that the agents are installed and the Nginx plugins have been added, retest the Nginx metric that we examined earlier.</p>
+<ol start="19">
+<li>
+<p>Check the Cloud Shell window and verify that the test loop is still running, and that you are still receiving responses. If not, reset the URL property and restart the while.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Monitoring</strong> &gt; <strong>Metrics explorer</strong>.</p>
+</li>
+<li>
+<p>Set the <code>Resource type</code> to <strong>VM Instance</strong>, in the <code>Select a metric</code> box enter <strong>nginx</strong>, and then select <strong>Requests</strong>.</p>
+</li>
+</ol>
+<p>You may have to wait a few minutes and refresh the page, but you should soon see metric data coming in from Nginx. The monitoring agent is working as it should.</p>
+<h2 id="step5">Task 3. Add a service to the GKE cluster and examine its logs and metrics</h2>
+<p>You created a GKE cluster with logging and monitoring enabled earlier in this exercise. Now, load the HelloLoggingNodeJS application to it, put it behind a load balancer service, and view some metrics for your cluster.</p>
+<ol>
+<li>
+<p>Switch to or reopen the Cloud Shell console. Break the running test loop with CTRL+C.</p>
+</li>
+<li>
+<p>Enable the Cloud Build API as it is needed it in a few steps.</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">gcloud services enable cloudbuild.googleapis.com &#x000A;</code></pre>
+<ol start="3">
+<li>
+<p>Clone the <code>https://github.com/haggman/HelloLoggingNodeJS.git</code> repo.</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">git clone https://github.com/haggman/HelloLoggingNodeJS.git&#x000A;</code></pre>
+<ol start="4">
+<li>
+<p>This repository contains a basic Node.js web application that is used for testing. Change into the <code>HelloLoggingNodeJS</code> folder and open the <strong>index.js</strong> in the Cloud Shell editor.</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">cd HelloLoggingNodeJS&#x000A;edit index.js&#x000A;</code></pre>
+<ol start="5">
+<li>
+<p>Take a few minutes to peruse the code.</p>
+</li>
+<li>
+<p>In the editor, also take a look at the <code>package.json</code> file which contains the dependencies, and the <code>Dockerfile</code> which plans the Docker container we generate and deploy to GKE.</p>
+</li>
+<li>
+<p>Submit the Dockerfile to Google's Cloud Build to generate a container and store it in your Container Registry.</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">gcloud builds submit --tag gcr.io/$DEVSHELL_PROJECT_ID/hello-logging-js .&#x000A;</code></pre>
+<ol start="8">
+<li>
+<p>Open the <code>k8sapp.yaml</code> file and explore the instructions to Kubernetes to create three hello-logging pods, and then expose them through a LoadBalancer service.</p>
+</li>
+<li>
+<p>In the <code>k8sapp.yaml</code> file, replace the <strong>$GCLOUD_PROJECT</strong> with your actual project ID. Remember, your project ID is located on the Home page of your Google Cloud Console and in Qwiklabs just below your temporary Google Cloud password.</p>
+</li>
+<li>
+<p>Use the <strong>Navigation menu</strong> to navigate to <strong>Kubernetes Engine</strong>. Click on the <strong>triple dot</strong> icon for your cluster and select <strong>Connect</strong>. Copy the command line to configure <code>kubectl</code>.</p>
+</li>
+</ol>
+<p><img alt="dot_icon" src="https://cdn.qwiklabs.com/rDedlXDeoZq5FJGG7xgH07s%2FtbKxW2CYrNNWhPLRcHE%3D"></p>
+<ol start="11">
+<li>
+<p>Switch back to Cloud Shell and execute the command.</p>
+</li>
+<li>
+<p>Use <code>kubectl</code> to apply your k8sapp.yaml.</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">kubectl apply -f k8sapp.yaml&#x000A;</code></pre>
+<ol start="13">
+<li>
+<p>Get a list of your services. It may take a minute or two for the new <code>hello-logging-service</code> to appear, and for it to get an External IP.</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">kubectl get services&#x000A;</code></pre>
+<ol start="14">
+<li>
+<p>Once the service appears with the external IP, copy the external IP value.</p>
+</li>
+<li>
+<p>Open a tab in the browser and paste in the IP. Make sure you see the <code>Hello World</code> message.</p>
+</li>
+<li>
+<p>Copy the page URL from the browser and switch back to Cloud Shell. Update the URL environmental variable and restart the <code>while</code> loop. Make sure you are seeing the <code>Hello World</code> responses.</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint">URL=url_to_k8s_app&#x000A;while true; do curl -s $URL -w "\n"; sleep .1s;done&#x000A;</code></pre>
+<ol start="17">
+<li>
+<p>Navigate to the <strong>Monitoring</strong> &gt; <strong>Dashboards</strong> and open the <strong>GKE</strong> dashboard.</p>
+</li>
+<li>
+<p>On the <code>GKE</code> dashboard, for <strong>gke-cluster</strong> scroll horizontally and see the charts. If all of the small charts are reading <em>No Data,</em> refresh the page until they start showing readings for CPU and Memory Utilization. You might also want to toggle <strong>Off</strong> to <strong>On</strong> to enable auto-refresh of the data.</p>
+</li>
+<li>
+<p>If you want to examine the different cluster nodes, you can scroll horizontally in <strong>Nodes</strong> tab and see that the three hello-logging-js-deployments are spread across the nodes. This tab focuses on what's running where, from Cluster, to Node, to Pod.</p>
+</li>
+<li>
+<p>Switch to the <strong>Workloads</strong> tab. This is focused on the deployed workloads, grouped by namespace.</p>
+</li>
+<li>
+<p>Finally, scroll to the <strong>Kubernetes Services</strong> tab and expand <strong>hello-logging-service</strong>. This view is more about how services relate to their pods.</p>
+</li>
+<li>
+<p>In any of the views, if you drill all the way down to one of our hello-logging-js-containers, a right-hand window appears with details. Investigate Incidents, Metrics, and Logs.</p>
+</li>
+</ol>
+<h2 id="step6">Review</h2>
+<aside><p><strong>Congratulations!</strong></p>
+</aside>
+<p>In this exercise, you installed and used logging and monitoring agents on Compute Engine instances, and explored logging and monitoring in a GKE cluster. Nice job.</p>
+<h2 id="step7">End your lab</h2>
+<p>When you have completed your lab, click <strong>End Lab</strong>. Qwiklabs removes the resources you’ve used and cleans the account for you.</p>
+<p>You will be given an opportunity to rate the lab experience. Select the applicable number of stars, type a comment, and then click <strong>Submit</strong>.</p>
+<p>The number of stars indicates the following:</p>
+<ul>
+<li>1 star = Very dissatisfied</li>
+<li>2 stars = Dissatisfied</li>
+<li>3 stars = Neutral</li>
+<li>4 stars = Satisfied</li>
+<li>5 stars = Very satisfied</li>
+</ul>
+<p>You can close the dialog box if you don't want to provide feedback.</p>
+<p>For feedback, suggestions, or corrections, please use the <strong>Support</strong> tab.</p>
+
+<p>Copyright 2021 Google LLC All rights reserved. Google and the Google logo are trademarks of Google LLC. All other company and product names may be trademarks of the respective companies with which they are associated.</p>
+
+
+
+</div>
+</div>
+
+
+<div class='hidden js-end-lab-button-container lab-content__end-lab-button'>
+<ql-lab-control-button class='js-end-lab-button' running></ql-lab-control-button>
+</div>
+<!-- / TODO: Move recommendations into the end lab modal -->
+</ql-drawer-content>
+<ql-drawer end id='outline-drawer' open slot='drawer' width='320'>
+<div class='js-lab-content-outline lab-content__outline'>
+<a href='#step1'>Overview</a><a href='#step2'>Task 0. Lab Setup</a><a href='#step3'>Task 1. Set up a VM and a GKE cluster</a><a href='#step4'>Task 2. Install and use the logging and monitoring agents for Compute Engine</a><a href='#step5'>Task 3. Add a service to the GKE cluster and examine its logs and metrics</a><a href='#step6'>Review</a><a href='#step7'>End your lab</a>
+</div>
+</ql-drawer>
+</ql-drawer-container>
+</ql-drawer-content>
+</ql-drawer-container>
+<div class='lab-introduction js-lab-introduction is-hidden'>
+<div class='lab-introduction__inner'>
+<h1 class='headline-1'>Welcome to Your First Lab!</h1>
+<ql-icon-button class='js-skip-button'>close</ql-icon-button>
+<div class='lab-introduction__video'>
+<iframe allow='autoplay; encrypted-media' allowfullscreen frameborder='0' id='lab-introduction' src='https://www.youtube.com/embed/yF7EDXKTmoQ?enablejsapi=1&amp;rel=0&amp;showinfo=0'></iframe>
+</div>
+<a class='js-skip-button button button--outline'>Skip this video</a>
+</div>
+</div>
+
+
+
+</div>
+</main>
+
+
+<div class='modal fade' id='lab-details-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<div class='modal-body'>
+<p class='l-mbm'>
+In this exercise you will install the logging and monitoring agents into a GCE VM running NGINX, and examine monitoring on GKE
+</p>
+<p class='small-label l-mbs'>
+<strong>
+Duration:
+</strong>
+0m setup
+&middot;
+120m access
+&middot;
+30m completion
+</p>
+<p class='small-label l-mbs'>
+<span><strong>Levels: </strong>intermediate</span>
+</p>
+<p class='small-label'>
+<strong>
+Permalink:
+</strong>
+<a href="https://googlecoursera.qwiklabs.com/catalog_lab/2648">https://googlecoursera.qwiklabs.com/catalog_lab/2648</a>
+</p>
+</div>
+<div class='modal-actions'>
+<a class='button button--text' data-dismiss='modal'>
+Got It
+</a>
+</div>
+
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='modal fade' id='lab-review-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<form class="simple_form js-lab-review-form" id="edit_lab_review_11977078" action="/lab_reviews/11977078" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="_method" value="patch" /><div class='modal-body'>
+<p class='label'>
+How satisfied are you with this lab?*
+</p>
+<div class='rateit js-rateit' data-rateit-max='5' data-rateit-min='0' data-rateit-resetable='false' data-rateit-step='1' data-rateit-value='5'></div>
+<div class='l-mtm'>
+
+<div class="control-group hidden lab_review_user_id"><div class="controls"><input class="hidden" type="hidden" value="3894861" name="lab_review[user_id]" id="lab_review_user_id" /></div></div>
+<div class="control-group hidden lab_review_classroom_id"><div class="controls"><input class="hidden" type="hidden" name="lab_review[classroom_id]" id="lab_review_classroom_id" /></div></div>
+<div class="control-group hidden lab_review_lab_id"><div class="controls"><input class="hidden" type="hidden" value="2648" name="lab_review[lab_id]" id="lab_review_lab_id" /></div></div>
+<div class="control-group hidden lab_review_focus_id"><div class="controls"><input class="hidden" type="hidden" name="lab_review[focus_id]" id="lab_review_focus_id" /></div></div>
+<div class="control-group hidden lab_review_rating"><div class="controls"><input class="hidden js-rating-input" type="hidden" value="2" name="lab_review[rating]" id="lab_review_rating" /></div></div>
+<div class="control-group text optional lab_review_comment"><label class="text optional control-label" for="lab_review_comment">Comment</label><div class="controls"><textarea class="text optional" name="lab_review[comment]" id="lab_review_comment">
+</textarea></div></div>
+</div>
+</div>
+<div class='modal-actions'>
+<a class='button button--text' data-dismiss='modal'>
+Cancel
+</a>
+<input type="submit" name="commit" value="Submit" disabled="disabled" id="submit" data-disabled="false" class="button" data-disable-with="Submit" />
+</div>
+</form>
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+
+
+<script>
+  $( function() {
+    ql.initMaterialInputs();
+    initChosen();
+    initSearch();
+    initTabs();
+    ql.list.init();
+    ql.favoriting.init();
+    ql.header.myAccount.init();
+    initTooltips();
+    ql.autocomplete.init();
+    ql.modals.init();
+    ql.toggleButtons.init();
+    ql.analytics.init();
+    ql.labControlPanel.addRecaptchaErrorHandler();
+  initLabContent();
+  ql.labOutline.links.init();
+  initLabReviewModal();
+  ql.labAssessment.init();
+  ql.labIntroduction.init( true );
+  ql.labData.init();
+  initLabTranslations( {"are_you_sure":"All done? If you end this lab, you will lose all your work. You may not be able to restart the lab if there is a quota limit. Are you sure you want to end this lab?\n","in_progress":"*In Progress*","ending":"*Ending*","starting":"*Starting, please wait*","end_concurrent_labs":"Sorry, you can only run one lab at a time. To start this lab, please confirm that you want all of your existing labs to end.\n","copied":"Copied","no_resource":"Error retrieving resource.","no_support":"No Support","mac_press":"Press ⌘-C to copy","thanks_review":"Thanks for reviewing this lab.","windows_press":"Press Ctrl-C to copy","days":"days"} );
+  ql.labRun.init();
+  ql.chat.init();
+  ql.initHeader();
+  ql.navigation.init();
+  ql.navPanel.init();
+  ql.navigation.init();
+  
+  });
+</script>
+
+</body>
+</html>
+
