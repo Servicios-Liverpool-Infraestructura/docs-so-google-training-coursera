@@ -1,0 +1,1248 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title>Building a VPN Between Google Cloud and AWS with Terraform | Qwiklabs</title>
+<script>
+//<![CDATA[
+window.gon={};gon.current_user={"firstname":"DANIEL","lastname":"ENRIQUE SANDOVAL SANCHEZ","fullname":"DANIEL ENRIQUE SANDOVAL SANCHEZ","company":"Coursera","email":"desandovals@liverpool.com.mx","origin":"googlecoursera-run, lti-coursera","subscriptions":0,"id":"40414ff5fc280f833d9acca966912f93","qlCreatedAt":"2020-11-17 20:45:59 UTC","optIn":null,"current_organization_id":null,"current_organization_role":null};gon.segment="j4Im8pqIko0Lxq4wVVZWMPMM0EroHUvb";gon.deployment="run";gon.content={"type":"Lab","id":3629,"name":"Building a VPN Between Google Cloud and AWS with Terraform"};
+//]]>
+</script>
+<script>
+  dataLayer = [
+    {user: gon.current_user},
+    {content: gon.content}
+  ];
+</script>
+<script>
+  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer',"GTM-TQR88QK");
+</script>
+<script>
+  EVENT_SOURCE_BASE_URL = "https://run.qwiklabs.com/nchan-sub?id=";
+</script>
+<script src="https://cdn.qwiklabs.com/assets/hallofmirrors/polyfills/webcomponents-loader-408088dc333247a761de5f2b2a4ba1cabd2bc36579f83ba92a559eb3682a9b77.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/vendor-45d462772c30000424907184f70c7157e95fb6227698d1671c5051818a6f60d8.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/application-034d6698d9e8e4069d310e418a7827442046e71025a0e336e0896055be8a1153.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/hallofmirrors/hallofmirrors-b1177b2da0d0a4d1b239b0364e70f5a598873a2b8fb44c288c9428709123506c.js"></script>
+<!--[if lt IE 9]>
+<script src='http://html5shim.googlecode.com/svn/trunk/html5.js' type='text/javascript'></script>
+<![endif]-->
+<!--[endif]>  <![endif]-->
+<script type='application/ld+json'>
+{
+  "@context": "http://schema.org",
+  "@type": "WebSite",
+  "url": "https://www.qwiklabs.com/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://www.qwiklabs.com/catalog?keywords={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
+
+<meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="E3Vu95e4rUMwusJ/BVCHAER0uYSqKFo3QflN53Zh9DKD+3nGt1O7HtJyrXCnO1mTxxcIgtGKhD5ZHFIPd82kBg==" />
+<meta content='width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0' name='viewport'>
+<meta content='1rRsY0INj8RvwB5EF5pwdxt2A2P9aDgAlsICaJ0d5w0' name='google-site-verification'>
+<meta content='#3681E4' property='msapplication-TileColor'>
+<meta content='/favicon-144.png' property='msapplication-TileImage'>
+<meta content='[{&quot;id&quot;:&quot;recaptcha_experiment&quot;,&quot;optimize_id&quot;:&quot;dpViOcLkT3qS4TvL2mRojA&quot;,&quot;title&quot;:&quot;No Recaptcha shown for trusted users&quot;,&quot;variant_index&quot;:0,&quot;variant&quot;:&quot;original&quot;}]' name='active-experiments'>
+<meta content='{&quot;userId&quot;:3894861}' name='help-api-product-data'>
+<meta content='In this lab, you will use Terraform to to create secure, private, site-to-site connections between Google Cloud and Amazon Web Services (AWS) using virtual private networks (VPNs).' name='description'>
+<meta content='Qwiklabs' name='author'>
+<meta content='Building a VPN Between Google Cloud and AWS with Terraform | Qwiklabs' property='og:title'>
+<meta content='website' property='og:type'>
+<meta content='/favicon-144.png' property='og:image'>
+<meta content='Qwiklabs' property='og:site_name'>
+<meta content='In this lab, you will use Terraform to to create secure, private, site-to-site connections between Google Cloud and Amazon Web Services (AWS) using virtual private networks (VPNs).' property='og:description'>
+<meta content='/qwiklabs_logo_900x887.png' property='og:logo' size='900x887'>
+<meta content='/qwiklabs_logo_994x187.png' property='og:logo' size='994x187'>
+
+
+<link href='/favicon-32.png' rel='shortcut icon'>
+<link color='#3681E4' href='/favicon-svg.svg' rel='mask-icon'>
+<link href='/favicon-180.png' rel='apple-touch-icon-precomposed'>
+
+
+
+<link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css?family=Oswald:400|Roboto+Mono:400,700|Roboto:300,400,500,700|Google+Sans:300,400,500,700|Google+Sans+Display:400|Material+Icons|Google+Material+Icons" />
+
+
+<link rel="stylesheet" media="all" href="https://cdn.qwiklabs.com/assets/application-3b0f6c441394eebd52ff10f04fb2923fdb7b1b4fec780e7fa8ef67f5dd2ef411.css" />
+
+
+
+</head>
+<body class='lab-show l-full no-nav application-new focuses focuses-show lab-show l-full no-nav '>
+<noscript>
+<iframe height='0' src='https://www.googletagmanager.com/ns.html?id=GTM-TQR88QK' style='display:none;visibility:hidden;' width='0'></iframe>
+</noscript>
+<span class='hidden' id='flash-sibling-before'></span>
+
+<div class='header-container light-theme'>
+<div class='header'>
+<ql-icon-button class='js-nav-toggle header__nav-panel-button l-mrm'>menu</ql-icon-button>
+<div class='header__title'>
+<ql-icon-button label="Back" href="https://www.qwiklabs.com/quests/44" id="64816120a0493dee" target="_self">arrow_back</ql-icon-button><div class="mdl-tooltip" data-mdl-for="64816120a0493dee">Back</div>
+
+<h1 class='headline-5'>
+Building a VPN Between Google Cloud and AWS with Terraform
+</h1>
+</div>
+<div class='header__actions'>
+<ql-icon-button class='header__button--search js-header-search-bar-button'>search</ql-icon-button>
+<ql-icon-button id='share_3629'>share</ql-icon-button>
+<ql-menu for='share_3629'>
+<ql-menu-item>
+<a data-analytics-action="Shared to LinkedIn." data-analytics-category="Lab" data-analytics-label="Building a VPN Between Google Cloud and AWS with Terraform" target="_blank" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fwww.qwiklabs.com%2Fcatalog_lab%2F3629%3Futm_medium%3Dsocial%26utm_source%3Dlinkedin%26utm_campaign%3Dql-social-share"><ql-icon class='l-mrs'>post_linkedin</ql-icon>
+LinkedIn
+</a>
+</ql-menu-item>
+<ql-menu-item>
+<a data-analytics-action="Shared to Twitter." data-analytics-category="Lab" data-analytics-label="Building a VPN Between Google Cloud and AWS with Terraform" target="_blank" href="https://twitter.com/intent/tweet?text=Learn%20cloud%20tech%20through%20hands-on%20training%20on%20%23Qwiklabs%21&amp;url=https%3A%2F%2Fwww.qwiklabs.com%2Fcatalog_lab%2F3629%3Futm_medium%3Dsocial%26utm_source%3Dtwitter%26utm_campaign%3Dql-social-share&amp;hashtags="><ql-icon class='l-mrs'>post_twitter</ql-icon>
+Twitter
+</a>
+</ql-menu-item>
+<ql-menu-item>
+<a data-analytics-action="Shared to Facebook." data-analytics-category="Lab" data-analytics-label="Building a VPN Between Google Cloud and AWS with Terraform" target="_blank" href="https://facebook.com/sharer.php?display=popup&amp;u=https%3A%2F%2Fwww.qwiklabs.com%2Fcatalog_lab%2F3629%3Futm_medium%3Dsocial%26utm_source%3Dfacebook%26utm_campaign%3Dql-social-share"><ql-icon class='l-mrs'>post_facebook</ql-icon>
+Facebook
+</a>
+</ql-menu-item>
+<ql-menu-item>
+<ql-copyable-input label='Share Link' value='https://www.qwiklabs.com/catalog_lab/3629'></ql-copyable-input>
+</ql-menu-item>
+</ql-menu>
+
+<a class="icon-button js-favorite-button favorite-button" id="CatalogItem-17869-favorite-button" data-type="CatalogItem" data-id="17869" data-name="Building a VPN Between Google Cloud and AWS with Terraform" href="/favorite.json?item_id=17869&amp;item_type=CatalogItem"><ql-icon>favorite_border</ql-icon>
+</a><div class='mdl-tooltip js-tooltip' for='CatalogItem-17869-favorite-button'>
+Add to favorites
+</div>
+
+
+
+<ql-icon-button id='control-panel-target' style='display: none;'>
+dashboard
+</ql-icon-button>
+<ql-menu for='control-panel-target' id='control-panel-menu'></ql-menu>
+
+<ql-icon-button id='help-menu-button'>help</ql-icon-button>
+<div class='mdl-tooltip js-tooltip' data-mdl-for='help-menu-button'>
+Help
+</div>
+<ql-menu for='help-menu-button' id='help-menu'>
+<ql-menu-item>
+<ql-help context='lab' data-analytics-action='opened_help' data-analytics-label='lab' productdata='{&quot;userId&quot;:3894861}'>
+Help Center
+</ql-help>
+</ql-menu-item>
+<ql-menu-item>
+<a target="_blank" class="ql-body-1" href="https://support.google.com/qwiklabs/contact/contact_us">Email support</a>
+</ql-menu-item>
+</ql-menu>
+
+<ql-icon-button id='language'>language</ql-icon-button>
+<div class='mdl-menu mdl-menu__bottom-right mdl-js-menu elevation-3' for='language'>
+<a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ar" href="/focuses/17869?locale=ar&amp;parent=catalog">العربية‬‎
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="de" href="/focuses/17869?locale=de&amp;parent=catalog">Deutsch
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="en" href="/focuses/17869?locale=en&amp;parent=catalog">English
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="es" href="/focuses/17869?locale=es&amp;parent=catalog">español (Latinoamérica)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="fr" href="/focuses/17869?locale=fr&amp;parent=catalog">français
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="id" href="/focuses/17869?locale=id&amp;parent=catalog">bahasa Indonesia
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="it" href="/focuses/17869?locale=it&amp;parent=catalog">Italiano
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ja" href="/focuses/17869?locale=ja&amp;parent=catalog">日本語
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ko" href="/focuses/17869?locale=ko&amp;parent=catalog">한국어
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pl" href="/focuses/17869?locale=pl&amp;parent=catalog">Polski
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pt_BR" href="/focuses/17869?locale=pt_BR&amp;parent=catalog">português (Brasil)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pt_PT" href="/focuses/17869?locale=pt_PT&amp;parent=catalog">português (Portugal)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ru" href="/focuses/17869?locale=ru&amp;parent=catalog">русский
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="tr" href="/focuses/17869?locale=tr&amp;parent=catalog">Türkçe
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="zh" href="/focuses/17869?locale=zh&amp;parent=catalog">简体中文
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="zh_TW" href="/focuses/17869?locale=zh_TW&amp;parent=catalog">繁體中文
+</a></div>
+<button class='icon-button' id='my_account'>
+<ql-avatar src='https://lh3.googleusercontent.com/a-/AOh14Gh6Bmcr7vfcCi5iPAH2qDeJgSaD6RLv1Muiv9mceA=s320-c'></ql-avatar>
+</button>
+<ql-menu for='my_account' open>
+<div class='my-account-menu'>
+<ql-avatar class='l-mtl l-mbl' size='120' src='https://lh3.googleusercontent.com/a-/AOh14Gh6Bmcr7vfcCi5iPAH2qDeJgSaD6RLv1Muiv9mceA=s320-c'></ql-avatar>
+<div class='my-account-menu__user-info l-mbl'>
+<h4 class='ql-subhead-1'>DANIEL ENRIQUE SANDOVAL SANCHEZ</h4>
+<p class='ql-body-2 text--light'>desandovals@liverpool.com.mx</p>
+<p class='ql-body-2 text--light'>
+</p>
+<a class="text--green ql-subhead-2" href="/my_account/payments"><ql-chip positive>
+1882 Credits
+</ql-chip>
+</a></div>
+<div class='buttons l-mbl'>
+<a class="button button--hairline l-mrm" id="profile" href="/public_profiles/7a1e8d39-fa01-4103-ac38-c0184ccdbd0c">Profile</a>
+<a class="button button--hairline" id="settings" href="/my_account/profile">Settings</a>
+</div>
+<hr>
+<ql-button data-analytics-action='clicked_sign_out' href='/users/sign_out' method='delete'>
+Sign Out
+</ql-button>
+<div class='privacy l-mtl'>
+<a class="ql-caption text--light" href="/privacy_policy">Privacy</a>
+<span class='ql-caption text--light l-mls l-mrs'>&middot;</span>
+<a class="ql-caption text--light" href="/terms_of_service">Terms</a>
+</div>
+</div>
+</ql-menu>
+
+</div>
+</div>
+<div class='header__search-bar js-header-search-bar'>
+<form class="js-search-form-mobile" onsubmit="ql.searchFilter(); return false;" action="/searches/elasticsearch" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="a6+yZlLcBK4jtzP1k5OH4SDxOToJfvU9yCpR2DRtO0H7IaVXcjcS88F/XPox+Flyo5KIPHLcKzTQz04wNcFrdQ==" />
+<input type="text" name="keywords" id="keywords" placeholder="Search" maxlength="255" aria-label="catalog search bar" />
+</form>
+
+<ql-icon-button class='js-close-search-bar'>close</ql-icon-button>
+</div>
+</div>
+
+<nav class='nav-bar'>
+<a class="nav-bar__item js-navigation-button" href="/"><ql-icon class='nav-bar__item__icon'>
+home
+</ql-icon>
+<span class='nav-bar__item__label'>
+Home
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button  active" aria-current="page" href="/catalog"><ql-icon class='nav-bar__item__icon'>
+school
+</ql-icon>
+<span class='nav-bar__item__label'>
+Catalog
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="/my_learning"><ql-icon class='nav-bar__item__icon'>
+event_note
+</ql-icon>
+<span class='nav-bar__item__label'>
+My Learning
+</span>
+</a>
+</nav>
+
+<nav class='nav-panel js-nav-panel'>
+<div class='nav-panel__logo'>
+<div class='logo logo--blue'></div>
+</div>
+<a title="Home" tabindex="-1" class="nav-panel__item js-navigation-button" href="/"><ql-icon class='nav-panel__item__icon'>
+home
+</ql-icon>
+<div class='nav-panel__item__label'>
+Home
+</div>
+</a>
+<a title="Catalog" tabindex="-1" class="nav-panel__item js-navigation-button active" aria-current="page" href="/catalog"><ql-icon class='nav-panel__item__icon'>
+school
+</ql-icon>
+<div class='nav-panel__item__label'>
+Catalog
+</div>
+</a>
+<a title="My Learning" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_learning"><ql-icon class='nav-panel__item__icon'>
+event_note
+</ql-icon>
+<div class='nav-panel__item__label'>
+My Learning
+</div>
+</a>
+<div class='nav-panel__spacer'></div>
+<a title="Profile" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/profile"><ql-icon class='nav-panel__item__icon'>
+account_circle
+</ql-icon>
+<div class='nav-panel__item__label'>
+Profile
+</div>
+</a>
+<a title="Credits &amp; Subscriptions" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/credits"><ql-icon class='nav-panel__item__icon'>
+money
+</ql-icon>
+<div class='nav-panel__item__label'>
+Credits &amp; Subscriptions
+</div>
+</a>
+<a title="Security" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/security"><ql-icon class='nav-panel__item__icon'>
+security
+</ql-icon>
+<div class='nav-panel__item__label'>
+Security
+</div>
+</a>
+<div class='nav-panel__spacer'></div>
+<a class="nav-panel__item" tabindex="-1" href="#"><ql-help>
+<div class='nav-panel__help-item'>
+<ql-icon class='nav-panel__item__icon'>help</ql-icon>
+<div class='nav-panel__item__label'>
+Help
+</div>
+</div>
+</ql-help>
+</a><div class='nav-panel__small-links'>
+<a tabindex="-1" href="/privacy_policy">Privacy</a>
+<a tabindex="-1" href="/terms_of_service">Terms</a>
+</div>
+</nav>
+<div class='nav-panel__overlay js-nav-toggle'></div>
+
+<main class='js-main'>
+<div class='l-main-wrapper' id='main-wrapper'>
+
+
+
+
+
+
+
+<div class='lab-assessment__tab js-open-lab-assessment-panel'>
+<h6 class='js-lab-assessment-total-score'>
+&mdash;/100
+</h6>
+</div>
+<div class='lab-assessment__panel js-lab-assessment-panel'>
+<div class='lab-assessment__panel__header'>
+<h4>Checkpoints</h4>
+<ql-icon-button class='js-close-lab-assessment-panel'>arrow_forward</ql-icon-button>
+</div>
+<div class='lab-assessment__step'>
+<p class='lab-assessment__step__title'>
+Create service key for default service account
+</p>
+<div class='lab-assessment__step__action'>
+<a class='button js-show-run-step-button' step_no='1'>
+Check my progress
+</a>
+<p class='lab-assessment__step__score'>
+<span class='js-assessment-step-score-1'>
+</span>
+/ 50
+</p>
+</div>
+</div>
+
+<div class='lab-assessment__step'>
+<p class='lab-assessment__step__title'>
+Deploy with Terraform
+</p>
+<div class='lab-assessment__step__action'>
+<a class='button js-show-run-step-button' step_no='2'>
+Check my progress
+</a>
+<p class='lab-assessment__step__score'>
+<span class='js-assessment-step-score-2'>
+</span>
+/ 50
+</p>
+</div>
+</div>
+
+</div>
+<ql-drawer-container class='js-lab-state' data-analytics-payload='{&quot;label&quot;:&quot;Building a VPN Between Google Cloud and AWS with Terraform&quot;,&quot;lab_name&quot;:&quot;Building a VPN Between Google Cloud and AWS with Terraform&quot;,&quot;classroom_name&quot;:null,&quot;deployment&quot;:&quot;run&quot;}' data-focus-id='17869' data-lab-billing-limit='0.0' data-lab-duration='5400' data-parent='catalog' data-payment-required data-recaptcha-enabled id='lab-container'>
+<ql-drawer id='terminal-drawer' slot='drawer' style='width: calc(100% - 480px)'>
+<iframe allow='clipboard-read' class='terminal' id='embedded-resource'></iframe>
+</ql-drawer>
+<ql-drawer-content class='js-lab-wrapper' id='lab-content' slot='drawer-content'>
+<ql-drawer-container id='lab-content-container'>
+<ql-drawer id='control-panel-drawer' open slot='drawer' width='320'>
+<ql-lab-control-panel class='ql-lab-control-panel__max-height control-panel js-lab-control-panel' connectionFiles='[]' labControlButton='{&quot;disabled&quot;:false,&quot;pending&quot;:false,&quot;running&quot;:false}' labDetails='[]' labTimer='{&quot;ticking&quot;:false,&quot;secondsRemaining&quot;:5400}' studentResources='[]'>
+<script src="https://www.recaptcha.net/recaptcha/api.js?render=6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr"   ></script>
+        <script>
+          // Define function so that we can call it again later if we need to reset it
+          // This executes reCAPTCHA and then calls our callback.
+          function executeRecaptchaForStartLab() {
+            grecaptcha.ready(function() {
+              grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}).then(function(token) {
+                setInputWithRecaptchaResponseTokenForStartLab('g-recaptcha-response-data-start-lab', token)
+              });
+            });
+          };
+          // Invoke immediately
+          executeRecaptchaForStartLab()
+
+          // Async variant so you can await this function from another async function (no need for
+          // an explicit callback function then!)
+          // Returns a Promise that resolves with the response token.
+          async function executeRecaptchaForStartLabAsync() {
+            return new Promise((resolve, reject) => {
+              grecaptcha.ready(async function() {
+                resolve(await grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}))
+              });
+            })
+          };
+
+                    var setInputWithRecaptchaResponseTokenForStartLab = function(id, token) {
+            var element = document.getElementById(id);
+            element.value = token;
+          }
+
+        </script>
+<input type="hidden" name="g-recaptcha-response-data[start_lab]" id="g-recaptcha-response-data-start-lab" data-sitekey="6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr" class="g-recaptcha g-recaptcha-response "/>
+
+<div class='hidden' id='recaptcha-v2-start-lab' slot='recaptcha'>
+<script src="https://www.recaptcha.net/recaptcha/api.js" async defer ></script>
+<div data-sitekey="6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV" data-callback="recaptchaComplete" data-expired-callback="expireV2Token" class="g-recaptcha "></div>
+          <noscript>
+            <div>
+              <div style="width: 302px; height: 422px; position: relative;">
+                <div style="width: 302px; height: 422px; position: absolute;">
+                  <iframe
+                    src="https://www.recaptcha.net/recaptcha/api/fallback?k=6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV"
+                    name="ReCAPTCHA"
+                    style="width: 302px; height: 422px; border-style: none; border: 0; overflow: hidden;">
+                  </iframe>
+                </div>
+              </div>
+              <div style="width: 300px; height: 60px; border-style: none;
+                bottom: 12px; left: 25px; margin: 0px; padding: 0px; right: 25px;
+                background: #f9f9f9; border: 1px solid #c1c1c1; border-radius: 3px;">
+                <textarea id="g-recaptcha-response" name="g-recaptcha-response"
+                  class="g-recaptcha-response"
+                  style="width: 250px; height: 40px; border: 1px solid #c1c1c1;
+                  margin: 10px 25px; padding: 0px; resize: none;">
+                </textarea>
+              </div>
+            </div>
+          </noscript>
+
+</div>
+</ql-lab-control-panel>
+</ql-drawer>
+<ql-drawer-content id='lab-instructions' slot='drawer-content'>
+<div class='alert alert--fake js-alert'>
+<p class='alert__message js-alert-message'></p>
+<a class='alert__close js-alert-close'>
+<i class='fa fa-times'></i>
+</a>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='js-lab-content lab-content__renderable-instructions'>
+<div class='lab-preamble'>
+<h1 class='lab-preamble__title'>
+Building a VPN Between Google Cloud and AWS with Terraform
+</h1>
+<div class='lab-preamble__details subtitle-headline-1'>
+<span>1 hour 30 minutes</span>
+<span>7 Credits</span>
+<div class='lab__rating'>
+<a href="/focuses/17869/reviews?parent=catalog"><div class='rateit' data-rateit-readonly='true' data-rateit-value='4.314'></div>
+
+</a><a data-target='#lab-review-modal' data-toggle='modal'>
+Rate Lab
+</a>
+</div>
+</div>
+</div>
+
+<div class='js-markdown-instructions markdown-lab-instructions' id='markdown-lab-instructions'>
+
+
+
+<h2 id="step1">GSP854</h2>
+<p><img alt="Google Cloud Self-Paced Labs" src="https://cdn.qwiklabs.com/GMOHykaqmlTHiqEeQXTySaMXYPHeIvaqa2qHEzw6Occ%3D"></p>
+
+<h2 id="step2">Overview</h2>
+<p>This lab will show you how to use <a href="https://www.terraform.io/" target="_blank">Terraform</a> by HashiCorp to create secure, private, site-to-site connections between Google Cloud and Amazon Web Services (AWS) using virtual private networks (VPNs). This is a multi-cloud deployment.</p>
+<p>In this lab, you will deploy virtual machine (VM) instances into custom virtual private cloud (VPC) networks in Google Cloud and AWS. You then deploy supporting infrastructure to construct a VPN connection with two Internet Protocol security (IPsec) tunnels between the Google Cloud and AWS VPC networks. The environment and tunnel deployment usually completes within four minutes. This lab is based off of the <a href="https://cloud.google.com/solutions/automated-network-deployment-overview" target="_blank">Automated Network Deployment</a> tutorial.</p>
+<h3>Deployment Architecture</h3>
+<p>In this lab, you build the following deployment environment:</p>
+<p><img alt="automated-network-deployment-3-architecture.png" src="https://cdn.qwiklabs.com/0FrmBApTKjWjfvDkudOtBRk9BavqQcjvUnRn5suW3bQ%3D"></p>
+<h3>Objectives</h3>
+<p>In this lab, you will:</p>
+<ul>
+<li>Build custom VPC networks with user-specified CIDR blocks in Google Cloud and AWS</li>
+<li>Deploy a VM instance in each VPC network</li>
+<li>Create VPN gateways in each VPC network and related resources for two IPsec tunnels</li>
+</ul>
+<p>While Google Cloud uses routes to support equal-cost multi-path (ECMP) routing, AWS supports VPN gateways with two tunnels, active and standby, for redundancy and availability.</p>
+<h3>Routing</h3>
+<p>The lab configuration uses Cloud Router to demonstrate dynamic routing. Cloud Router exchanges your VPC network route updates with your environment in AWS using Border Gateway Protocol (BGP). Dynamic routing by Cloud Router requires a separate Cloud Router for each IPsec tunnel. Alternatively, you can configure a setup with static routes. Both configurations are covered in the Cloud VPN Interop Guide.</p>
+<h2 id="step3">Setup and Requirements</h2>
+<h4>Before you click the Start Lab button</h4>
+<p>Read these instructions. Labs are timed and you cannot pause them. The timer, which starts when you click <strong>Start Lab</strong>, shows how long Google Cloud resources will be made available to you.</p>
+<p>This Qwiklabs hands-on lab lets you do the lab activities yourself in a real cloud environment, not in a simulation or demo environment. It does so by giving you new, temporary credentials that you use to sign in and access Google Cloud for the duration of the lab.</p>
+<h4>What you need</h4>
+<p>To complete this lab, you need:</p>
+<ul>
+<li>Access to a standard internet browser (Chrome browser recommended).</li>
+<li>Time to complete the lab.</li>
+</ul>
+<p><strong>Note:</strong> If you already have your own personal Google Cloud account or project, do not use it for this lab.</p>
+<p><strong>Note:</strong> If you are using a Pixelbook, open an Incognito window to run this lab.</p>
+
+<h4>How to start your lab and sign in to the Google Cloud Console</h4>
+<ol>
+<li>
+<p>Click the <strong>Start Lab</strong> button. If you need to pay for the lab, a pop-up opens for you to select your payment method.
+On the left is a panel populated with the temporary credentials that you must use for this lab.</p>
+<p><img alt="Open Google Console" src="https://cdn.qwiklabs.com/%2FtHp4GI5VSDyTtdqi3qDFtevuY014F88%2BFow%2FadnRgE%3D"></p>
+</li>
+<li>
+<p>Copy the username, and then click <strong>Open Google Console</strong>.
+The lab spins up resources, and then opens another tab that shows the <strong>Sign in</strong> page.</p>
+<p><img alt="Sign in" src="https://cdn.qwiklabs.com/VkUIAFY2xX3zoHgmWqYKccRLwFrR4BfARLd5ojmlbhs%3D"></p>
+<p><strong><em>Tip:</em></strong> Open the tabs in separate windows, side-by-side.</p>
+<aside>
+ If you see the <strong>Choose an account</strong> page, click <strong>Use Another Account</strong>.
+<img alt="Choose an account" src="https://cdn.qwiklabs.com/eQ6xPnPn13GjiJP3RWlHWwiMjhooHxTNvzfg1AL2WPw%3D">
+</aside>
+</li>
+<li>
+<p>In the <strong>Sign in</strong> page, paste the username that you copied from the Connection Details panel. Then copy and paste the password.</p>
+<p><strong><em>Important:</em></strong> You must use the credentials from the Connection Details panel. Do not use your Qwiklabs credentials. If you have your own Google Cloud account, do not use it for this lab (avoids incurring charges).</p>
+</li>
+<li>
+<p>Click through the subsequent pages:</p>
+<ul>
+<li>Accept the terms and conditions.</li>
+<li>Do not add recovery options or two-factor authentication (because this is a temporary account).</li>
+<li>Do not sign up for free trials.</li>
+</ul>
+</li>
+</ol>
+<p>After a few moments, the Cloud Console opens in this tab.</p>
+<aside>
+<strong>Note:</strong> You can view the menu with a list of Google Cloud Products and Services by clicking the <strong>Navigation menu</strong> at the top-left.
+<img alt="Cloud Console Menu" src="https://cdn.qwiklabs.com/9vT7xPlxoNP%2FPsK0J8j0ZPFB4HnnpaIJVCDByaBrSHg%3D">
+</aside>
+
+<h3>Activate Cloud Shell</h3>
+<p>Cloud Shell is a virtual machine that is loaded with development tools. It offers a persistent 5GB home directory and runs on the Google Cloud. Cloud Shell provides command-line access to your Google Cloud resources.</p>
+<p>In the Cloud Console, in the top right toolbar, click the <strong>Activate Cloud Shell</strong> button.</p>
+<p><img alt="Cloud Shell icon" src="https://cdn.qwiklabs.com/vdY5e%2Fan9ZGXw5a%2FZMb1agpXhRGozsOadHURcR8thAQ%3D"></p>
+<p>Click <strong>Continue</strong>.</p>
+<p><img alt="cloudshell_continue.png" src="https://cdn.qwiklabs.com/lr3PBRjWIrJ%2BMQnE8kCkOnRQQVgJnWSg4UWk16f0s%2FA%3D"></p>
+<p>It takes a few moments to provision and connect to the environment. When you are connected, you are already authenticated, and the project is set to your <em>PROJECT_ID</em>. For example:</p>
+<p><img alt="Cloud Shell Terminal" src="https://cdn.qwiklabs.com/hmMK0W41Txk%2B20bQyuDP9g60vCdBajIS%2B52iI2f4bYk%3D"></p>
+<p><code>gcloud</code> is the command-line tool for Google Cloud. It comes pre-installed on Cloud Shell and supports tab-completion.</p>
+<p>You can list the active account name with this command:</p>
+<pre><code>gcloud auth list&#x000A;</code></pre>
+<p>(Output)</p>
+<pre><code class="language-output prettyprint">Credentialed accounts:&#x000A; - &lt;myaccount&gt;@&lt;mydomain&gt;.com (active)&#x000A;</code></pre>
+<p>(Example output)</p>
+<pre><code class="language-Output prettyprint">Credentialed accounts:&#x000A; - google1623327_student@qwiklabs.net&#x000A;</code></pre>
+<p>You can list the project ID with this command:</p>
+<pre><code>gcloud config list project&#x000A;</code></pre>
+<p>(Output)</p>
+<pre><code class="language-output prettyprint">[core]&#x000A;project = &lt;project_ID&gt;&#x000A;</code></pre>
+<p>(Example output)</p>
+<pre><code class="language-Output prettyprint">[core]&#x000A;project = qwiklabs-gcp-44776a13dea667a6&#x000A;</code></pre>
+<aside>
+  For full documentation of <code>gcloud</code> see the <a href="https://cloud.google.com/sdk/gcloud" target="_blank">gcloud command-line tool overview</a>.
+
+</aside>
+
+<h2 id="step4">Preparing your Google Cloud working environment</h2>
+<p>In this section, you will clone the tutorial code and verify your Google Cloud region and zone.</p>
+<h3>Clone the tutorial code</h3>
+<ol>
+<li>
+<p>In the Google Cloud Console, open a new Cloud Shell window and clone the tutorial code from GitHub:</p>
+</li>
+</ol>
+<pre><code>git clone https://github.com/GoogleCloudPlatform/autonetdeploy-multicloudvpn.git&#x000A;</code></pre>
+<ol start="2">
+<li>
+<p>Navigate to the tutorial directory:</p>
+</li>
+</ol>
+<pre><code>cd autonetdeploy-multicloudvpn&#x000A;</code></pre>
+<h3>Verify the Google Cloud region and zone</h3>
+<p>Certain cloud resources in this lab, including Compute Engine instances, VPN gateways, and Cloud Router, require you to explicitly declare the intended placement region or zone, or both. For more details, see <a href="https://cloud.google.com/compute/docs/regions-zones/regions-zones" target="_blank">Regions and Zones for Google Cloud</a>.</p>
+<p>This lab requires only a single region for each provider. To optimize the connection between the two clouds, choose regions near each other. The following table lists the values set in the tutorial files <code>terraform/gcp_variables.tf</code> and <code>terraform/aws_variables.tf</code>.</p>
+<table>
+
+<tr>
+<th>Field name</th>
+<th>Google Cloud values</th>
+<th>AWS values</th>
+</tr>
+
+
+<tr>
+<td>Region Name</td>
+<td><code>us-west1</code></td>
+<td>US West (<code>us-west-1</code>)</td>
+</tr>
+<tr>
+<td>Location</td>
+<td>The Dalles, Oregon, USA</td>
+<td>Northern California</td>
+</tr>
+
+</table>
+<h2 id="step5">Preparing for AWS use</h2>
+<p>In this section, you will verify your AWS region. For details about AWS regions, see <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html" target="_blank">Regions and Availability Zones for AWS</a>.</p>
+<ol>
+<li>
+<p>Sign in to the AWS Management Console (Click the <strong>Open AWS Console</strong> button on the left, and log in with the provided username and password).</p>
+</li>
+<li>
+<p>Navigate to the <strong>EC2 Dashboard</strong> (<strong>Services &gt; Compute &gt; EC2</strong>). Select the <strong>Northern California</strong> region (<code>us-west-1</code>) using the pulldown menu in the top right. In the EC2 Dashboard and the VPC Dashboard, you can review the resources deployed later in the lab.</p>
+</li>
+</ol>
+<h2 id="step6">Creating access credentials</h2>
+<p>In this section, you will create access credentials for Google Cloud and AWS and point your templates at these access credentials.</p>
+<h3>Download Compute Engine default service account credentials</h3>
+<p>In Cloud Shell, which is a Linux environment, <code>gcloud</code> manages credentials files under the <code>~/.config/gcloud</code> directory. To set up your Compute Engine default service account credentials, follow these steps:</p>
+<ol>
+<li>
+<p>In the Google Cloud Console, in the <strong>Navigation Menu</strong> <img alt="Navigation menu" src="https://cdn.qwiklabs.com/tkgw1TDgj4Q%2BYKQUW4jUFd0O5OEKlUMBRYbhlCrF0WY%3D" title="Navigation menu">
+, click <strong>IAM &amp; Admin</strong> &gt; <strong>Service Accounts</strong>.</p>
+</li>
+<li>
+<p>Click the <code>Compute Engine default service account</code> service account, click <strong>KEYS</strong>, and click <strong>ADD KEY</strong> &gt; <strong>Create new key</strong>.</p>
+</li>
+<li>
+<p>Verify <strong>JSON</strong> is selected as the key type and click <strong>Create</strong>, which downloads your credentials as a file named <code>[PROJECT_ID]-[UNIQUE_ID].json</code>. Click <strong>CLOSE</strong>.</p>
+</li>
+</ol>
+<p>Click <em>Check my progress</em> to verify the objective.
+<ql-activity-tracking step="1">
+Create service key for default service account
+</ql-activity-tracking></p>
+<ol start="4">
+<li>
+<p>In your Cloud Shell terminal, verify you are still in the <code>autonetdeploy-multicloudvpn</code> folder.</p>
+</li>
+<li>
+<p>To upload your downloaded JSON file from your local machine into the Cloud Shell environment, click <strong>More</strong> <img alt="more" src="https://cdn.qwiklabs.com/2ufrDePg5inKfodUoT2Kib4oE7II7emYn%2BypCC85FjQ%3D" title="More"> and click <strong>Upload file</strong>.</p>
+</li>
+<li>
+<p>Navigate to the JSON file you downloaded and click <strong>Open</strong> to upload. The file is placed in the home (<code>~</code>) directory.</p>
+</li>
+<li>
+<p>Use the <code>./gcp_set_credentials.sh</code> script provided to create the <code>~/.config/gcloud/credentials_autonetdeploy.json</code> file. This script also creates <code>terraform/terraform.tfvars</code> with a reference to the new credentials.</p>
+</li>
+</ol>
+<ql-infobox>Replace <code>[PROJECT_ID]-[UNIQUE_ID]</code> with the actual file name of your downloaded JSON key.</ql-infobox>
+<pre><code>./gcp_set_credentials.sh ~/[PROJECT_ID]-[UNIQUE_ID].json&#x000A;</code></pre>
+<p>Output (Do not copy):</p>
+<pre><code>Created ~/.config/gcloud/credentials_autonetdeploy.json from ~/[PROJECT_ID]-[UNIQUE_ID].json.&#x000A;Updated gcp_credentials_file_path in ~/autonetdeploy-startup/terraform/terraform.tfvars.&#x000A;</code></pre>
+<h3>Create AWS access credentials</h3>
+<p>In this section, you will set up your Qwiklabs-generated AWS access credentials to use with Terraform. Note that the method used in here differs from that of a production or personal environment due to lab constraints. If you would like to see how this is done outside of a lab environment, you can check out the steps <a href="https://cloud.google.com/architecture/automated-network-deployment-overview#download_aws_access_credentials" target="_blank">here</a>.</p>
+<ol>
+<li>
+<p>Run the following commands to create your credentials directory and file:</p>
+</li>
+</ol>
+<pre><code>export username=`whoami`&#x000A;mkdir /home/$username/.aws/&#x000A;touch /home/$username/.aws/credentials_autonetdeploy&#x000A;</code></pre>
+<ol start="2">
+<li>
+<p>Run the following command to edit the credentials file. This is where you will put your Qwiklabs generated AWS Access and Secret keys.</p>
+</li>
+</ol>
+<pre><code>nano /home/$username/.aws/credentials_autonetdeploy&#x000A;</code></pre>
+<ol start="3">
+<li>
+<p>On the first line, paste the following:</p>
+</li>
+</ol>
+<pre><code>[default]&#x000A;</code></pre>
+<ol start="4">
+<li>
+<p>On the next line, add the following code. Replace <code>&lt;Your AWS Access Key&gt;</code> with your <strong>AWS Access Key</strong> from the Qwiklabs connection details panel.</p>
+</li>
+</ol>
+<pre><code>aws_access_key_id=&lt;Your AWS Access Key&gt;&#x000A;</code></pre>
+<ol start="5">
+<li>
+<p>On the next line, add the following code. Replace <code>&lt;Your AWS Secret Key&gt;</code> with your <strong>AWS Secret Key</strong> from the Qwiklabs connection details panel.</p>
+</li>
+</ol>
+<pre><code>aws_secret_access_key=&lt;Your AWS Secret Key&gt;&#x000A;</code></pre>
+<ol start="6">
+<li>
+<p>To save the file, use <strong>CTRL+X</strong> to exit, then type <code>Y</code> to save the changes, and hit <strong>Enter</strong>.</p>
+</li>
+<li>
+<p>Run the following to inspect your security credentials file:</p>
+</li>
+</ol>
+<pre><code>cat /home/$username/.aws/credentials_autonetdeploy&#x000A;</code></pre>
+<p>Your file should resemble the following:</p>
+<pre><code>[default]&#x000A;aws_access_key_id=AKIA3INBXVI72ZO2Z4F4&#x000A;aws_secret_access_key=bvQ+aMscVps34Q5ZZnazUGB2+kneKFr73P33iZIo&#x000A;</code></pre>
+<ol start="7">
+<li>
+<p>Once your file is correctly formatted, use the following command to set a Terraform environment variable to the correct AWS credentials file path:</p>
+</li>
+</ol>
+<pre><code>export TF_VAR_aws_credentials_file_path=/home/$username/.aws/credentials_autonetdeploy&#x000A;</code></pre>
+<ql-infobox>
+<strong>Note:</strong> a different way to do this would be to update the <code>terraform/terraform.tfvars</code> file to reference the AWS credentials file path.
+</ql-infobox>
+<h2 id="step7">Setting your project</h2>
+<p>In this section, you point your deployment templates at your project. Google Cloud offers several ways to designate the Google Cloud project to be used by the automation tools. For simplicity, instead of pulling the Project ID from the environment, the Google Cloud project is explicitly identified by a string variable in the template files.</p>
+<ol>
+<li>
+<p>Set your Google Cloud Project ID by using the following commands:</p>
+</li>
+</ol>
+<pre><code>export PROJECT_ID=$(gcloud config get-value project)&#x000A;gcloud config set project $PROJECT_ID&#x000A;</code></pre>
+<ol start="2">
+<li>
+<p>Use the provided script to update the project value in your configuration files for Terraform.</p>
+</li>
+</ol>
+<pre><code>./gcp_set_project.sh&#x000A;</code></pre>
+<ol start="3">
+<li>
+<p>Review the updated file to verify that your <code>project-id</code> value has been inserted into <code>terraform/terraform.tfvars</code>. You can either use the <code>cat</code> command or the Cloud Shell Editor to verify the file.</p>
+</li>
+<li>
+<p>Run the one-time <code>terraform init</code> command to install the Terraform providers for this deployment.</p>
+</li>
+</ol>
+<pre><code>cd terraform&#x000A;terraform init&#x000A;</code></pre>
+<ol start="5">
+<li>
+<p>Run the Terraform <code>plan</code> command to verify your credentials.</p>
+</li>
+</ol>
+<pre><code>terraform plan&#x000A;</code></pre>
+<p>Output (Do not copy):</p>
+<pre><code>Refreshing Terraform state in-memory prior to plan...&#x000A;...&#x000A; +google_compute_instance.gcp-vm&#x000A;...&#x000A;Plan: 34 to add, 0 to change, 0 to destroy.&#x000A;</code></pre>
+<h2 id="step8">Using SSH keys for connecting to VM instances</h2>
+<p>In Google Cloud, the Cloud Console and <code>gcloud</code> tool work behind the scenes to <a href="https://cloud.google.com/compute/docs/instances/ssh-keys" target="_blank">manage SSH keys</a> for you. Use the <code>ssh</code> command to <a href="https://cloud.google.com/compute/docs/instances/connecting-to-instance" target="_blank">communicate with your Compute Engine</a> instances without generating or uploading any key files.</p>
+<p>However, for your multi-cloud exercises, you do need a public/private key pair to connect with VM instances in Amazon Elastic Compute Cloud (EC2).</p>
+<h3>Generate a key pair</h3>
+<ol>
+<li>
+<p>In Cloud Shell, use <code>ssh-keygen</code> to generate a new key pair:</p>
+</li>
+</ol>
+<pre><code>ssh-keygen -t rsa -f ~/.ssh/vm-ssh-key -C $username&#x000A;</code></pre>
+<ol start="2">
+<li>
+<p>Restrict access to your private key. This is a best practice.</p>
+</li>
+</ol>
+<pre><code>chmod 400 ~/.ssh/vm-ssh-key&#x000A;</code></pre>
+<h3>Import the public key to Google Cloud</h3>
+<p>In this section, you will import and register your key.</p>
+<ol>
+<li>
+<p>In Cloud Shell, register your public key with Google Cloud:</p>
+</li>
+</ol>
+<pre><code>gcloud compute config-ssh --ssh-key-file=~/.ssh/vm-ssh-key&#x000A;</code></pre>
+<ql-infobox>You can ignore the warning <code>No host aliases were added...</code> because the command also attempts to update Compute Engine VM instances, but no instances have been created yet.</ql-infobox>
+<ol start="2">
+<li>
+<p>In the Cloud Console, navigate to the <strong>Compute Engine &gt; Metadata</strong> page.</p>
+</li>
+<li>
+<p>Click <strong>SSH Keys</strong>. Verify your SSH Key exists.</p>
+</li>
+<li>
+<p>Under the <strong>Key</strong> Section, copy the SSH Key value. You will use this in the next section.</p>
+</li>
+</ol>
+<p><img alt="ssh-key.png" src="https://cdn.qwiklabs.com/Yt%2By34QKTxn2HLflwgfpDyxTkwiaP%2B%2FLmwOBjmlhrRQ%3D"></p>
+<h3>Import the public key to AWS</h3>
+<p>You can reuse the public key file generated with Google Cloud.</p>
+<ol>
+<li>In the AWS Management Console, navigate to <strong>Services &gt; Compute &gt; EC2</strong>.</li>
+</ol>
+<ql-infobox>
+<strong>Verify</strong> that you are in the <strong>US-West (N. California)</strong> <code>us-west-1</code> region.
+</ql-infobox>
+<ol start="2">
+<li>
+<p>In <strong>EC2 Dashboard</strong>, under the <strong>Network &amp; Security</strong> group on the left, click <strong>Key Pairs</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Actions &gt; Import Key Pair</strong>.</p>
+</li>
+<li>
+<p>For the name, enter: <code>vm-ssh-key</code>.</p>
+</li>
+<li>
+<p>Paste the contents of your Google Cloud public key (<strong>Compute Engine &gt; Metadata &gt; SSH Keys</strong>) into the <strong>Public key contents</strong> box.</p>
+</li>
+<li>
+<p>Verify that the contents are of the expected form: <code>ssh-rsa [KEY_DATA] [USERNAME]</code>.</p>
+</li>
+<li>
+<p>Click <strong>Import Key Pair</strong>.</p>
+</li>
+</ol>
+<p><img alt="import-key-pair.png" src="https://cdn.qwiklabs.com/GxqeiY8r9VvtcNN1lkHkBfSN9dpyoOSKcpJb82rxd5I%3D"></p>
+<p>You can now see the AWS entry for the <code>vm-ssh-key</code> value. You can reference this key in configuration settings, which enables you to use the ssh command for access.</p>
+<p>When you use the <code>ssh</code> command to connect to AWS instances, AWS behaves differently from Google Cloud. For AWS, you must provide a generic username supported by the AMI provider. In this tutorial, the AMI provider expects <code>ubuntu</code> as the user.</p>
+<p>You now have an environment in which you can easily deploy resources to the cloud using automated tools. Use this environment to complete the rest of the lab.</p>
+<h2 id="step9">Examining Terraform configuration files</h2>
+<p>In Terraform, a <a href="https://www.terraform.io/intro/getting-started/build.html" target="_blank">deployment configuration</a> is defined by a directory of files. Although these files can be JSON files, it's better to use the <a href="https://www.terraform.io/docs/configuration/index.html" target="_blank">Terraform configuration</a> file (<code>.tf</code> file) syntax, which is easier to read and maintain. This lab provides a set of files that illustrate one way of cleanly organizing your resources. This set is a functional deployment and requires no edits to run.</p>
+<table>
+
+<tr>
+<th>Filename</th>
+<th>Purpose</th>
+</tr>
+
+
+<tr>
+<td><code>main.tf</code></td>
+<td>Defines your providers, and specifies which clouds to deploy in this configuration. Also reads your credentials, project name, and selected regions.</td>
+</tr>
+<tr>
+<td>
+<code>gcp_variables.tf</code>, <code>aws_variables.tf</code>
+</td>
+<td>Declares variables used to parameterize and customize the deployment—for example, <code>gcp_region</code> and <code>gcp_instance_type</code>.</td>
+</tr>
+<tr>
+<td>
+<code>gcp_compute.tf</code>, <code>aws_compute.tf</code>
+</td>
+<td>Defines the compute resources used in your deployment—for example, <code>google_compute_instance</code>.</td>
+</tr>
+<tr>
+<td><code>vm_userdata.sh</code></td>
+<td>Specifies the script to run when starting up VM instances. Automatically sets up the <code>iperf3</code> test tool and some wrapper scripts.</td>
+</tr>
+<tr>
+<td>
+<code>gcp_networking.tf</code>, <code>aws_networking.tf</code>
+</td>
+<td>Defines networking resources, including <code>google_compute_network</code>, <code>google_compute_subnetwork</code>, <code>google_compute_address</code>, <code>google_compute_vpn_gateway</code>, and <code>google_compute_vpn_tunnel</code>.</td>
+</tr>
+<tr>
+<td>
+<code>gcp_security.tf</code>, <code>aws_security.tf</code>
+</td>
+<td>Defines resources for allowing test traffic in the GCP or AWS environment, including <code>google_compute_firewall</code> rules and <code>aws_security_group</code> resources.</td>
+</tr>
+<tr>
+<td>
+<code>gcp_outputs.tf</code>, <code>aws_outputs.tf</code>
+</td>
+<td>Defines variables to be output upon completion of the deployment—for example, the <code>external_ip</code> and <code>internal_ip</code> of the deployed VM instance.</td>
+</tr>
+<tr>
+<td><code>terraform.tfstate</code></td>
+<td>[OUTPUT] Specifies the file used by Terraform to store the client-side resource state after checking with the cloud. For more details, see <a href="https://cloud.google.com/community/tutorials/managing-gcp-projects-with-terraform" target="_blank">Managing GCP Projects with Terraform</a>.</td>
+</tr>
+<tr>
+<td><code>run_graph.sh</code></td>
+<td>Shell script for generating a PNG file from Terraform that shows resource dependencies. You can see the output of this script in <code>images/gcpawsvpn_plan_graph.png</code>.</td>
+</tr>
+
+</table>
+<h2 id="step10">Deploying VPC networks, VM instances, VPN gateways, and IPsec tunnels</h2>
+<p>Constructing connections between multiple clouds is complex. You can deploy many resources in parallel in both environments, but when you are building IPsec tunnels, you need to order interdependencies carefully. For this reason, establishing a stable deployment configuration in code is a helpful way to scale your deployment knowledge. The following figure summarizes the steps required to create this deployment configuration across multiple providers.</p>
+<p><img alt="automated-network-deployment-3-steps.png" src="https://cdn.qwiklabs.com/D48v3QvnWlMCcqytQ2c3jeRCUvYdk4q68Y8J45BLZIg%3D"></p>
+<h2 id="step11">Deploy with Terraform</h2>
+<p>Terraform uses the <code>terraform.tfstate</code> file to capture the resource state. To view the current resource state in a readable form, you can run <code>terraform show</code>.</p>
+<ol>
+<li>
+<p>In Cloud Shell, navigate to the <code>terraform</code> directory:</p>
+</li>
+</ol>
+<pre><code>cd ~/autonetdeploy-multicloudvpn/terraform&#x000A;</code></pre>
+<ol start="2">
+<li>
+<p>Use the Terraform validate command to <code>validate</code> the syntax of your configuration files. This validation check is simpler than those performed as part of the <code>plan</code> and <code>apply</code> commands in subsequent steps. The <code>validate</code> command does not authenticate with any providers.</p>
+</li>
+</ol>
+<pre><code>terraform validate&#x000A;</code></pre>
+<p>If you don't see an error message, you have completed an initial validation of your file syntax and basic semantics. If you do see an error message, validation failed.</p>
+<ol start="3">
+<li>
+<p>Use the Terraform <code>plan</code> command to review the deployment without instantiating resources in the cloud. The plan command requires successful authentication with all providers specified in the configuration.</p>
+</li>
+</ol>
+<pre><code>terraform plan&#x000A;</code></pre>
+<p>The <code>plan</code> command returns an output listing of resources to be added, removed, or updated. The last line of the <code>plan</code> output shows a count of resources to be added, changed, or destroyed:</p>
+<pre><code>Refreshing Terraform state in-memory prior to plan...&#x000A;...&#x000A;Plan: 34 to add, 0 to change, 0 to destroy.&#x000A;</code></pre>
+<ol start="4">
+<li>
+<p>Use the Terraform <code>apply</code> command to create a deployment:</p>
+</li>
+</ol>
+<pre><code>terraform apply&#x000A;</code></pre>
+<p>The <code>apply</code> command creates a deployment with backing resources in the cloud. In around four minutes, <code>apply</code> creates 30+ resources for you, including GCP and AWS <a href="https://www.terraform.io/docs/providers/google/r/compute_network.html" target="_blank">VPC networks</a>, <a href="https://www.terraform.io/docs/providers/google/r/compute_instance.html" target="_blank">VM instances</a>, <a href="https://www.terraform.io/docs/providers/google/r/compute_vpn_gateway.html" target="_blank">VPN gateways</a>, and <a href="https://www.terraform.io/docs/providers/google/r/compute_vpn_tunnel.html" target="_blank">IPsec tunnels</a>. The output of the <code>apply</code> command includes details of the resources deployed and the output variables defined by the configuration.</p>
+<ol start="5">
+<li>Type <code>yes</code> then enter to approve.</li>
+</ol>
+<p>Click <em>Check my progress</em> to verify the objective.
+<ql-activity-tracking step="2">
+Deploy with Terraform
+</ql-activity-tracking></p>
+<ol start="6">
+<li>
+<p>Your deployments can emit output variables to aid your workflow. In this tutorial, the assigned internal and external IP addresses of VM instances have been identified as output variables by the <code>gcp_outputs.tf</code> and <code>aws_outputs.tf</code> files. These addresses are printed automatically when the apply step completes. If, later in your workflow, you want to redisplay the output variable values, use the <code>output</code> command.</p>
+</li>
+</ol>
+<pre><code>terraform output&#x000A;</code></pre>
+<p>The output variables defined by this configuration include the internal and external IP addresses for your VM instances. To use the <code>ssh</code> command for network validation, you need the external IP addresses to connect to the VM instances.</p>
+<pre><code>aws_instance_external_ip = [AWS_EXTERNAL_IP]&#x000A;aws_instance_internal_ip = 172.16.0.100&#x000A;gcp_instance_external_ip = [GCP_EXTERNAL_IP]&#x000A;gcp_instance_internal_ip = 10.240.0.100&#x000A;</code></pre>
+<ol start="7">
+<li>
+<p>Use the Terraform <code>show</code> command to inspect the deployed resources and verify the current state.</p>
+</li>
+</ol>
+<pre><code>terraform show&#x000A;</code></pre>
+<ol start="8">
+<li>
+<p>To review your instances, use <code>gcloud compute instances list</code>, or use the Cloud Console, on the VM instances panel.</p>
+</li>
+</ol>
+<pre><code>gcloud compute instances list&#x000A;</code></pre>
+<p>Output (Do not copy):</p>
+<pre><code>NAME             ZONE        MACHINE_TYPE  PREEMPTIBLE  INTERNAL_IP    EXTERNAL_IP    STATUS&#x000A;gcp-vm-us-west1  us-west1-a  n1-highmem-4               10.240.0.100   [EXTERNAL IP]  RUNNING&#x000A;</code></pre>
+<ol start="9">
+<li>
+<p>Verify that your Google Cloud VM instance is functioning by using the <code>ssh</code> command to connect to it:</p>
+</li>
+</ol>
+<pre><code>ssh -i ~/.ssh/vm-ssh-key [GCP_EXTERNAL_IP]&#x000A;</code></pre>
+<ol start="10">
+<li>
+<p>Run the <code>ping</code> and <code>curl</code> commands in your <code>ssh</code> session:</p>
+</li>
+</ol>
+<pre><code>ping -c 5 google.com&#x000A;curl ifconfig.co/ip&#x000A;</code></pre>
+<ol start="11">
+<li>
+<p>Run simple network performance checks from the Google Cloud VM instance. Use pre-installed scripts to run a test on each network interface, both external and internal.</p>
+</li>
+</ol>
+<ul>
+<li>
+<p>Over external IPs:</p>
+</li>
+</ul>
+<pre><code>/tmp/run_iperf_to_ext.sh&#x000A;</code></pre>
+<p>This script runs a 30-second performance test that produces summary data about network performance.</p>
+<p>Resulting output:</p>
+<pre><code>...&#x000A;[SUM]   ... sender&#x000A;[SUM]   ... receiver&#x000A;...&#x000A;</code></pre>
+<ul>
+<li>
+<p>Over VPN (internal IPs):</p>
+</li>
+</ul>
+<pre><code>/tmp/run_iperf_to_int.sh&#x000A;</code></pre>
+<p>This script runs a 30-second performance test that produces summary data about network performance.</p>
+<p>Resulting output:</p>
+<pre><code>...&#x000A;[SUM]   ... sender&#x000A;[SUM]   ... receiver&#x000A;...&#x000A;</code></pre>
+<ql-warningbox>
+Once the output has been displayed <b>once</b>, please exit iperf.
+</ql-warningbox>
+<ol start="12">
+<li>
+<p>When you complete the checks from the Google Cloud VM instance, enter the following command:</p>
+</li>
+</ol>
+<pre><code>exit&#x000A;</code></pre>
+<ol start="13">
+<li>
+<p>To verify that your AWS VM instance is functioning, use the <code>ssh</code> command to connect to it:</p>
+</li>
+</ol>
+<pre><code>ssh -i ~/.ssh/vm-ssh-key ubuntu@[AWS_EXTERNAL_IP]&#x000A;</code></pre>
+<ol start="14">
+<li>
+<p>Run the <code>ping</code> and <code>curl</code> commands in your <code>ssh</code> session:</p>
+</li>
+</ol>
+<pre><code>ping -c 5 google.com&#x000A;curl ifconfig.co/ip&#x000A;</code></pre>
+<ol start="15">
+<li>
+<p>Run simple network performance checks from the AWS VM instance. Use pre-installed scripts to run a test on each network interface, both external and internal.</p>
+</li>
+</ol>
+<ul>
+<li>
+<p>Over external IPs:</p>
+</li>
+</ul>
+<pre><code>/tmp/run_iperf_to_ext.sh&#x000A;</code></pre>
+<p>This script runs a 30-second performance test that produces summary data about network performance.</p>
+<p>Resulting output:</p>
+<pre><code>...&#x000A;[SUM]   ... sender&#x000A;[SUM]   ... receiver&#x000A;...&#x000A;</code></pre>
+<ul>
+<li>
+<p>Over VPN (internal IPs):</p>
+</li>
+</ul>
+<pre><code>/tmp/run_iperf_to_int.sh&#x000A;</code></pre>
+<p>This script runs a 30-second performance test that produces summary data about network performance.</p>
+<p>Output (Do not copy):</p>
+<pre><code>...&#x000A;[SUM]   ... sender&#x000A;[SUM]   ... receiver&#x000A;...&#x000A;</code></pre>
+<ql-warningbox>
+Once the output has been displayed <b>once</b>, please exit iperf.
+</ql-warningbox>
+<ol start="16">
+<li>
+<p>When you complete the checks from the AWS VM instance, enter the following command:</p>
+</li>
+</ol>
+<pre><code>exit&#x000A;</code></pre>
+<p>You have successfully deployed a secure, private, site-to-site connection between Google Cloud and AWS using VPN! You can optionally destroy your infrastructure using the <code>terraform destroy</code> <a href="https://www.terraform.io/docs/cli/commands/destroy.html" target="_blank">command</a>, explore the resources you created, or end your lab here.</p>
+<h2 id="step12">Congratulations!</h2>
+<p>In this lab, you used Terraform to build custom VPC networks with user-specified CIDR blocks in Google Cloud and AWS, deploy a VM instance in each network, and create VPN gateways in each VPC network and related resources for two IPsec tunnels.</p>
+<h3>Next Steps / Learn More</h3>
+<p>Be sure to check out the following to receive more hands-on practice with Terraform:</p>
+<ul>
+<li><a href="https://learn.hashicorp.com/terraform" target="_blank">Hashicorp Learn</a></li>
+<li><a href="https://console.cloud.google.com/marketplace/product/hashicorp-marketplace-public/hashicorp-for-gcp" target="_blank">Terraform Enterprise on the Google Cloud Marketplace</a></li>
+<li><a href="https://www.terraform.io/community.html" target="_blank">Terraform Community</a></li>
+<li><a href="https://github.com/GoogleCloudPlatform/terraform-google-examples" target="_blank">Terraform Google Examples</a></li>
+</ul>
+<h3>Google Cloud Training &amp; Certification</h3>
+<p>...helps you make the most of Google Cloud technologies. <a href="https://cloud.google.com/training/courses" target="_blank">Our classes</a> include technical skills and best practices to help you get up to speed quickly and continue your learning journey. We offer fundamental to advanced level training, with on-demand, live, and virtual options to suit your busy schedule. <a href="https://cloud.google.com/certification/" target="_blank">Certifications</a> help you validate and prove your skill and expertise in Google Cloud technologies.</p>
+
+<h4>Manual Last April 29, 2021</h4>
+<h4>Lab Last April 29, 2021</h4>
+<p>Copyright 2021 Google LLC All rights reserved. Google and the Google logo are trademarks of Google LLC. All other company and product names may be trademarks of the respective companies with which they are associated.</p>
+
+
+
+</div>
+</div>
+
+
+<div class='hidden js-end-lab-button-container lab-content__end-lab-button'>
+<ql-lab-control-button class='js-end-lab-button' running></ql-lab-control-button>
+</div>
+<!-- / TODO: Move recommendations into the end lab modal -->
+<div class='lab-content__renderable-instructions'>
+<div class='lab-content__recommendation'>
+<h4 class='headline-3'>
+Ready for more?
+<p>Here&#39;s another lab we think you&#39;ll like.</p>
+<div class='content-card-grid'>
+<div class='card-content-wrapper js-content-card' data-id='480' data-level='Expert' data-name='Predict Baby Weight with TensorFlow on AI Platform' data-type='Lab'>
+<a class="card card--content elevation-0 content-lab" href="/focuses/607?parent=catalog"><div class='card__image'>
+<div class='card__image__inner' style='background-image: url(https://cdn.qwiklabs.com/assets/fractal4-1d205807c54d90fe4382315dbfc0dd665ddb825bbc90f3ca5db7d7170fa0df1b.jpg)'></div>
+</div>
+<div class='card__body'>
+<div class='overline card--content__type'>
+Lab
+</div>
+<h3 class='card--content__title'>
+Predict Baby Weight with TensorFlow on AI Platform
+</h3>
+<div class='card--content__description body-1'>
+<p>
+In this lab you train, evaluate, and deploy a machine learning model to predict a baby’s weight.  You then send requests to the model to make online predictions.  This lab is part of a series of labs on processing scientific data.
+</p>
+</div>
+</div>
+<div class='card__footer'>
+<div class='card__footer__left'>
+<span>Expert</span>
+</div>
+<div class='card__footer__right'>
+<div class='rateit' data-rateit-readonly='true' data-rateit-value='4.4655'></div>
+</div>
+</div>
+</a></div>
+
+</div>
+</h4>
+</div>
+
+</div>
+</ql-drawer-content>
+<ql-drawer end id='outline-drawer' open slot='drawer' width='320'>
+<div class='js-lab-content-outline lab-content__outline'>
+<a href='#step1'>GSP854</a><a href='#step2'>Overview</a><a href='#step3'>Setup and Requirements</a><a href='#step4'>Preparing your Google Cloud working environment</a><a href='#step5'>Preparing for AWS use</a><a href='#step6'>Creating access credentials</a><a href='#step7'>Setting your project</a><a href='#step8'>Using SSH keys for connecting to VM instances</a><a href='#step9'>Examining Terraform configuration files</a><a href='#step10'>Deploying VPC networks, VM instances, VPN gateways, and IPsec tunnels</a><a href='#step11'>Deploy with Terraform</a><a href='#step12'>Congratulations!</a>
+</div>
+</ql-drawer>
+</ql-drawer-container>
+</ql-drawer-content>
+</ql-drawer-container>
+<div class='lab-introduction js-lab-introduction is-hidden'>
+<div class='lab-introduction__inner'>
+<h1 class='headline-1'>Welcome to Your First Lab!</h1>
+<ql-icon-button class='js-skip-button'>close</ql-icon-button>
+<div class='lab-introduction__video'>
+<iframe allow='autoplay; encrypted-media' allowfullscreen frameborder='0' id='lab-introduction' src='https://www.youtube.com/embed/yF7EDXKTmoQ?enablejsapi=1&amp;rel=0&amp;showinfo=0'></iframe>
+</div>
+<a class='js-skip-button button button--outline'>Skip this video</a>
+</div>
+</div>
+
+
+
+</div>
+</main>
+
+
+<div class='modal fade' id='lab-details-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<div class='modal-body'>
+<p class='l-mbm'>
+In this lab, you will use Terraform to to create secure, private, site-to-site connections between Google Cloud and Amazon Web Services (AWS) using virtual private networks (VPNs).
+</p>
+<p>
+This lab is included in the quest
+<a href="/quests/44">Managing Cloud Infrastructure with Terraform</a>.
+If you complete this lab you&#39;ll receive credit for it when you enroll in this quest.
+</p>
+<p class='small-label l-mbs'>
+<strong>
+Duration:
+</strong>
+0m setup
+&middot;
+90m access
+&middot;
+90m completion
+</p>
+<p class='small-label l-mbs'>
+<strong>AWS Region:</strong>
+[] <strong></strong>
+</p>
+<p class='small-label l-mbs'>
+<span><strong>Levels: </strong>advanced</span>
+</p>
+<p class='small-label'>
+<strong>
+Permalink:
+</strong>
+<a href="https://www.qwiklabs.com/catalog_lab/3629">https://www.qwiklabs.com/catalog_lab/3629</a>
+</p>
+</div>
+<div class='modal-actions'>
+<a class='button button--text' data-dismiss='modal'>
+Got It
+</a>
+</div>
+
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='modal fade' id='lab-review-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<form class="simple_form js-lab-review-form" id="edit_lab_review_12410768" action="/lab_reviews/12410768" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="_method" value="patch" /><div class='modal-body'>
+<p class='label'>
+How satisfied are you with this lab?*
+</p>
+<div class='rateit js-rateit' data-rateit-max='5' data-rateit-min='0' data-rateit-resetable='false' data-rateit-step='1' data-rateit-value='5'></div>
+<div class='l-mtm'>
+
+<div class="control-group hidden lab_review_user_id"><div class="controls"><input class="hidden" type="hidden" value="3894861" name="lab_review[user_id]" id="lab_review_user_id" /></div></div>
+<div class="control-group hidden lab_review_classroom_id"><div class="controls"><input class="hidden" type="hidden" name="lab_review[classroom_id]" id="lab_review_classroom_id" /></div></div>
+<div class="control-group hidden lab_review_lab_id"><div class="controls"><input class="hidden" type="hidden" value="3629" name="lab_review[lab_id]" id="lab_review_lab_id" /></div></div>
+<div class="control-group hidden lab_review_focus_id"><div class="controls"><input class="hidden" type="hidden" name="lab_review[focus_id]" id="lab_review_focus_id" /></div></div>
+<div class="control-group hidden lab_review_rating"><div class="controls"><input class="hidden js-rating-input" type="hidden" value="2" name="lab_review[rating]" id="lab_review_rating" /></div></div>
+<div class="control-group text optional lab_review_comment"><label class="text optional control-label" for="lab_review_comment">Comment</label><div class="controls"><textarea class="text optional" name="lab_review[comment]" id="lab_review_comment">
+</textarea></div></div>
+</div>
+</div>
+<div class='modal-actions'>
+<a class='button button--text' data-dismiss='modal'>
+Cancel
+</a>
+<input type="submit" name="commit" value="Submit" disabled="disabled" id="submit" data-disabled="false" class="button" data-disable-with="Submit" />
+</div>
+</form>
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='modal fade' id='lab-access-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<a class='lab-access-modal-close' data-analytics-action='dismissed_lab_payment_modal' data-dismiss='modal'>
+<i class='material-icons'>close</i>
+</a>
+<form class="js-lab-access-form" action="/lab_onetime_coupons/activate?parent=catalog" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="&#x2713;" />
+<div class='modal-body'>
+<div class='lab-access-modal'>
+<input type="hidden" name="id" id="id" value="17869" />
+<input type="hidden" name="user_id" id="user_id" value="3894861" />
+<input type="hidden" name="launch_with_credits" id="launch_with_credits" value="0" class="js-launch-with-credits-input" />
+<input type="hidden" name="launch_with_subs" id="launch_with_subs" value="0" class="js-launch-with-subscription-input" />
+<input type="hidden" name="launch_with_access_code" id="launch_with_access_code" value="0" class="js-launch-with-access-code" />
+<div class='lab-access-modal__method'>
+<p>
+This lab costs
+7 Credits.
+</p>
+<p>
+1882 Credits
+available
+</p>
+<a class='button js-launch-with-credits-button js-lab-access-modal-button' data-analytics-action='clicked_launch_with_credits_button'>
+Launch with
+7 Credits
+</a>
+</div>
+<div class='lab-access-modal__method'>
+<p>
+Enter Lab Access Code:
+</p>
+<div class='lab-access-modal__code js-access-code'>
+<input type="text" name="uuid_1" id="uuid_1" value="" maxlength="4" placeholder="1234" class="js-access-code-input" />
+<input type="text" name="uuid_2" id="uuid_2" value="" maxlength="4" placeholder="1234" class="js-access-code-input" />
+<input type="text" name="uuid_3" id="uuid_3" value="" maxlength="4" placeholder="1234" class="js-access-code-input" />
+<input type="text" name="uuid_4" id="uuid_4" value="" maxlength="4" placeholder="1234" class="js-access-code-input" />
+</div>
+<a class='button js-launch-with-access-code-button js-lab-access-modal-button' data-analytics-action='clicked_launch_with_access_code_button'>
+Launch with Access Code
+</a>
+</div>
+</div>
+</div>
+</form>
+
+
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+
+
+<script>
+  $( function() {
+    ql.initMaterialInputs();
+    initChosen();
+    initSearch();
+    initTabs();
+    ql.list.init();
+    ql.favoriting.init();
+    ql.header.myAccount.init();
+    initTooltips();
+    ql.autocomplete.init();
+    ql.modals.init();
+    ql.toggleButtons.init();
+    ql.analytics.init();
+    ql.favoriting.init();
+  ql.labControlPanel.addRecaptchaErrorHandler();
+  initLabContent();
+  ql.labOutline.links.init();
+  initLabReviewModal();
+  initLabAccessModal();
+  ql.labAssessment.init();
+  ql.labData.init();
+  initLabTranslations( {"are_you_sure":"All done? If you end this lab, you will lose all your work. You may not be able to restart the lab if there is a quota limit. Are you sure you want to end this lab?\n","in_progress":"*In Progress*","ending":"*Ending*","starting":"*Starting, please wait*","end_concurrent_labs":"Sorry, you can only run one lab at a time. To start this lab, please confirm that you want all of your existing labs to end.\n","copied":"Copied","no_resource":"Error retrieving resource.","no_support":"No Support","mac_press":"Press ⌘-C to copy","thanks_review":"Thanks for reviewing this lab.","windows_press":"Press Ctrl-C to copy","days":"days"} );
+  ql.labRun.init();
+  ql.initHeader();
+  ql.navigation.init();
+  ql.navPanel.init();
+  ql.navigation.init();
+  
+  });
+</script>
+
+</body>
+</html>
+

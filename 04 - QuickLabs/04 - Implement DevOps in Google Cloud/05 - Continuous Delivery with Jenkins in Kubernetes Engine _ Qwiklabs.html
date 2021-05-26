@@ -1,0 +1,1158 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title>Continuous Delivery with Jenkins in Kubernetes Engine | Qwiklabs</title>
+<script>
+//<![CDATA[
+window.gon={};gon.current_user={"firstname":"DANIEL","lastname":"ENRIQUE SANDOVAL SANCHEZ","fullname":"DANIEL ENRIQUE SANDOVAL SANCHEZ","company":"Coursera","email":"desandovals@liverpool.com.mx","origin":"googlecoursera-run, lti-coursera","subscriptions":0,"id":"40414ff5fc280f833d9acca966912f93","qlCreatedAt":"2020-11-17 20:45:59 UTC","optIn":null,"current_organization_id":null,"current_organization_role":null};gon.segment="j4Im8pqIko0Lxq4wVVZWMPMM0EroHUvb";gon.deployment="run";gon.content={"type":"Lab","id":984,"name":"Continuous Delivery with Jenkins in Kubernetes Engine"};
+//]]>
+</script>
+<script>
+  dataLayer = [
+    {user: gon.current_user},
+    {content: gon.content}
+  ];
+</script>
+<script>
+  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer',"GTM-TQR88QK");
+</script>
+<script>
+  EVENT_SOURCE_BASE_URL = "https://run.qwiklabs.com/nchan-sub?id=";
+</script>
+<script src="https://cdn.qwiklabs.com/assets/hallofmirrors/polyfills/webcomponents-loader-408088dc333247a761de5f2b2a4ba1cabd2bc36579f83ba92a559eb3682a9b77.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/vendor-45d462772c30000424907184f70c7157e95fb6227698d1671c5051818a6f60d8.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/application-034d6698d9e8e4069d310e418a7827442046e71025a0e336e0896055be8a1153.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/hallofmirrors/hallofmirrors-b1177b2da0d0a4d1b239b0364e70f5a598873a2b8fb44c288c9428709123506c.js"></script>
+<!--[if lt IE 9]>
+<script src='http://html5shim.googlecode.com/svn/trunk/html5.js' type='text/javascript'></script>
+<![endif]-->
+<!--[endif]>  <![endif]-->
+<script type='application/ld+json'>
+{
+  "@context": "http://schema.org",
+  "@type": "WebSite",
+  "url": "https://www.qwiklabs.com/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://www.qwiklabs.com/catalog?keywords={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
+
+<meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="6SsK87U+/mAABRU1MuXsgid3p/uOiMXYv2p2cg/cpih5pR3CldXoPeLNejqQjjIRpBQW/fUqG9Gnj2maDnD2HA==" />
+<meta content='width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0' name='viewport'>
+<meta content='1rRsY0INj8RvwB5EF5pwdxt2A2P9aDgAlsICaJ0d5w0' name='google-site-verification'>
+<meta content='#3681E4' property='msapplication-TileColor'>
+<meta content='/favicon-144.png' property='msapplication-TileImage'>
+<meta content='[{&quot;id&quot;:&quot;recaptcha_experiment&quot;,&quot;optimize_id&quot;:&quot;dpViOcLkT3qS4TvL2mRojA&quot;,&quot;title&quot;:&quot;No Recaptcha shown for trusted users&quot;,&quot;variant_index&quot;:0,&quot;variant&quot;:&quot;original&quot;}]' name='active-experiments'>
+<meta content='{&quot;userId&quot;:3894861}' name='help-api-product-data'>
+<meta content='In this lab you will deploy and completely configure a continuous delivery pipeline using Jenkins running on Kubernetes Engine and go through the dev - deploy process.' name='description'>
+<meta content='Qwiklabs' name='author'>
+<meta content='Continuous Delivery with Jenkins in Kubernetes Engine | Qwiklabs' property='og:title'>
+<meta content='website' property='og:type'>
+<meta content='/favicon-144.png' property='og:image'>
+<meta content='Qwiklabs' property='og:site_name'>
+<meta content='In this lab you will deploy and completely configure a continuous delivery pipeline using Jenkins running on Kubernetes Engine and go through the dev - deploy process.' property='og:description'>
+<meta content='/qwiklabs_logo_900x887.png' property='og:logo' size='900x887'>
+<meta content='/qwiklabs_logo_994x187.png' property='og:logo' size='994x187'>
+
+
+<link href='/favicon-32.png' rel='shortcut icon'>
+<link color='#3681E4' href='/favicon-svg.svg' rel='mask-icon'>
+<link href='/favicon-180.png' rel='apple-touch-icon-precomposed'>
+
+
+
+<link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css?family=Oswald:400|Roboto+Mono:400,700|Roboto:300,400,500,700|Google+Sans:300,400,500,700|Google+Sans+Display:400|Material+Icons|Google+Material+Icons" />
+
+
+<link rel="stylesheet" media="all" href="https://cdn.qwiklabs.com/assets/application-3b0f6c441394eebd52ff10f04fb2923fdb7b1b4fec780e7fa8ef67f5dd2ef411.css" />
+
+
+
+</head>
+<body class='lab-show l-full no-nav application-new focuses focuses-show lab-show l-full no-nav '>
+<noscript>
+<iframe height='0' src='https://www.googletagmanager.com/ns.html?id=GTM-TQR88QK' style='display:none;visibility:hidden;' width='0'></iframe>
+</noscript>
+<span class='hidden' id='flash-sibling-before'></span>
+
+<div class='header-container light-theme'>
+<div class='header'>
+<ql-icon-button class='js-nav-toggle header__nav-panel-button l-mrm'>menu</ql-icon-button>
+<div class='header__title'>
+<ql-icon-button label="Back" href="https://www.qwiklabs.com/quests/141" id="527439fc36a88e53" target="_self">arrow_back</ql-icon-button><div class="mdl-tooltip" data-mdl-for="527439fc36a88e53">Back</div>
+
+<h1 class='headline-5'>
+Continuous Delivery with Jenkins in Kubernetes Engine
+</h1>
+</div>
+<div class='header__actions'>
+<ql-icon-button class='header__button--search js-header-search-bar-button'>search</ql-icon-button>
+<ql-icon-button id='share_984'>share</ql-icon-button>
+<ql-menu for='share_984'>
+<ql-menu-item>
+<a data-analytics-action="Shared to LinkedIn." data-analytics-category="Lab" data-analytics-label="Continuous Delivery with Jenkins in Kubernetes Engine" target="_blank" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fwww.qwiklabs.com%2Fcatalog_lab%2F984%3Futm_medium%3Dsocial%26utm_source%3Dlinkedin%26utm_campaign%3Dql-social-share"><ql-icon class='l-mrs'>post_linkedin</ql-icon>
+LinkedIn
+</a>
+</ql-menu-item>
+<ql-menu-item>
+<a data-analytics-action="Shared to Twitter." data-analytics-category="Lab" data-analytics-label="Continuous Delivery with Jenkins in Kubernetes Engine" target="_blank" href="https://twitter.com/intent/tweet?text=Learn%20cloud%20tech%20through%20hands-on%20training%20on%20%23Qwiklabs%21&amp;url=https%3A%2F%2Fwww.qwiklabs.com%2Fcatalog_lab%2F984%3Futm_medium%3Dsocial%26utm_source%3Dtwitter%26utm_campaign%3Dql-social-share&amp;hashtags="><ql-icon class='l-mrs'>post_twitter</ql-icon>
+Twitter
+</a>
+</ql-menu-item>
+<ql-menu-item>
+<a data-analytics-action="Shared to Facebook." data-analytics-category="Lab" data-analytics-label="Continuous Delivery with Jenkins in Kubernetes Engine" target="_blank" href="https://facebook.com/sharer.php?display=popup&amp;u=https%3A%2F%2Fwww.qwiklabs.com%2Fcatalog_lab%2F984%3Futm_medium%3Dsocial%26utm_source%3Dfacebook%26utm_campaign%3Dql-social-share"><ql-icon class='l-mrs'>post_facebook</ql-icon>
+Facebook
+</a>
+</ql-menu-item>
+<ql-menu-item>
+<ql-copyable-input label='Share Link' value='https://www.qwiklabs.com/catalog_lab/984'></ql-copyable-input>
+</ql-menu-item>
+</ql-menu>
+
+<a class="icon-button js-favorite-button favorite-button" id="CatalogItem-1104-favorite-button" data-type="CatalogItem" data-id="1104" data-name="Continuous Delivery with Jenkins in Kubernetes Engine" href="/favorite.json?item_id=1104&amp;item_type=CatalogItem"><ql-icon>favorite_border</ql-icon>
+</a><div class='mdl-tooltip js-tooltip' for='CatalogItem-1104-favorite-button'>
+Add to favorites
+</div>
+
+
+
+<ql-icon-button id='control-panel-target' style='display: none;'>
+dashboard
+</ql-icon-button>
+<ql-menu for='control-panel-target' id='control-panel-menu'></ql-menu>
+
+<ql-icon-button id='help-menu-button'>help</ql-icon-button>
+<div class='mdl-tooltip js-tooltip' data-mdl-for='help-menu-button'>
+Help
+</div>
+<ql-menu for='help-menu-button' id='help-menu'>
+<ql-menu-item>
+<ql-help context='lab' data-analytics-action='opened_help' data-analytics-label='lab' productdata='{&quot;userId&quot;:3894861}'>
+Help Center
+</ql-help>
+</ql-menu-item>
+<ql-menu-item>
+<a target="_blank" class="ql-body-1" href="https://support.google.com/qwiklabs/contact/contact_us">Email support</a>
+</ql-menu-item>
+</ql-menu>
+
+<ql-icon-button id='language'>language</ql-icon-button>
+<div class='mdl-menu mdl-menu__bottom-right mdl-js-menu elevation-3' for='language'>
+<a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ar" href="/focuses/1104?locale=ar&amp;parent=catalog">العربية‬‎
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="de" href="/focuses/1104?locale=de&amp;parent=catalog">Deutsch
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="en" href="/focuses/1104?locale=en&amp;parent=catalog">English
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="es" href="/focuses/1104?locale=es&amp;parent=catalog">español (Latinoamérica)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="fr" href="/focuses/1104?locale=fr&amp;parent=catalog">français
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="id" href="/focuses/1104?locale=id&amp;parent=catalog">bahasa Indonesia
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="it" href="/focuses/1104?locale=it&amp;parent=catalog">Italiano
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ja" href="/focuses/1104?locale=ja&amp;parent=catalog">日本語
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ko" href="/focuses/1104?locale=ko&amp;parent=catalog">한국어
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pl" href="/focuses/1104?locale=pl&amp;parent=catalog">Polski
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pt_BR" href="/focuses/1104?locale=pt_BR&amp;parent=catalog">português (Brasil)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pt_PT" href="/focuses/1104?locale=pt_PT&amp;parent=catalog">português (Portugal)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ru" href="/focuses/1104?locale=ru&amp;parent=catalog">русский
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="tr" href="/focuses/1104?locale=tr&amp;parent=catalog">Türkçe
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="zh" href="/focuses/1104?locale=zh&amp;parent=catalog">简体中文
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="zh_TW" href="/focuses/1104?locale=zh_TW&amp;parent=catalog">繁體中文
+</a></div>
+<button class='icon-button' id='my_account'>
+<ql-avatar src='https://lh3.googleusercontent.com/a-/AOh14Gh6Bmcr7vfcCi5iPAH2qDeJgSaD6RLv1Muiv9mceA=s320-c'></ql-avatar>
+</button>
+<ql-menu for='my_account' open>
+<div class='my-account-menu'>
+<ql-avatar class='l-mtl l-mbl' size='120' src='https://lh3.googleusercontent.com/a-/AOh14Gh6Bmcr7vfcCi5iPAH2qDeJgSaD6RLv1Muiv9mceA=s320-c'></ql-avatar>
+<div class='my-account-menu__user-info l-mbl'>
+<h4 class='ql-subhead-1'>DANIEL ENRIQUE SANDOVAL SANCHEZ</h4>
+<p class='ql-body-2 text--light'>desandovals@liverpool.com.mx</p>
+<p class='ql-body-2 text--light'>
+</p>
+<a class="text--green ql-subhead-2" href="/my_account/payments"><ql-chip positive>
+1860 Credits
+</ql-chip>
+</a></div>
+<div class='buttons l-mbl'>
+<a class="button button--hairline l-mrm" id="profile" href="/public_profiles/7a1e8d39-fa01-4103-ac38-c0184ccdbd0c">Profile</a>
+<a class="button button--hairline" id="settings" href="/my_account/profile">Settings</a>
+</div>
+<hr>
+<ql-button data-analytics-action='clicked_sign_out' href='/users/sign_out' method='delete'>
+Sign Out
+</ql-button>
+<div class='privacy l-mtl'>
+<a class="ql-caption text--light" href="/privacy_policy">Privacy</a>
+<span class='ql-caption text--light l-mls l-mrs'>&middot;</span>
+<a class="ql-caption text--light" href="/terms_of_service">Terms</a>
+</div>
+</div>
+</ql-menu>
+
+</div>
+</div>
+<div class='header__search-bar js-header-search-bar'>
+<form class="js-search-form-mobile" onsubmit="ql.searchFilter(); return false;" action="/searches/elasticsearch" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="LKLpQt0HFPnwEZY9fQwmtGvHQukVNlMjn+mDyL8YhHS8LP5z/ewCpBLZ+TLfZ/gn6KTz726UjSqHDJwgvrTUQA==" />
+<input type="text" name="keywords" id="keywords" placeholder="Search" maxlength="255" aria-label="catalog search bar" />
+</form>
+
+<ql-icon-button class='js-close-search-bar'>close</ql-icon-button>
+</div>
+</div>
+
+<nav class='nav-bar'>
+<a class="nav-bar__item js-navigation-button" href="/"><ql-icon class='nav-bar__item__icon'>
+home
+</ql-icon>
+<span class='nav-bar__item__label'>
+Home
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button  active" aria-current="page" href="/catalog"><ql-icon class='nav-bar__item__icon'>
+school
+</ql-icon>
+<span class='nav-bar__item__label'>
+Catalog
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="/my_learning"><ql-icon class='nav-bar__item__icon'>
+event_note
+</ql-icon>
+<span class='nav-bar__item__label'>
+My Learning
+</span>
+</a>
+</nav>
+
+<nav class='nav-panel js-nav-panel'>
+<div class='nav-panel__logo'>
+<div class='logo logo--blue'></div>
+</div>
+<a title="Home" tabindex="-1" class="nav-panel__item js-navigation-button" href="/"><ql-icon class='nav-panel__item__icon'>
+home
+</ql-icon>
+<div class='nav-panel__item__label'>
+Home
+</div>
+</a>
+<a title="Catalog" tabindex="-1" class="nav-panel__item js-navigation-button active" aria-current="page" href="/catalog"><ql-icon class='nav-panel__item__icon'>
+school
+</ql-icon>
+<div class='nav-panel__item__label'>
+Catalog
+</div>
+</a>
+<a title="My Learning" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_learning"><ql-icon class='nav-panel__item__icon'>
+event_note
+</ql-icon>
+<div class='nav-panel__item__label'>
+My Learning
+</div>
+</a>
+<div class='nav-panel__spacer'></div>
+<a title="Profile" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/profile"><ql-icon class='nav-panel__item__icon'>
+account_circle
+</ql-icon>
+<div class='nav-panel__item__label'>
+Profile
+</div>
+</a>
+<a title="Credits &amp; Subscriptions" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/credits"><ql-icon class='nav-panel__item__icon'>
+money
+</ql-icon>
+<div class='nav-panel__item__label'>
+Credits &amp; Subscriptions
+</div>
+</a>
+<a title="Security" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/security"><ql-icon class='nav-panel__item__icon'>
+security
+</ql-icon>
+<div class='nav-panel__item__label'>
+Security
+</div>
+</a>
+<div class='nav-panel__spacer'></div>
+<a class="nav-panel__item" tabindex="-1" href="#"><ql-help>
+<div class='nav-panel__help-item'>
+<ql-icon class='nav-panel__item__icon'>help</ql-icon>
+<div class='nav-panel__item__label'>
+Help
+</div>
+</div>
+</ql-help>
+</a><div class='nav-panel__small-links'>
+<a tabindex="-1" href="/privacy_policy">Privacy</a>
+<a tabindex="-1" href="/terms_of_service">Terms</a>
+</div>
+</nav>
+<div class='nav-panel__overlay js-nav-toggle'></div>
+
+<main class='js-main'>
+<div class='l-main-wrapper' id='main-wrapper'>
+
+
+
+
+
+
+
+<div class='lab-assessment__tab js-open-lab-assessment-panel'>
+<h6 class='js-lab-assessment-total-score'>
+&mdash;/100
+</h6>
+</div>
+<div class='lab-assessment__panel js-lab-assessment-panel'>
+<div class='lab-assessment__panel__header'>
+<h4>Checkpoints</h4>
+<ql-icon-button class='js-close-lab-assessment-panel'>arrow_forward</ql-icon-button>
+</div>
+<div class='lab-assessment__step'>
+<p class='lab-assessment__step__title'>
+Create a Kubernetes cluster (zone: us-east1-d)
+</p>
+<div class='lab-assessment__step__action'>
+<a class='button js-show-run-step-button' step_no='1'>
+Check my progress
+</a>
+<p class='lab-assessment__step__score'>
+<span class='js-assessment-step-score-1'>
+</span>
+/ 30
+</p>
+</div>
+</div>
+
+<div class='lab-assessment__step'>
+<p class='lab-assessment__step__title'>
+Configure and Install Jenkins
+</p>
+<div class='lab-assessment__step__action'>
+<a class='button js-show-run-step-button' step_no='2'>
+Check my progress
+</a>
+<p class='lab-assessment__step__score'>
+<span class='js-assessment-step-score-2'>
+</span>
+/ 30
+</p>
+</div>
+</div>
+
+<div class='lab-assessment__step'>
+<p class='lab-assessment__step__title'>
+Create the production and canary deployments
+</p>
+<div class='lab-assessment__step__action'>
+<a class='button js-show-run-step-button' step_no='3'>
+Check my progress
+</a>
+<p class='lab-assessment__step__score'>
+<span class='js-assessment-step-score-3'>
+</span>
+/ 20
+</p>
+</div>
+</div>
+
+<div class='lab-assessment__step'>
+<p class='lab-assessment__step__title'>
+Create a repository
+</p>
+<div class='lab-assessment__step__action'>
+<a class='button js-show-run-step-button' step_no='4'>
+Check my progress
+</a>
+<p class='lab-assessment__step__score'>
+<span class='js-assessment-step-score-4'>
+</span>
+/ 20
+</p>
+</div>
+</div>
+
+</div>
+<ql-drawer-container class='js-lab-state' data-analytics-payload='{&quot;label&quot;:&quot;Continuous Delivery with Jenkins in Kubernetes Engine&quot;,&quot;lab_name&quot;:&quot;Continuous Delivery with Jenkins in Kubernetes Engine&quot;,&quot;classroom_name&quot;:null,&quot;deployment&quot;:&quot;run&quot;}' data-focus-id='1104' data-lab-billing-limit='0.0' data-lab-duration='4500' data-parent='catalog' data-payment-required data-recaptcha-enabled id='lab-container'>
+<ql-drawer id='terminal-drawer' slot='drawer' style='width: calc(100% - 480px)'>
+<iframe allow='clipboard-read' class='terminal' id='embedded-resource'></iframe>
+</ql-drawer>
+<ql-drawer-content class='js-lab-wrapper' id='lab-content' slot='drawer-content'>
+<ql-drawer-container id='lab-content-container'>
+<ql-drawer id='control-panel-drawer' open slot='drawer' width='320'>
+<ql-lab-control-panel class='ql-lab-control-panel__max-height control-panel js-lab-control-panel' connectionFiles='[]' labControlButton='{&quot;disabled&quot;:false,&quot;pending&quot;:false,&quot;running&quot;:false}' labDetails='[]' labTimer='{&quot;ticking&quot;:false,&quot;secondsRemaining&quot;:4500}' studentResources='[]'>
+<script src="https://www.recaptcha.net/recaptcha/api.js?render=6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr"   ></script>
+        <script>
+          // Define function so that we can call it again later if we need to reset it
+          // This executes reCAPTCHA and then calls our callback.
+          function executeRecaptchaForStartLab() {
+            grecaptcha.ready(function() {
+              grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}).then(function(token) {
+                setInputWithRecaptchaResponseTokenForStartLab('g-recaptcha-response-data-start-lab', token)
+              });
+            });
+          };
+          // Invoke immediately
+          executeRecaptchaForStartLab()
+
+          // Async variant so you can await this function from another async function (no need for
+          // an explicit callback function then!)
+          // Returns a Promise that resolves with the response token.
+          async function executeRecaptchaForStartLabAsync() {
+            return new Promise((resolve, reject) => {
+              grecaptcha.ready(async function() {
+                resolve(await grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}))
+              });
+            })
+          };
+
+                    var setInputWithRecaptchaResponseTokenForStartLab = function(id, token) {
+            var element = document.getElementById(id);
+            element.value = token;
+          }
+
+        </script>
+<input type="hidden" name="g-recaptcha-response-data[start_lab]" id="g-recaptcha-response-data-start-lab" data-sitekey="6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr" class="g-recaptcha g-recaptcha-response "/>
+
+<div class='hidden' id='recaptcha-v2-start-lab' slot='recaptcha'>
+<script src="https://www.recaptcha.net/recaptcha/api.js" async defer ></script>
+<div data-sitekey="6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV" data-callback="recaptchaComplete" data-expired-callback="expireV2Token" class="g-recaptcha "></div>
+          <noscript>
+            <div>
+              <div style="width: 302px; height: 422px; position: relative;">
+                <div style="width: 302px; height: 422px; position: absolute;">
+                  <iframe
+                    src="https://www.recaptcha.net/recaptcha/api/fallback?k=6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV"
+                    name="ReCAPTCHA"
+                    style="width: 302px; height: 422px; border-style: none; border: 0; overflow: hidden;">
+                  </iframe>
+                </div>
+              </div>
+              <div style="width: 300px; height: 60px; border-style: none;
+                bottom: 12px; left: 25px; margin: 0px; padding: 0px; right: 25px;
+                background: #f9f9f9; border: 1px solid #c1c1c1; border-radius: 3px;">
+                <textarea id="g-recaptcha-response" name="g-recaptcha-response"
+                  class="g-recaptcha-response"
+                  style="width: 250px; height: 40px; border: 1px solid #c1c1c1;
+                  margin: 10px 25px; padding: 0px; resize: none;">
+                </textarea>
+              </div>
+            </div>
+          </noscript>
+
+</div>
+</ql-lab-control-panel>
+</ql-drawer>
+<ql-drawer-content id='lab-instructions' slot='drawer-content'>
+<div class='alert alert--fake js-alert'>
+<p class='alert__message js-alert-message'></p>
+<a class='alert__close js-alert-close'>
+<i class='fa fa-times'></i>
+</a>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='js-lab-content lab-content__renderable-instructions'>
+<div class='lab-preamble'>
+<h1 class='lab-preamble__title'>
+Continuous Delivery with Jenkins in Kubernetes Engine
+</h1>
+<div class='lab-preamble__details subtitle-headline-1'>
+<span>1 hour 15 minutes</span>
+<span>7 Credits</span>
+<div class='lab__rating'>
+<a href="/focuses/1104/reviews?parent=catalog"><div class='rateit' data-rateit-readonly='true' data-rateit-value='4.4148'></div>
+
+</a><a data-target='#lab-review-modal' data-toggle='modal'>
+Rate Lab
+</a>
+</div>
+</div>
+</div>
+
+<div class='js-markdown-instructions markdown-lab-instructions' id='markdown-lab-instructions'>
+
+
+
+<h2 id="step1">GSP051</h2>
+<p><img alt="Google Cloud Self-Paced Labs" src="https://cdn.qwiklabs.com/GMOHykaqmlTHiqEeQXTySaMXYPHeIvaqa2qHEzw6Occ%3D"></p>
+
+<h2 id="step2">Overview</h2>
+<p>In this lab, you will learn how to set up a continuous delivery pipeline with <code>Jenkins</code> on Kubernetes engine. Jenkins is the go-to automation server used by developers who frequently integrate their code in a shared repository. The solution you'll build in this lab will be similar to the following diagram:</p>
+<p><img alt="overview.png" src="https://cdn.qwiklabs.com/1b%2B9D20QnfRjAF8c6xlXmexot7TDcOsYzsRwp%2FH4ErE%3D"></p>
+<p>You can find more details about running Jenkins on Kubernetes <a href="https://cloud.google.com/solutions/jenkins-on-container-engine" target="_blank">here</a>.</p>
+<h3><strong>What you'll do</strong></h3>
+<p>In this lab, you will complete the following tasks:</p>
+<ul>
+<li>Provision a Jenkins application into a Kubernetes Engine Cluster</li>
+<li>Set up your Jenkins application using Helm Package Manager</li>
+<li>Explore the features of a Jenkins application</li>
+<li>Create and exercise a Jenkins pipeline</li>
+</ul>
+<h3>Prerequisites</h3>
+<p>This is an <strong>advanced level</strong> lab. Before taking it, you should be comfortable with at least the basics of shell programming, Kubernetes, and Jenkins. Here are some Qwiklabs that can get you up to speed:</p>
+<ul>
+<li><a href="https://google.qwiklabs.com/catalog_lab/944" target="_blank">Introduction to Docker</a></li>
+<li><a href="https://google.qwiklabs.com/catalog_lab/468" target="_blank">Hello Node Kubernetes</a></li>
+<li><a href="https://google.qwiklabs.com/catalog_lab/572" target="_blank">Managing Deployments Using Kubernetes Engine</a></li>
+<li><a href="https://google.qwiklabs.com/catalog_lab/1093" target="_blank">Setting up Jenkins on Kubernetes Engine</a></li>
+</ul>
+<p>Once you are prepared, scroll down to learn more about Kubernetes, Jenkins, and Continuous Delivery.</p>
+<h3>What is Kubernetes Engine?</h3>
+<p>Kubernetes Engine is Google Cloud's hosted version of <code>Kubernetes</code> - a powerful cluster manager and orchestration system for containers. Kubernetes is an open source project that can run on many different environments—from laptops to high-availability multi-node clusters; from virtual machines to bare metal. As mentioned before, Kubernetes apps are built on <code>containers</code> - these are lightweight applications bundled with all the necessary dependencies and libraries to run them. This underlying structure makes Kubernetes applications highly available, secure, and quick to deploy—an ideal framework for cloud developers.</p>
+<h3>What is Jenkins?</h3>
+<p><a href="https://jenkins.io/" target="_blank">Jenkins</a> is an open-source automation server that lets you flexibly orchestrate your build, test, and deployment pipelines. Jenkins allows developers to iterate quickly on projects without worrying about overhead issues that can stem from continuous delivery.</p>
+<h3>What is Continuous Delivery / Continuous Deployment?</h3>
+<p>When you need to set up a continuous delivery (CD) pipeline, deploying Jenkins on Kubernetes Engine provides important benefits over a standard VM-based deployment.</p>
+<p>When your build process uses containers, one virtual host can run jobs on multiple operating systems. Kubernetes Engine provides <code>ephemeral build executors</code>—these are only utilized when builds are actively running, which leaves resources for other cluster tasks such as batch processing jobs. Another benefit of ephemeral build executors is <em>speed</em>—they launch in a matter of seconds.</p>
+<p>Kubernetes Engine also comes pre-equipped with Google's global load balancer, which you can use to automate web traffic routing to your instance(s). The load balancer handles SSL termination and utilizes a global IP address that's configured with Google's backbone network—coupled with your web front, this load balancer will always set your users on the fastest possible path to an application instance.</p>
+<p>Now that you've learned a little bit about Kubernetes, Jenkins, and how the two interact in a CD pipeline, it's time to go build one.</p>
+<h2 id="step3">Setup</h2>
+<h4>Before you click the Start Lab button</h4>
+<p>Read these instructions. Labs are timed and you cannot pause them. The timer, which starts when you click <strong>Start Lab</strong>, shows how long Google Cloud resources will be made available to you.</p>
+<p>This Qwiklabs hands-on lab lets you do the lab activities yourself in a real cloud environment, not in a simulation or demo environment. It does so by giving you new, temporary credentials that you use to sign in and access Google Cloud for the duration of the lab.</p>
+<h4>What you need</h4>
+<p>To complete this lab, you need:</p>
+<ul>
+<li>Access to a standard internet browser (Chrome browser recommended).</li>
+<li>Time to complete the lab.</li>
+</ul>
+<p><strong>Note:</strong> If you already have your own personal Google Cloud account or project, do not use it for this lab.</p>
+<p><strong>Note:</strong> If you are using a Pixelbook, open an Incognito window to run this lab.</p>
+
+<h4>How to start your lab and sign in to the Google Cloud Console</h4>
+<ol>
+<li>
+<p>Click the <strong>Start Lab</strong> button. If you need to pay for the lab, a pop-up opens for you to select your payment method.
+On the left is a panel populated with the temporary credentials that you must use for this lab.</p>
+<p><img alt="Open Google Console" src="https://cdn.qwiklabs.com/%2FtHp4GI5VSDyTtdqi3qDFtevuY014F88%2BFow%2FadnRgE%3D"></p>
+</li>
+<li>
+<p>Copy the username, and then click <strong>Open Google Console</strong>.
+The lab spins up resources, and then opens another tab that shows the <strong>Sign in</strong> page.</p>
+<p><img alt="Sign in" src="https://cdn.qwiklabs.com/VkUIAFY2xX3zoHgmWqYKccRLwFrR4BfARLd5ojmlbhs%3D"></p>
+<p><strong><em>Tip:</em></strong> Open the tabs in separate windows, side-by-side.</p>
+<aside>
+ If you see the <strong>Choose an account</strong> page, click <strong>Use Another Account</strong>.
+<img alt="Choose an account" src="https://cdn.qwiklabs.com/eQ6xPnPn13GjiJP3RWlHWwiMjhooHxTNvzfg1AL2WPw%3D">
+</aside>
+</li>
+<li>
+<p>In the <strong>Sign in</strong> page, paste the username that you copied from the Connection Details panel. Then copy and paste the password.</p>
+<p><strong><em>Important:</em></strong> You must use the credentials from the Connection Details panel. Do not use your Qwiklabs credentials. If you have your own Google Cloud account, do not use it for this lab (avoids incurring charges).</p>
+</li>
+<li>
+<p>Click through the subsequent pages:</p>
+<ul>
+<li>Accept the terms and conditions.</li>
+<li>Do not add recovery options or two-factor authentication (because this is a temporary account).</li>
+<li>Do not sign up for free trials.</li>
+</ul>
+</li>
+</ol>
+<p>After a few moments, the Cloud Console opens in this tab.</p>
+<aside>
+<strong>Note:</strong> You can view the menu with a list of Google Cloud Products and Services by clicking the <strong>Navigation menu</strong> at the top-left.
+<img alt="Cloud Console Menu" src="https://cdn.qwiklabs.com/9vT7xPlxoNP%2FPsK0J8j0ZPFB4HnnpaIJVCDByaBrSHg%3D">
+</aside>
+
+<h3>Activate Cloud Shell</h3>
+<p>Cloud Shell is a virtual machine that is loaded with development tools. It offers a persistent 5GB home directory and runs on the Google Cloud. Cloud Shell provides command-line access to your Google Cloud resources.</p>
+<p>In the Cloud Console, in the top right toolbar, click the <strong>Activate Cloud Shell</strong> button.</p>
+<p><img alt="Cloud Shell icon" src="https://cdn.qwiklabs.com/vdY5e%2Fan9ZGXw5a%2FZMb1agpXhRGozsOadHURcR8thAQ%3D"></p>
+<p>Click <strong>Continue</strong>.</p>
+<p><img alt="cloudshell_continue.png" src="https://cdn.qwiklabs.com/lr3PBRjWIrJ%2BMQnE8kCkOnRQQVgJnWSg4UWk16f0s%2FA%3D"></p>
+<p>It takes a few moments to provision and connect to the environment. When you are connected, you are already authenticated, and the project is set to your <em>PROJECT_ID</em>. For example:</p>
+<p><img alt="Cloud Shell Terminal" src="https://cdn.qwiklabs.com/hmMK0W41Txk%2B20bQyuDP9g60vCdBajIS%2B52iI2f4bYk%3D"></p>
+<p><code>gcloud</code> is the command-line tool for Google Cloud. It comes pre-installed on Cloud Shell and supports tab-completion.</p>
+<p>You can list the active account name with this command:</p>
+<pre><code>gcloud auth list&#x000A;</code></pre>
+<p>(Output)</p>
+<pre><code class="language-output prettyprint">Credentialed accounts:&#x000A; - &lt;myaccount&gt;@&lt;mydomain&gt;.com (active)&#x000A;</code></pre>
+<p>(Example output)</p>
+<pre><code class="language-Output prettyprint">Credentialed accounts:&#x000A; - google1623327_student@qwiklabs.net&#x000A;</code></pre>
+<p>You can list the project ID with this command:</p>
+<pre><code>gcloud config list project&#x000A;</code></pre>
+<p>(Output)</p>
+<pre><code class="language-output prettyprint">[core]&#x000A;project = &lt;project_ID&gt;&#x000A;</code></pre>
+<p>(Example output)</p>
+<pre><code class="language-Output prettyprint">[core]&#x000A;project = qwiklabs-gcp-44776a13dea667a6&#x000A;</code></pre>
+<aside>
+  For full documentation of <code>gcloud</code> see the <a href="https://cloud.google.com/sdk/gcloud" target="_blank">gcloud command-line tool overview</a>.
+
+</aside>
+
+<h2 id="step4">Clone the repository</h2>
+<p>To get set up, open a new session in Cloud Shell and run the following command to set your zone <code>us-east1-d</code>:</p>
+<pre><code>gcloud config set compute/zone us-east1-d&#x000A;</code></pre>
+<p>Then clone the lab's sample code:</p>
+<pre><code>git clone https://github.com/GoogleCloudPlatform/continuous-deployment-on-kubernetes.git&#x000A;</code></pre>
+<p>Now change to the correct directory:</p>
+<pre><code>cd continuous-deployment-on-kubernetes&#x000A;</code></pre>
+<h2 id="step5">Provisioning Jenkins</h2>
+<h3><strong>Creating a Kubernetes cluster</strong></h3>
+<p>Now, run the following command to provision a Kubernetes cluster:</p>
+<pre><code>gcloud container clusters create jenkins-cd \&#x000A;--num-nodes 2 \&#x000A;--machine-type n1-standard-2 \&#x000A;--scopes "https://www.googleapis.com/auth/source.read_write,cloud-platform"&#x000A;</code></pre>
+<p>This step can take up to several minutes to complete. The extra scopes enable Jenkins to access Cloud Source Repositories and Google Container Registry.</p>
+<h3>Test Completed Task</h3>
+<p>Click <strong>Check my progress</strong> to verify your performed task. If you have successfully created Kubernetes cluster, you'll see an assessment score.</p>
+<ql-activity-tracking step="1">
+    Create a Kubernetes cluster (zone: us-east1-d)
+</ql-activity-tracking>
+<p>Before continuing, confirm that your cluster is running by executing the following command:</p>
+<pre><code>gcloud container clusters list&#x000A;</code></pre>
+<p>Now, get the credentials for your cluster:</p>
+<pre><code>gcloud container clusters get-credentials jenkins-cd&#x000A;</code></pre>
+<p>Kubernetes Engine uses these credentials to access your newly provisioned cluster—confirm that you can connect to it by running the following command:</p>
+<pre><code>kubectl cluster-info&#x000A;</code></pre>
+<h2 id="step6">Setup Helm</h2>
+<p>In this lab, you will use Helm to install Jenkins from the Charts repository. Helm is a package manager that makes it easy to configure and deploy Kubernetes applications. Once you have Jenkins installed, you'll be able to set up your CI/CD pipeline.</p>
+<ol>
+<li>
+<p>Add Helm's stable chart repo:</p>
+</li>
+</ol>
+<pre><code>helm repo add jenkins https://charts.jenkins.io&#x000A;</code></pre>
+<ol start="2">
+<li>
+<p>Ensure the repo is up to date:</p>
+</li>
+</ol>
+<pre><code>helm repo update&#x000A;</code></pre>
+<h2 id="step7">Configure and Install Jenkins</h2>
+<p>You will use a custom <code>values</code> file to add the Google Cloud specific plugin necessary to use service account credentials to reach your Cloud Source Repository.</p>
+<ol>
+<li>
+<p>Use the Helm CLI to deploy the chart with your configuration settings.</p>
+</li>
+</ol>
+<pre><code>helm install cd jenkins/jenkins -f jenkins/values.yaml --version 1.2.2 --wait&#x000A;</code></pre>
+<p>This command may take a couple minutes to complete.</p>
+<h3>Test Completed Task</h3>
+<p>Click <strong>Check my progress</strong> to verify your performed task. If you have successfully configure Jenkins chart you will see an assessment score.</p>
+<ql-activity-tracking step="2">
+    Configure and Install Jenkins
+</ql-activity-tracking>
+<ol start="2">
+<li>
+<p>Once that command completes ensure the Jenkins pod goes to the <code>Running</code> state and the container is in the READY state:</p>
+</li>
+</ol>
+<pre><code>kubectl get pods&#x000A;</code></pre>
+<p><strong>Example Output:</strong></p>
+<pre><code>NAME                          READY     STATUS    RESTARTS   AGE&#x000A;cd-jenkins-7c786475dd-vbhg4   1/1       Running   0          1m&#x000A;</code></pre>
+<ol start="3">
+<li>
+<p>Configure the Jenkins service account to be able to deploy to the cluster.</p>
+</li>
+</ol>
+<pre><code>kubectl create clusterrolebinding jenkins-deploy --clusterrole=cluster-admin --serviceaccount=default:cd-jenkins&#x000A;</code></pre>
+<p>You should receive the following output:</p>
+<pre><code class="language-output prettyprint">clusterrolebinding.rbac.authorization.k8s.io/jenkins-deploy created&#x000A;</code></pre>
+<ol start="4">
+<li>
+<p>Run the following command to setup port forwarding to the Jenkins UI from the Cloud Shell</p>
+</li>
+</ol>
+<pre><code>export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/component=jenkins-master" -l "app.kubernetes.io/instance=cd" -o jsonpath="{.items[0].metadata.name}")&#x000A;kubectl port-forward $POD_NAME 8080:8080 &gt;&gt; /dev/null &amp;&#x000A;</code></pre>
+<ol start="5">
+<li>
+<p>Now, check that the Jenkins Service was created properly:</p>
+</li>
+</ol>
+<pre><code>kubectl get svc&#x000A;</code></pre>
+<p><strong>Example Output:</strong></p>
+<pre><code>NAME               CLUSTER-IP     EXTERNAL-IP   PORT(S)     AGE&#x000A;cd-jenkins         10.35.249.67   &lt;none&gt;        8080/TCP    3h&#x000A;cd-jenkins-agent   10.35.248.1    &lt;none&gt;        50000/TCP   3h&#x000A;kubernetes         10.35.240.1    &lt;none&gt;        443/TCP     9h&#x000A;</code></pre>
+<p>You are using the <a href="https://wiki.jenkins-ci.org/display/JENKINS/Kubernetes+Plugin" target="_blank">Kubernetes Plugin</a> so that our builder nodes will be automatically launched as necessary when the Jenkins master requests them. Upon completion of their work, they will automatically be turned down and their resources added back to the clusters resource pool.</p>
+<p>Notice that this service exposes ports <code>8080</code> and <code>50000</code> for any pods that match the <code>selector</code>. This will expose the Jenkins web UI and builder/agent registration ports within the Kubernetes cluster. Additionally, the <code>jenkins-ui</code> services is exposed using a ClusterIP so that it is not accessible from outside the cluster.</p>
+<h2 id="step8">Connect to Jenkins</h2>
+<ol>
+<li>
+<p>The Jenkins chart will automatically create an admin password for you. To retrieve it, run:</p>
+</li>
+</ol>
+<pre><code>printf $(kubectl get secret cd-jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo&#x000A;</code></pre>
+<ol start="2">
+<li>To get to the Jenkins user interface, click on the <strong>Web Preview</strong> button in cloud shell, then click <strong>Preview on port 8080</strong>:</li>
+</ol>
+<p><img alt="web_prev.png" src="https://cdn.qwiklabs.com/wy13PEPdV6ZbYMJR2tmk3iKe%2FEyVDXVWtrWFVJeZUXk%3D"></p>
+<ol start="3">
+<li>You should now be able to log in with username <code>admin</code> and your auto-generated password.</li>
+</ol>
+<p>You now have Jenkins set up in your Kubernetes cluster! Jenkins will drive your automated CI/CD pipelines in the next sections.</p>
+<h2 id="step9">Understanding the Application</h2>
+<p>You'll deploy the sample application, <code>gceme</code>, in your continuous deployment pipeline. The application is written in the Go language and is located in the repo's sample-app directory. When you run the gceme binary on a Compute Engine instance, the app displays the instance's metadata in an info card.</p>
+<p><img alt="90fb779a65809b9e.png" src="https://cdn.qwiklabs.com/ceqFX6Vwtd12NSBtnNhrkemKfRSLHbCmFZiLn8WmC98%3D"></p>
+<p>The application mimics a microservice by supporting two operation modes.</p>
+<ul>
+<li>In <strong>backend mode</strong>: gceme listens on port 8080 and returns Compute Engine instance metadata in JSON format.</li>
+<li>In <strong>frontend mode</strong>: gceme queries the backend gceme service and renders the resulting JSON in the user interface.</li>
+</ul>
+<p><img alt="fc22b68ab20dfe0e.png" src="https://cdn.qwiklabs.com/P1T5JBWWprA4iLf%2FB5%2BO6as7otLE25YBde57gzZwSz4%3D"></p>
+<h2 id="step10">Deploying the Application</h2>
+<p>You will deploy the application into two different environments:</p>
+<ul>
+<li>
+<strong>Production</strong>: The live site that your users access.</li>
+<li>
+<strong>Canary</strong>: A smaller-capacity site that receives only a percentage of your user traffic. Use this environment to validate your software with live traffic before it's released to all of your users.</li>
+</ul>
+<p>In Google Cloud Shell, navigate to the sample application directory:</p>
+<pre><code>cd sample-app&#x000A;</code></pre>
+<p>Create the Kubernetes namespace to logically isolate the deployment:</p>
+<pre><code>kubectl create ns production&#x000A;</code></pre>
+
+<p>Create the production and canary deployments, and the services using the <code>kubectl apply</code> commands:</p>
+<pre><code>kubectl apply -f k8s/production -n production&#x000A;</code></pre>
+<pre><code>kubectl apply -f k8s/canary -n production&#x000A;</code></pre>
+<pre><code>kubectl apply -f k8s/services -n production&#x000A;</code></pre>
+<h3>Test Completed Task</h3>
+<p>Click <strong>Check my progress</strong> to verify your performed task. If you have successfully created deployments you will see an assessment score.</p>
+<ql-activity-tracking step="3">
+    Create the production and canary deployments
+</ql-activity-tracking>
+<p>By default, only one replica of the frontend is deployed. Use the <code>kubectl scale</code> command to ensure that there are at least 4 replicas running at all times.</p>
+<p>Scale up the production environment frontends by running the following command:</p>
+<pre><code>kubectl scale deployment gceme-frontend-production -n production --replicas 4&#x000A;</code></pre>
+<p>Now confirm that you have 5 pods running for the frontend, 4 for production traffic and 1 for canary releases (changes to the canary release will only affect 1 out of 5 (20%) of users):</p>
+<pre><code>kubectl get pods -n production -l app=gceme -l role=frontend&#x000A;</code></pre>
+<p>Also confirm that you have 2 pods for the backend, 1 for production and 1 for canary:</p>
+<pre><code>kubectl get pods -n production -l app=gceme -l role=backend&#x000A;</code></pre>
+<p>Retrieve the external IP for the production services:</p>
+<pre><code>kubectl get service gceme-frontend -n production&#x000A;</code></pre>
+<aside class="warning">
+<p><strong>Note: </strong>It can take several minutes before you see the load balancer external IP address.</p>
+</aside>
+<p><strong>Example Output:</strong></p>
+<pre><code class="language-bash prettyprint">NAME            TYPE          CLUSTER-IP     EXTERNAL-IP     PORT(S)  AGE&#x000A;gceme-frontend  LoadBalancer  10.79.241.131  104.196.110.46  80/TCP   5h&#x000A;</code></pre>
+<p>Paste <strong>External IP</strong> into a browser to see the info card displayed on a card—you should get a similar page:</p>
+<p><img alt="backend_card.png" src="https://cdn.qwiklabs.com/dfXfZfxRk0UMSTZm8FyIaLFsHla7AlUmxHO70UTOFjk%3D"></p>
+<p>Now, store the <em>frontend service</em> load balancer IP in an environment variable for use later:</p>
+<pre><code>export FRONTEND_SERVICE_IP=$(kubectl get -o jsonpath="{.status.loadBalancer.ingress[0].ip}" --namespace=production services gceme-frontend)&#x000A;</code></pre>
+<p>Confirm that both services are working by opening the frontend external IP address in your browser. Check the version output of the service by running the following command (it should read 1.0.0):</p>
+<pre><code>curl http://$FRONTEND_SERVICE_IP/version&#x000A;</code></pre>
+<p>You have successfully deployed the sample application! Next, you will set up a pipeline for deploying your changes continuously and reliably.</p>
+<h2 id="step11">Creating the Jenkins Pipeline</h2>
+<h3><strong>Creating a repository to host the sample app source code</strong></h3>
+<p>Create a copy of the <code>gceme</code> sample app and push it to a <a href="https://cloud.google.com/source-repositories/docs/" target="_blank">Cloud Source Repository</a>:</p>
+<pre><code>gcloud source repos create default&#x000A;</code></pre>
+<p>You can ignore the warning, you will not be billed for this repository.</p>
+<h3>Test Completed Task</h3>
+<p>Click <strong>Check my progress</strong> to verify your performed task. If you have successfully created source repository you will see an assessment score.</p>
+<ql-activity-tracking step="4">
+    Create a repository
+</ql-activity-tracking>
+<pre><code>git init&#x000A;</code></pre>
+<p>Initialize the sample-app directory as its own Git repository:</p>
+<pre><code>git config credential.helper gcloud.sh&#x000A;</code></pre>
+<p>Run the following command:</p>
+<pre><code>git remote add origin https://source.developers.google.com/p/$DEVSHELL_PROJECT_ID/r/default&#x000A;</code></pre>
+<p>Set the username and email address for your Git commits. Replace <code>[EMAIL_ADDRESS]</code> with your Git email address and <code>[USERNAME]</code> with your Git username:</p>
+<pre><code>git config --global user.email "[EMAIL_ADDRESS]"&#x000A;</code></pre>
+<pre><code>git config --global user.name "[USERNAME]"&#x000A;</code></pre>
+<p>Add, commit, and push the files:</p>
+<pre><code>git add .&#x000A;</code></pre>
+<pre><code>git commit -m "Initial commit"&#x000A;</code></pre>
+<pre><code>git push origin master&#x000A;</code></pre>
+<h3><strong>Adding your service account credentials</strong></h3>
+<p>Configure your credentials to allow Jenkins to access the code repository. Jenkins will use your cluster's service account credentials in order to download code from the Cloud Source Repositories.</p>
+<p><strong>Step 1</strong>: In the Jenkins user interface, click <strong>Manage Jenkins</strong> in the left navigation then click <strong>Manage Credentials</strong>.</p>
+<p><strong>Step 2</strong>: Click <strong>Jenkins</strong> <img alt="stored_scoped_cred.png" src="https://cdn.qwiklabs.com/SiqLluBt531RSaLWnUZm28LRRVJCVBbINUZz7vaSyfo%3D"></p>
+<p><strong>Step 3</strong>: Click <strong>Global credentials (unrestricted)</strong>.</p>
+<p><strong>Step 4</strong>: Click <strong>Add Credentials</strong> in the left navigation.</p>
+<p><strong>Step 5</strong>: Select <strong>Google Service Account from metadata</strong> from the <strong>Kind</strong> drop-down and click <strong>OK</strong>.</p>
+<p>The global credentials has been added. The name of the credential is the <code>Project ID</code> found in the <code>CONNECTION DETAILS</code> section of the lab.</p>
+<p><img alt="global_cred.png" src="https://cdn.qwiklabs.com/AADN9HYavaPKH3MPQMY8P9qhACY47HgPjAOuRLZz97M%3D"></p>
+<p><strong>Creating the Jenkins job</strong></p>
+<p>Navigate to your Jenkins user interface and follow these steps to configure a Pipeline job.</p>
+<p><strong>Step 1</strong>: Click <strong>New Item</strong> in the left navigation:</p>
+<p><img alt="86e92964a4599231.png" src="https://cdn.qwiklabs.com/KXB9gx8B77F27XAgu6bgXle0HvnoERwlPf9f2WYVqQM%3D"></p>
+<p><strong>Step 2</strong>: Name the project <strong>sample-app</strong>, then choose the <strong>Multibranch Pipeline</strong> option and click <strong>OK</strong>.</p>
+<p><strong>Step 3</strong>: On the next page, in the <strong>Branch Sources</strong> section, click <strong>Add Source</strong> and select <strong>git</strong>.</p>
+<p><strong>Step 4</strong>: Paste the <strong>HTTPS clone URL</strong> of your sample-app repo in Cloud Source Repositories into the <strong>Project Repository</strong> field. Replace <code>[PROJECT_ID]</code> with your <strong>Project ID</strong>:</p>
+<pre><code>https://source.developers.google.com/p/[PROJECT_ID]/r/default&#x000A;</code></pre>
+<p><strong>Step 5</strong>: From the <strong>Credentials</strong> drop-down, select the name of the credentials you created when adding your service account in the previous steps.</p>
+<p><strong>Step 6</strong>: Under <strong>Scan Multibranch Pipeline Triggers</strong> section, check the <strong>Periodically if not otherwise run</strong> box and set the <strong>Interval</strong> value to 1 minute.</p>
+<p><strong>Step 7</strong>: Your job configuration should look like this:</p>
+<p><img alt="general_tab_jenkins.png" src="https://cdn.qwiklabs.com/Eke%2BxaE%2BRpitZRG%2FFifw9jmNwAgCLMmnU21mdq8KDco%3D"></p>
+<p><img alt="branch_source_jenkins.png" src="https://cdn.qwiklabs.com/Kp4KwWsjF4YOP1PHIs7i4OPV19GvBQMGqWkqG7UTpOg%3D"></p>
+<p><img alt="build_conf_jenkins.png" src="https://cdn.qwiklabs.com/MmwLl5ZgWpBlrD%2B9%2Bfr97UhBrnVuqlpmMvmBofd49YM%3D"></p>
+<p><strong>Step 8</strong>: Click <strong>Save</strong> leaving all other options with their defaults</p>
+<p>After you complete these steps, a job named <code>Branch indexing</code> runs. This meta-job identifies the branches in your repository and ensures changes haven't occurred in existing branches. If you click sample-app in the top left, the <code>master</code> job should be seen.</p>
+<aside class="warning"><p><strong>Note: </strong>The first run of the master job might fail until you make a few code changes in the next step.</p>
+</aside>
+<p>You have successfully created a Jenkins pipeline! Next, you'll create the development environment for continuous integration.</p>
+<h2 id="step12">Creating the Development Environment</h2>
+<p>Development branches are a set of environments your developers use to test their code changes before submitting them for integration into the live site. These environments are scaled-down versions of your application, but need to be deployed using the same mechanisms as the live environment.</p>
+<h3>Creating a development branch</h3>
+<p>To create a development environment from a feature branch, you can push the branch to the Git server and let Jenkins deploy your environment.</p>
+<p>Create a development branch and push it to the Git server:</p>
+<pre><code>git checkout -b new-feature&#x000A;</code></pre>
+<h3>Modifying the pipeline definition</h3>
+<p>The <code>Jenkinsfile</code> that defines that pipeline is written using the  <a href="https://jenkins.io/doc/book/pipeline/syntax/" target="_blank">Jenkins Pipeline Groovy syntax</a>. Using a <code>Jenkinsfile</code> allows an entire build pipeline to be expressed in a single file that lives alongside your source code. Pipelines support powerful features like parallelization and require manual user approval.</p>
+<p>In order for the pipeline to work as expected, you need to modify the <code>Jenkinsfile</code> to set your project ID.</p>
+<p>Open the Jenkinsfile in your terminal editor, for example <code>vi</code>:</p>
+<pre><code>vi Jenkinsfile&#x000A;</code></pre>
+<p>Start the editor:</p>
+<pre><code>i&#x000A;</code></pre>
+<p>Add your <code>PROJECT_ID</code> to the  <code>REPLACE_WITH_YOUR_PROJECT_ID</code> value. (Your <code>PROJECT_ID</code> is your Project ID found in the <code>CONNECTION DETAILS</code> section of the lab. You can also run <code>gcloud config get-value project</code> to find it.</p>
+<pre><code>PROJECT = "REPLACE_WITH_YOUR_PROJECT_ID"&#x000A;APP_NAME = "gceme"&#x000A;FE_SVC_NAME = "${APP_NAME}-frontend"&#x000A;CLUSTER = "jenkins-cd"&#x000A;CLUSTER_ZONE = "us-east1-d"&#x000A;IMAGE_TAG = "gcr.io/${PROJECT}/${APP_NAME}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"&#x000A;JENKINS_CRED = "${PROJECT}"&#x000A;</code></pre>
+<p>Save the <code>Jenkinsfile</code> file: hit <strong>Esc</strong> then (for <code>vi</code> users):</p>
+<pre><code>:wq&#x000A;</code></pre>
+<h3>Modify the site</h3>
+<p>To demonstrate changing the application, you will change the gceme cards from <strong>blue</strong> to <strong>orange</strong>.</p>
+<p>Open <code>html.go:</code></p>
+<pre><code>vi html.go&#x000A;</code></pre>
+<p>Start the editor:</p>
+<pre><code>i&#x000A;</code></pre>
+<p>Change the two instances of <code>&lt;div class="card blue"&gt;</code> with following:</p>
+<pre><code>&lt;div class="card orange"&gt;&#x000A;</code></pre>
+<p>Save the <code>html.go</code> file: press <strong>Esc</strong> then:</p>
+<pre><code>:wq&#x000A;</code></pre>
+<p>Open <code>main.go:</code></p>
+<pre><code>vi main.go&#x000A;</code></pre>
+<p>Start the editor:</p>
+<pre><code>i&#x000A;</code></pre>
+<p>The version is defined in this line:</p>
+<pre><code>const version string = "1.0.0"&#x000A;</code></pre>
+<p>Update it to the following:</p>
+<pre><code>const version string = "2.0.0"&#x000A;</code></pre>
+<p>Save the main.go file one more time: <strong>Esc</strong> then:</p>
+<pre><code>:wq&#x000A;</code></pre>
+<h2 id="step13">Kick off Deployment</h2>
+<p>Commit and push your changes:</p>
+<pre><code>git add Jenkinsfile html.go main.go&#x000A;</code></pre>
+<pre><code>git commit -m "Version 2.0.0"&#x000A;</code></pre>
+<pre><code>git push origin new-feature&#x000A;</code></pre>
+<p>This will kick off a build of your development environment.</p>
+<p>After the change is pushed to the Git repository, navigate to the Jenkins user interface where you can see that your build started for the <code>new-feature</code> branch. It can take up to a minute for the changes to be picked up.</p>
+<p>After the build is running, click the down arrow next to the <strong>build</strong> in the left navigation and select <strong>Console output</strong>:</p>
+<p><img alt="6ea3b2ed776e3b29.png" src="https://cdn.qwiklabs.com/3SL2TROBOgHPAAXRLhLCMEmyJ4h0LJGZAH2aNrLsToQ%3D"></p>
+<p>Track the output of the build for a few minutes and watch for the <code>kubectl --namespace=new-feature apply...</code> messages to begin. Your new-feature branch will now be deployed to your cluster.</p>
+<aside class="special"><p><strong>Note: </strong>In a development scenario, you wouldn't use a public-facing load balancer. To help secure your application, you can use <a href="https://kubernetes.io/docs/tasks/extend-kubernetes/http-proxy-access-api/" target='blank"'>kubectl proxy</a>. The proxy authenticates itself with the Kubernetes API and proxies requests from your local machine to the service in the cluster without exposing your service to the Internet.</p>
+</aside>
+<p>If you didn't see anything in <code>Build Executor</code>, not to worry. Just go to the Jenkins homepage --&gt; sample app. Verify that the <code>new-feature</code> pipeline has been created.</p>
+<p>Once that's all taken care of, start the proxy in the background:</p>
+<pre><code>kubectl proxy &amp;&#x000A;</code></pre>
+<p>If it stalls, press <strong>Ctrl + C</strong> to exit out. Verify that your application is accessible by sending a request to <code>localhost</code> and letting <code>kubectl</code> proxy forward it to your service:</p>
+<pre><code>curl \&#x000A;http://localhost:8001/api/v1/namespaces/new-feature/services/gceme-frontend:80/proxy/version&#x000A;</code></pre>
+<p>You should see it respond with 2.0.0, which is the version that is now running.</p>
+<p>If you receive a similar error:</p>
+<pre><code class="language-output__ prettyprint">{&#x000A;  "kind": "Status",&#x000A;  "apiVersion": "v1",&#x000A;  "metadata": {&#x000A;  },&#x000A;  "status": "Failure",&#x000A;  "message": "no endpoints available for service \"gceme-frontend:80\"",&#x000A;  "reason": "ServiceUnavailable",&#x000A;  "code": 503&#x000A;</code></pre>
+<p>It means your frontend endpoint hasn't propagated yet—wait a little bit and try the <code>curl</code> command again. Move on when you get the following output:</p>
+<pre><code>2.0.0&#x000A;</code></pre>
+<p>You have set up the development environment! Next, you will build on what you learned in the previous module by deploying a canary release to test out a new feature.</p>
+<h2 id="step14">Deploying a Canary Release</h2>
+<p>You have verified that your app is running the latest code in the development environment, so now deploy that code to the canary environment.</p>
+<p>Create a canary branch and push it to the Git server:</p>
+<pre><code>git checkout -b canary&#x000A;</code></pre>
+<pre><code>git push origin canary&#x000A;</code></pre>
+<p>In Jenkins, you should see the <strong>canary</strong> pipeline has kicked off. Once complete, you can check the service URL to ensure that some of the traffic is being served by your new version. You should see about 1 in 5 requests (in no particular order) returning version <code>2.0.0</code>.</p>
+<pre><code>export FRONTEND_SERVICE_IP=$(kubectl get -o \&#x000A;jsonpath="{.status.loadBalancer.ingress[0].ip}" --namespace=production services gceme-frontend)&#x000A;</code></pre>
+<pre><code>while true; do curl http://$FRONTEND_SERVICE_IP/version; sleep 1; done&#x000A;</code></pre>
+<p>If you keep seeing 1.0.0, try running the above commands again. Once you've verified that the above works, end the command with <strong>Ctrl + C</strong>.</p>
+<p>That's it! You have deployed a canary release. Next you will deploy the new version to production.</p>
+<h2 id="step15">Deploying to production</h2>
+<p>Now that our canary release was successful and we haven't heard any customer complaints, deploy to the rest of your production fleet.</p>
+<p>Create a canary branch and push it to the Git server:</p>
+<pre><code>git checkout master&#x000A;</code></pre>
+<pre><code>git merge canary&#x000A;</code></pre>
+<pre><code>git push origin master&#x000A;</code></pre>
+<p>In Jenkins, you should see the master pipeline has kicked off. <em>Once complete</em> (which may take a few minutes), you can check the service URL to ensure that all of the traffic is being served by your new version, 2.0.0.</p>
+<pre><code>export FRONTEND_SERVICE_IP=$(kubectl get -o \&#x000A;jsonpath="{.status.loadBalancer.ingress[0].ip}" --namespace=production services gceme-frontend)&#x000A;</code></pre>
+<pre><code>while true; do curl http://$FRONTEND_SERVICE_IP/version; sleep 1; done&#x000A;</code></pre>
+<p>Once again, if you see instances of <code>1.0.0</code> try running the above commands again. You can stop this command by pressing <strong>Ctrl + C</strong>.</p>
+<p><strong>Example Output:</strong></p>
+<pre><code class="language-bash prettyprint">gcpstaging9854_student@qwiklabs-gcp-df93aba9e6ea114a:~/continuous-deployment-on-kubernetes/sample-app$ while true; do curl http://$FRONTEND_SERVICE_IP/version; sleep 1; done&#x000A;2.0.0&#x000A;2.0.0&#x000A;2.0.0&#x000A;2.0.0&#x000A;2.0.0&#x000A;2.0.0&#x000A;^C&#x000A;</code></pre>
+<p>You can also navigate to site on which the gceme application displays the info cards. The card color changed from blue to orange. Here's the command again to get the external IP address so you can check it out:</p>
+<pre><code>kubectl get service gceme-frontend -n production&#x000A;</code></pre>
+<p><strong>Example Output:</strong></p>
+<p><img alt="orange_card.png" src="https://cdn.qwiklabs.com/nFJlHtZPI%2F8HvtCNSGRmCyqRkMDylftq%2F200xRXtUKc%3D"></p>
+<h2 id="step16">Test your Understanding</h2>
+<p>Below are multiple-choice questions to reinforce your understanding of this lab's concepts. Answer them to the best of your abilities.</p>
+<p><ql-multiple-select-probe answerindices="[0, 1, 2]" optiontitles='[
+"kube-system",
+"production",
+"default",
+"jenkins",
+"helm"
+]' shuffle="" stem="Which are the following Kubernetes namespaces used in the lab?">
+</ql-multiple-select-probe></p>
+<ql-true-false-probe answer="true" stem="The Helm chart is a collection of files that describe a related set of Kubernetes resources.">
+</ql-true-false-probe>
+<p><strong>You're done!</strong></p>
+<p>Awesome job, you have successfully deployed your application to production!</p>
+<h2 id="step17">Congratulations!</h2>
+<p>This concludes this hands-on lab deploying and working with Jenkins in Kubernetes Engine to enable a Continuous Delivery / Continuous Deployment pipeline. You've had the opportunity to deploy a <strong>significant</strong> DevOps tool in Kubernetes Engine and configure it for production use. You've worked with the kubectl command-line tool and deployment configurations in YAML files, and have learned a bit about setting up Jenkins pipelines for a development / deployment process. With this practical hands-on experience you should feel comfortable applying these tools in your own DevOps shop.</p>
+<h3>Finish Your Quest</h3>
+<p><img alt="6d0798e24a18671b.png" src="https://cdn.qwiklabs.com/2LSNdbBU3lu0UqtX1hUrMEip%2BbKsc9ecpQe%2BXtIL9qY%3D">
+<img alt="Cloud_Architecture.png" src="https://cdn.qwiklabs.com/QNBqfg1D%2FzCw3KdiioKbnB1YWX9jpAs21holGhwny%2FY%3D"></p>
+<p>This self-paced lab is part of the Qwiklabs  <a href="https://google.qwiklabs.com/quests/29" target="_blank">Kubernetes in the Google Cloud</a>, <a href="https://google.qwiklabs.com/quests/24" target="_blank">Cloud Architecture</a>, and <a href="https://google.qwiklabs.com/quests/96" target="_blank">DevOps Essentials</a> Quests. A Quest is a series of related labs that form a learning path. Completing this Quest earns you the badge above, to recognize your achievement. You can make your badge (or badges) public and link to them in your online resume or social media account.  Enroll in a Quest and get immediate completion credit if you've taken this lab.  <a href="https://google.qwiklabs.com/catalog" target="_blank">See other available Qwiklabs Quests</a>.</p>
+<h3>Take Your Next Lab</h3>
+<p>Continue your Quest with  <a href="https://google.qwiklabs.com/catalog_lab/468" target="_blank">Hello Node Kubernetes</a>, or check out these suggestions:</p>
+<ul>
+<li>
+<p><a href="https://google.qwiklabs.com/catalog_lab/486" target="_blank">Orchestrating the Cloud with Kubernetes</a></p>
+</li>
+<li>
+<p><a href="https://google.qwiklabs.com/catalog_lab/572" target="_blank">Managing Deployments Using Kubernetes Engine</a></p>
+</li>
+</ul>
+<h3>Next Steps / Learn More</h3>
+<ul>
+<li>Read further on the  <a href="https://cloud.google.com/solutions/jenkins-on-container-engine" target="_blank">Jenkins in Kubernetes Engine</a> Solution.</li>
+<li>Learn how to  <a href="https://cloud.google.com/solutions/continuous-delivery-jenkins-container-engine" target="_blank">use Jenkins to enable Continuous Delivery to Kubernetes Engine</a>
+</li>
+<li>Read further on  <a href="https://cloud.google.com/solutions/devops/" target="_blank">DevOps Solutions and DevOps Guides</a> in the Google Cloud documentation</li>
+<li>Connect with the  <a href="https://jenkins.io/" target="_blank">Jenkins Community</a>!</li>
+</ul>
+<h3>Google Cloud Training &amp; Certification</h3>
+<p>...helps you make the most of Google Cloud technologies. <a href="https://cloud.google.com/training/courses" target="_blank">Our classes</a> include technical skills and best practices to help you get up to speed quickly and continue your learning journey. We offer fundamental to advanced level training, with on-demand, live, and virtual options to suit your busy schedule. <a href="https://cloud.google.com/certification/" target="_blank">Certifications</a> help you validate and prove your skill and expertise in Google Cloud technologies.</p>
+
+<h5>Manual Last Updated December 28, 2020</h5>
+<h5>Lab Last Tested December 28, 2020</h5>
+<p>Copyright 2021 Google LLC All rights reserved. Google and the Google logo are trademarks of Google LLC. All other company and product names may be trademarks of the respective companies with which they are associated.</p>
+
+
+
+</div>
+</div>
+
+
+<div class='hidden js-end-lab-button-container lab-content__end-lab-button'>
+<ql-lab-control-button class='js-end-lab-button' running></ql-lab-control-button>
+</div>
+<!-- / TODO: Move recommendations into the end lab modal -->
+<div class='lab-content__renderable-instructions'>
+<div class='lab-content__recommendation'>
+<!-- # TODO: Change classes so that this doesn't stack vertically -->
+<section class='upcoming-cards'>
+<h2 class='ql-headline-4'>Continue questing</h2>
+<div class='content-card-grid'>
+<div class='card-content-wrapper js-content-card' data-id='2889' data-level='Expert' data-name='Implement DevOps in Google Cloud: Challenge Lab' data-type='Lab'>
+<a class="card card--content elevation-0 content-lab" href="/focuses/1104"><div class='card__image'>
+<div class='card__image__inner' style='background-image: url(https://cdn.qwiklabs.com/assets/fractal5-0b9c1091ae0b232c6183f561cba00288eb66afa9f51e45ce9d4bbf8bf6d40a1a.jpg)'></div>
+</div>
+<div class='card__body'>
+<div class='overline card--content__type'>
+Lab
+</div>
+<h3 class='card--content__title'>
+Implement DevOps in Google Cloud: Challenge Lab
+</h3>
+<div class='card--content__description body-1'>
+<p>
+This challenge labs tests your skills in implementing a continuous deployment pipeline using the Jenkins build and deployment automation tool
+</p>
+</div>
+</div>
+<div class='card__footer'>
+<div class='card__footer__left'>
+<span>Expert</span>
+</div>
+<div class='card__footer__right'>
+<div class='rateit' data-rateit-readonly='true' data-rateit-value='3.8415'></div>
+</div>
+</div>
+</a></div>
+
+</div>
+</section>
+
+</div>
+
+</div>
+</ql-drawer-content>
+<ql-drawer end id='outline-drawer' open slot='drawer' width='320'>
+<div class='js-lab-content-outline lab-content__outline'>
+<a href='#step1'>GSP051</a><a href='#step2'>Overview</a><a href='#step3'>Setup</a><a href='#step4'>Clone the repository</a><a href='#step5'>Provisioning Jenkins</a><a href='#step6'>Setup Helm</a><a href='#step7'>Configure and Install Jenkins</a><a href='#step8'>Connect to Jenkins</a><a href='#step9'>Understanding the Application</a><a href='#step10'>Deploying the Application</a><a href='#step11'>Creating the Jenkins Pipeline</a><a href='#step12'>Creating the Development Environment</a><a href='#step13'>Kick off Deployment</a><a href='#step14'>Deploying a Canary Release</a><a href='#step15'>Deploying to production</a><a href='#step16'>Test your Understanding</a><a href='#step17'>Congratulations!</a>
+</div>
+</ql-drawer>
+</ql-drawer-container>
+</ql-drawer-content>
+</ql-drawer-container>
+<div class='lab-introduction js-lab-introduction is-hidden'>
+<div class='lab-introduction__inner'>
+<h1 class='headline-1'>Welcome to Your First Lab!</h1>
+<ql-icon-button class='js-skip-button'>close</ql-icon-button>
+<div class='lab-introduction__video'>
+<iframe allow='autoplay; encrypted-media' allowfullscreen frameborder='0' id='lab-introduction' src='https://www.youtube.com/embed/yF7EDXKTmoQ?enablejsapi=1&amp;rel=0&amp;showinfo=0'></iframe>
+</div>
+<a class='js-skip-button button button--outline'>Skip this video</a>
+</div>
+</div>
+
+
+
+</div>
+</main>
+
+
+<div class='modal fade' id='lab-details-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<div class='modal-body'>
+<p class='l-mbm'>
+In this lab you will deploy and completely configure a continuous delivery pipeline using Jenkins running on Kubernetes Engine and go through the dev - deploy process.
+</p>
+<p>
+This lab is included in these quests:
+<a href="/quests/24">Cloud Architecture</a>, <a href="/quests/29">Kubernetes in Google Cloud</a>, <a href="/quests/116">Deploy to Kubernetes in Google Cloud</a>, <a href="/quests/96">DevOps Essentials</a>, <a href="/quests/141">Implement DevOps in Google Cloud</a>.
+If you complete this lab you&#39;ll receive credit for it when you enroll in one of these quests.
+</p>
+<p class='small-label l-mbs'>
+<strong>
+Duration:
+</strong>
+0m setup
+&middot;
+75m access
+&middot;
+75m completion
+</p>
+<p class='small-label l-mbs'>
+<span><strong>Levels: </strong>advanced</span>
+</p>
+<p class='small-label'>
+<strong>
+Permalink:
+</strong>
+<a href="https://www.qwiklabs.com/catalog_lab/984">https://www.qwiklabs.com/catalog_lab/984</a>
+</p>
+</div>
+<div class='modal-actions'>
+<a class='button button--text' data-dismiss='modal'>
+Got It
+</a>
+</div>
+
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='modal fade' id='lab-review-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<form class="simple_form js-lab-review-form" id="edit_lab_review_12470395" action="/lab_reviews/12470395" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="_method" value="patch" /><div class='modal-body'>
+<p class='label'>
+How satisfied are you with this lab?*
+</p>
+<div class='rateit js-rateit' data-rateit-max='5' data-rateit-min='0' data-rateit-resetable='false' data-rateit-step='1' data-rateit-value='5'></div>
+<div class='l-mtm'>
+
+<div class="control-group hidden lab_review_user_id"><div class="controls"><input class="hidden" type="hidden" value="3894861" name="lab_review[user_id]" id="lab_review_user_id" /></div></div>
+<div class="control-group hidden lab_review_classroom_id"><div class="controls"><input class="hidden" type="hidden" name="lab_review[classroom_id]" id="lab_review_classroom_id" /></div></div>
+<div class="control-group hidden lab_review_lab_id"><div class="controls"><input class="hidden" type="hidden" value="984" name="lab_review[lab_id]" id="lab_review_lab_id" /></div></div>
+<div class="control-group hidden lab_review_focus_id"><div class="controls"><input class="hidden" type="hidden" name="lab_review[focus_id]" id="lab_review_focus_id" /></div></div>
+<div class="control-group hidden lab_review_rating"><div class="controls"><input class="hidden js-rating-input" type="hidden" value="2" name="lab_review[rating]" id="lab_review_rating" /></div></div>
+<div class="control-group text optional lab_review_comment"><label class="text optional control-label" for="lab_review_comment">Comment</label><div class="controls"><textarea class="text optional" name="lab_review[comment]" id="lab_review_comment">
+</textarea></div></div>
+</div>
+</div>
+<div class='modal-actions'>
+<a class='button button--text' data-dismiss='modal'>
+Cancel
+</a>
+<input type="submit" name="commit" value="Submit" disabled="disabled" id="submit" data-disabled="false" class="button" data-disable-with="Submit" />
+</div>
+</form>
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='modal fade' id='lab-access-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<a class='lab-access-modal-close' data-analytics-action='dismissed_lab_payment_modal' data-dismiss='modal'>
+<i class='material-icons'>close</i>
+</a>
+<form class="js-lab-access-form" action="/lab_onetime_coupons/activate?parent=catalog" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="&#x2713;" />
+<div class='modal-body'>
+<div class='lab-access-modal'>
+<input type="hidden" name="id" id="id" value="1104" />
+<input type="hidden" name="user_id" id="user_id" value="3894861" />
+<input type="hidden" name="launch_with_credits" id="launch_with_credits" value="0" class="js-launch-with-credits-input" />
+<input type="hidden" name="launch_with_subs" id="launch_with_subs" value="0" class="js-launch-with-subscription-input" />
+<input type="hidden" name="launch_with_access_code" id="launch_with_access_code" value="0" class="js-launch-with-access-code" />
+<div class='lab-access-modal__method'>
+<p>
+This lab costs
+7 Credits.
+</p>
+<p>
+1860 Credits
+available
+</p>
+<a class='button js-launch-with-credits-button js-lab-access-modal-button' data-analytics-action='clicked_launch_with_credits_button'>
+Launch with
+7 Credits
+</a>
+</div>
+<div class='lab-access-modal__method'>
+<p>
+Enter Lab Access Code:
+</p>
+<div class='lab-access-modal__code js-access-code'>
+<input type="text" name="uuid_1" id="uuid_1" value="" maxlength="4" placeholder="1234" class="js-access-code-input" />
+<input type="text" name="uuid_2" id="uuid_2" value="" maxlength="4" placeholder="1234" class="js-access-code-input" />
+<input type="text" name="uuid_3" id="uuid_3" value="" maxlength="4" placeholder="1234" class="js-access-code-input" />
+<input type="text" name="uuid_4" id="uuid_4" value="" maxlength="4" placeholder="1234" class="js-access-code-input" />
+</div>
+<a class='button js-launch-with-access-code-button js-lab-access-modal-button' data-analytics-action='clicked_launch_with_access_code_button'>
+Launch with Access Code
+</a>
+</div>
+</div>
+</div>
+</form>
+
+
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+
+
+<script>
+  $( function() {
+    ql.initMaterialInputs();
+    initChosen();
+    initSearch();
+    initTabs();
+    ql.list.init();
+    ql.favoriting.init();
+    ql.header.myAccount.init();
+    initTooltips();
+    ql.autocomplete.init();
+    ql.modals.init();
+    ql.toggleButtons.init();
+    ql.analytics.init();
+    ql.favoriting.init();
+  ql.labControlPanel.addRecaptchaErrorHandler();
+  initLabContent();
+  ql.labOutline.links.init();
+  initLabReviewModal();
+  initLabAccessModal();
+  ql.labAssessment.init();
+  ql.labIntroduction.init( true );
+  ql.labData.init();
+  initLabTranslations( {"are_you_sure":"All done? If you end this lab, you will lose all your work. You may not be able to restart the lab if there is a quota limit. Are you sure you want to end this lab?\n","in_progress":"*In Progress*","ending":"*Ending*","starting":"*Starting, please wait*","end_concurrent_labs":"Sorry, you can only run one lab at a time. To start this lab, please confirm that you want all of your existing labs to end.\n","copied":"Copied","no_resource":"Error retrieving resource.","no_support":"No Support","mac_press":"Press ⌘-C to copy","thanks_review":"Thanks for reviewing this lab.","windows_press":"Press Ctrl-C to copy","days":"days"} );
+  ql.labRun.init();
+  ql.initHeader();
+  ql.navigation.init();
+  ql.navPanel.init();
+  ql.navigation.init();
+  
+  });
+</script>
+
+</body>
+</html>
+

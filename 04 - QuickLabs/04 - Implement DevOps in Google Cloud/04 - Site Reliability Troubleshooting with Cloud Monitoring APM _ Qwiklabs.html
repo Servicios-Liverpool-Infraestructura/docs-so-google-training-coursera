@@ -1,0 +1,1377 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title>Site Reliability Troubleshooting with Cloud Monitoring APM | Qwiklabs</title>
+<script>
+//<![CDATA[
+window.gon={};gon.current_user={"firstname":"DANIEL","lastname":"ENRIQUE SANDOVAL SANCHEZ","fullname":"DANIEL ENRIQUE SANDOVAL SANCHEZ","company":"Coursera","email":"desandovals@liverpool.com.mx","origin":"googlecoursera-run, lti-coursera","subscriptions":0,"id":"40414ff5fc280f833d9acca966912f93","qlCreatedAt":"2020-11-17 20:45:59 UTC","optIn":null,"current_organization_id":null,"current_organization_role":null};gon.segment="j4Im8pqIko0Lxq4wVVZWMPMM0EroHUvb";gon.deployment="run";gon.content={"type":"Lab","id":1583,"name":"Site Reliability Troubleshooting with Cloud Monitoring APM"};
+//]]>
+</script>
+<script>
+  dataLayer = [
+    {user: gon.current_user},
+    {content: gon.content}
+  ];
+</script>
+<script>
+  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer',"GTM-TQR88QK");
+</script>
+<script>
+  EVENT_SOURCE_BASE_URL = "https://run.qwiklabs.com/nchan-sub?id=";
+</script>
+<script src="https://cdn.qwiklabs.com/assets/hallofmirrors/polyfills/webcomponents-loader-408088dc333247a761de5f2b2a4ba1cabd2bc36579f83ba92a559eb3682a9b77.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/vendor-45d462772c30000424907184f70c7157e95fb6227698d1671c5051818a6f60d8.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/application-034d6698d9e8e4069d310e418a7827442046e71025a0e336e0896055be8a1153.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/hallofmirrors/hallofmirrors-b1177b2da0d0a4d1b239b0364e70f5a598873a2b8fb44c288c9428709123506c.js"></script>
+<!--[if lt IE 9]>
+<script src='http://html5shim.googlecode.com/svn/trunk/html5.js' type='text/javascript'></script>
+<![endif]-->
+<!--[endif]>  <![endif]-->
+<script type='application/ld+json'>
+{
+  "@context": "http://schema.org",
+  "@type": "WebSite",
+  "url": "https://www.qwiklabs.com/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://www.qwiklabs.com/catalog?keywords={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
+
+<meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="CfQwgeKroTUQ4FZQYztfzbnb12UCe+c7GlKdtniRPlyZeiewwkC3aPIoOV/BUIFeOrhmY3nZOTICt4JeeT1uaA==" />
+<meta content='width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0' name='viewport'>
+<meta content='1rRsY0INj8RvwB5EF5pwdxt2A2P9aDgAlsICaJ0d5w0' name='google-site-verification'>
+<meta content='#3681E4' property='msapplication-TileColor'>
+<meta content='/favicon-144.png' property='msapplication-TileImage'>
+<meta content='[{&quot;id&quot;:&quot;recaptcha_experiment&quot;,&quot;optimize_id&quot;:&quot;dpViOcLkT3qS4TvL2mRojA&quot;,&quot;title&quot;:&quot;No Recaptcha shown for trusted users&quot;,&quot;variant_index&quot;:0,&quot;variant&quot;:&quot;original&quot;}]' name='active-experiments'>
+<meta content='{&quot;userId&quot;:3894861}' name='help-api-product-data'>
+<meta content='The objective of this lab is to familiarize yourself with the specific capabilities of Cloud Monitoring to monitor GKE cluster infrastructure, Istio, and applications deployed on this infrastructure.' name='description'>
+<meta content='Qwiklabs' name='author'>
+<meta content='Site Reliability Troubleshooting with Cloud Monitoring APM | Qwiklabs' property='og:title'>
+<meta content='website' property='og:type'>
+<meta content='/favicon-144.png' property='og:image'>
+<meta content='Qwiklabs' property='og:site_name'>
+<meta content='The objective of this lab is to familiarize yourself with the specific capabilities of Cloud Monitoring to monitor GKE cluster infrastructure, Istio, and applications deployed on this infrastructure.' property='og:description'>
+<meta content='/qwiklabs_logo_900x887.png' property='og:logo' size='900x887'>
+<meta content='/qwiklabs_logo_994x187.png' property='og:logo' size='994x187'>
+
+
+<link href='/favicon-32.png' rel='shortcut icon'>
+<link color='#3681E4' href='/favicon-svg.svg' rel='mask-icon'>
+<link href='/favicon-180.png' rel='apple-touch-icon-precomposed'>
+
+
+
+<link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css?family=Oswald:400|Roboto+Mono:400,700|Roboto:300,400,500,700|Google+Sans:300,400,500,700|Google+Sans+Display:400|Material+Icons|Google+Material+Icons" />
+
+
+<link rel="stylesheet" media="all" href="https://cdn.qwiklabs.com/assets/application-3b0f6c441394eebd52ff10f04fb2923fdb7b1b4fec780e7fa8ef67f5dd2ef411.css" />
+
+
+
+</head>
+<body class='lab-show l-full no-nav application-new focuses focuses-show lab-show l-full no-nav '>
+<noscript>
+<iframe height='0' src='https://www.googletagmanager.com/ns.html?id=GTM-TQR88QK' style='display:none;visibility:hidden;' width='0'></iframe>
+</noscript>
+<span class='hidden' id='flash-sibling-before'></span>
+
+<div class='header-container light-theme'>
+<div class='header'>
+<ql-icon-button class='js-nav-toggle header__nav-panel-button l-mrm'>menu</ql-icon-button>
+<div class='header__title'>
+<ql-icon-button label="Back" href="https://www.qwiklabs.com/quests/141" id="4bd4742709853e90" target="_self">arrow_back</ql-icon-button><div class="mdl-tooltip" data-mdl-for="4bd4742709853e90">Back</div>
+
+<h1 class='headline-5'>
+Site Reliability Troubleshooting with Cloud Monitoring APM
+</h1>
+</div>
+<div class='header__actions'>
+<ql-icon-button class='header__button--search js-header-search-bar-button'>search</ql-icon-button>
+<ql-icon-button id='share_1583'>share</ql-icon-button>
+<ql-menu for='share_1583'>
+<ql-menu-item>
+<a data-analytics-action="Shared to LinkedIn." data-analytics-category="Lab" data-analytics-label="Site Reliability Troubleshooting with Cloud Monitoring APM" target="_blank" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fwww.qwiklabs.com%2Fcatalog_lab%2F1583%3Futm_medium%3Dsocial%26utm_source%3Dlinkedin%26utm_campaign%3Dql-social-share"><ql-icon class='l-mrs'>post_linkedin</ql-icon>
+LinkedIn
+</a>
+</ql-menu-item>
+<ql-menu-item>
+<a data-analytics-action="Shared to Twitter." data-analytics-category="Lab" data-analytics-label="Site Reliability Troubleshooting with Cloud Monitoring APM" target="_blank" href="https://twitter.com/intent/tweet?text=Learn%20cloud%20tech%20through%20hands-on%20training%20on%20%23Qwiklabs%21&amp;url=https%3A%2F%2Fwww.qwiklabs.com%2Fcatalog_lab%2F1583%3Futm_medium%3Dsocial%26utm_source%3Dtwitter%26utm_campaign%3Dql-social-share&amp;hashtags="><ql-icon class='l-mrs'>post_twitter</ql-icon>
+Twitter
+</a>
+</ql-menu-item>
+<ql-menu-item>
+<a data-analytics-action="Shared to Facebook." data-analytics-category="Lab" data-analytics-label="Site Reliability Troubleshooting with Cloud Monitoring APM" target="_blank" href="https://facebook.com/sharer.php?display=popup&amp;u=https%3A%2F%2Fwww.qwiklabs.com%2Fcatalog_lab%2F1583%3Futm_medium%3Dsocial%26utm_source%3Dfacebook%26utm_campaign%3Dql-social-share"><ql-icon class='l-mrs'>post_facebook</ql-icon>
+Facebook
+</a>
+</ql-menu-item>
+<ql-menu-item>
+<ql-copyable-input label='Share Link' value='https://www.qwiklabs.com/catalog_lab/1583'></ql-copyable-input>
+</ql-menu-item>
+</ql-menu>
+
+<a class="icon-button js-favorite-button favorite-button" id="CatalogItem-4186-favorite-button" data-type="CatalogItem" data-id="4186" data-name="Site Reliability Troubleshooting with Cloud Monitoring APM" href="/favorite.json?item_id=4186&amp;item_type=CatalogItem"><ql-icon>favorite_border</ql-icon>
+</a><div class='mdl-tooltip js-tooltip' for='CatalogItem-4186-favorite-button'>
+Add to favorites
+</div>
+
+
+
+<ql-icon-button id='control-panel-target' style='display: none;'>
+dashboard
+</ql-icon-button>
+<ql-menu for='control-panel-target' id='control-panel-menu'></ql-menu>
+
+<ql-icon-button id='help-menu-button'>help</ql-icon-button>
+<div class='mdl-tooltip js-tooltip' data-mdl-for='help-menu-button'>
+Help
+</div>
+<ql-menu for='help-menu-button' id='help-menu'>
+<ql-menu-item>
+<ql-help context='lab' data-analytics-action='opened_help' data-analytics-label='lab' productdata='{&quot;userId&quot;:3894861}'>
+Help Center
+</ql-help>
+</ql-menu-item>
+<ql-menu-item>
+<a target="_blank" class="ql-body-1" href="https://support.google.com/qwiklabs/contact/contact_us">Email support</a>
+</ql-menu-item>
+</ql-menu>
+
+<ql-icon-button id='language'>language</ql-icon-button>
+<div class='mdl-menu mdl-menu__bottom-right mdl-js-menu elevation-3' for='language'>
+<a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ar" href="/focuses/4186?locale=ar&amp;parent=catalog">العربية‬‎
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="de" href="/focuses/4186?locale=de&amp;parent=catalog">Deutsch
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="en" href="/focuses/4186?locale=en&amp;parent=catalog">English
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="es" href="/focuses/4186?locale=es&amp;parent=catalog">español (Latinoamérica)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="fr" href="/focuses/4186?locale=fr&amp;parent=catalog">français
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="id" href="/focuses/4186?locale=id&amp;parent=catalog">bahasa Indonesia
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="it" href="/focuses/4186?locale=it&amp;parent=catalog">Italiano
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ja" href="/focuses/4186?locale=ja&amp;parent=catalog">日本語
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ko" href="/focuses/4186?locale=ko&amp;parent=catalog">한국어
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pl" href="/focuses/4186?locale=pl&amp;parent=catalog">Polski
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pt_BR" href="/focuses/4186?locale=pt_BR&amp;parent=catalog">português (Brasil)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="pt_PT" href="/focuses/4186?locale=pt_PT&amp;parent=catalog">português (Portugal)
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="ru" href="/focuses/4186?locale=ru&amp;parent=catalog">русский
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="tr" href="/focuses/4186?locale=tr&amp;parent=catalog">Türkçe
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="zh" href="/focuses/4186?locale=zh&amp;parent=catalog">简体中文
+</a><a class="mdl-menu__item locale-link" data-analytics-action="changed_locale" data-analytics-label="zh_TW" href="/focuses/4186?locale=zh_TW&amp;parent=catalog">繁體中文
+</a></div>
+<button class='icon-button' id='my_account'>
+<ql-avatar src='https://lh3.googleusercontent.com/a-/AOh14Gh6Bmcr7vfcCi5iPAH2qDeJgSaD6RLv1Muiv9mceA=s320-c'></ql-avatar>
+</button>
+<ql-menu for='my_account' open>
+<div class='my-account-menu'>
+<ql-avatar class='l-mtl l-mbl' size='120' src='https://lh3.googleusercontent.com/a-/AOh14Gh6Bmcr7vfcCi5iPAH2qDeJgSaD6RLv1Muiv9mceA=s320-c'></ql-avatar>
+<div class='my-account-menu__user-info l-mbl'>
+<h4 class='ql-subhead-1'>DANIEL ENRIQUE SANDOVAL SANCHEZ</h4>
+<p class='ql-body-2 text--light'>desandovals@liverpool.com.mx</p>
+<p class='ql-body-2 text--light'>
+</p>
+<a class="text--green ql-subhead-2" href="/my_account/payments"><ql-chip positive>
+1874 Credits
+</ql-chip>
+</a></div>
+<div class='buttons l-mbl'>
+<a class="button button--hairline l-mrm" id="profile" href="/public_profiles/7a1e8d39-fa01-4103-ac38-c0184ccdbd0c">Profile</a>
+<a class="button button--hairline" id="settings" href="/my_account/profile">Settings</a>
+</div>
+<hr>
+<ql-button data-analytics-action='clicked_sign_out' href='/users/sign_out' method='delete'>
+Sign Out
+</ql-button>
+<div class='privacy l-mtl'>
+<a class="ql-caption text--light" href="/privacy_policy">Privacy</a>
+<span class='ql-caption text--light l-mls l-mrs'>&middot;</span>
+<a class="ql-caption text--light" href="/terms_of_service">Terms</a>
+</div>
+</div>
+</ql-menu>
+
+</div>
+</div>
+<div class='header__search-bar js-header-search-bar'>
+<form class="js-search-form-mobile" onsubmit="ql.searchFilter(); return false;" action="/searches/elasticsearch" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="ZyYKcq4dqSXu9TmJL+eC9U0Nl0QLZZiL98g8N6hzutr3qB1Djva/eAw9VoaNjFxmzm4mQnDHRoLvLSPfqd/q7g==" />
+<input type="text" name="keywords" id="keywords" placeholder="Search" maxlength="255" aria-label="catalog search bar" />
+</form>
+
+<ql-icon-button class='js-close-search-bar'>close</ql-icon-button>
+</div>
+</div>
+
+<nav class='nav-bar'>
+<a class="nav-bar__item js-navigation-button" href="/"><ql-icon class='nav-bar__item__icon'>
+home
+</ql-icon>
+<span class='nav-bar__item__label'>
+Home
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button  active" aria-current="page" href="/catalog"><ql-icon class='nav-bar__item__icon'>
+school
+</ql-icon>
+<span class='nav-bar__item__label'>
+Catalog
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="/my_learning"><ql-icon class='nav-bar__item__icon'>
+event_note
+</ql-icon>
+<span class='nav-bar__item__label'>
+My Learning
+</span>
+</a>
+</nav>
+
+<nav class='nav-panel js-nav-panel'>
+<div class='nav-panel__logo'>
+<div class='logo logo--blue'></div>
+</div>
+<a title="Home" tabindex="-1" class="nav-panel__item js-navigation-button" href="/"><ql-icon class='nav-panel__item__icon'>
+home
+</ql-icon>
+<div class='nav-panel__item__label'>
+Home
+</div>
+</a>
+<a title="Catalog" tabindex="-1" class="nav-panel__item js-navigation-button active" aria-current="page" href="/catalog"><ql-icon class='nav-panel__item__icon'>
+school
+</ql-icon>
+<div class='nav-panel__item__label'>
+Catalog
+</div>
+</a>
+<a title="My Learning" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_learning"><ql-icon class='nav-panel__item__icon'>
+event_note
+</ql-icon>
+<div class='nav-panel__item__label'>
+My Learning
+</div>
+</a>
+<div class='nav-panel__spacer'></div>
+<a title="Profile" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/profile"><ql-icon class='nav-panel__item__icon'>
+account_circle
+</ql-icon>
+<div class='nav-panel__item__label'>
+Profile
+</div>
+</a>
+<a title="Credits &amp; Subscriptions" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/credits"><ql-icon class='nav-panel__item__icon'>
+money
+</ql-icon>
+<div class='nav-panel__item__label'>
+Credits &amp; Subscriptions
+</div>
+</a>
+<a title="Security" tabindex="-1" class="nav-panel__item js-navigation-button" href="/my_account/security"><ql-icon class='nav-panel__item__icon'>
+security
+</ql-icon>
+<div class='nav-panel__item__label'>
+Security
+</div>
+</a>
+<div class='nav-panel__spacer'></div>
+<a class="nav-panel__item" tabindex="-1" href="#"><ql-help>
+<div class='nav-panel__help-item'>
+<ql-icon class='nav-panel__item__icon'>help</ql-icon>
+<div class='nav-panel__item__label'>
+Help
+</div>
+</div>
+</ql-help>
+</a><div class='nav-panel__small-links'>
+<a tabindex="-1" href="/privacy_policy">Privacy</a>
+<a tabindex="-1" href="/terms_of_service">Terms</a>
+</div>
+</nav>
+<div class='nav-panel__overlay js-nav-toggle'></div>
+
+<main class='js-main'>
+<div class='l-main-wrapper' id='main-wrapper'>
+
+
+
+
+
+
+
+<div class='lab-assessment__tab js-open-lab-assessment-panel'>
+<h6 class='js-lab-assessment-total-score'>
+&mdash;/100
+</h6>
+</div>
+<div class='lab-assessment__panel js-lab-assessment-panel'>
+<div class='lab-assessment__panel__header'>
+<h4>Checkpoints</h4>
+<ql-icon-button class='js-close-lab-assessment-panel'>arrow_forward</ql-icon-button>
+</div>
+<div class='lab-assessment__step'>
+<p class='lab-assessment__step__title'>
+Deploy application
+</p>
+<div class='lab-assessment__step__action'>
+<a class='button js-show-run-step-button' step_no='1'>
+Check my progress
+</a>
+<p class='lab-assessment__step__score'>
+<span class='js-assessment-step-score-1'>
+</span>
+/ 20
+</p>
+</div>
+</div>
+
+<div class='lab-assessment__step'>
+<p class='lab-assessment__step__title'>
+Configure Latency SLI
+</p>
+<div class='lab-assessment__step__action'>
+<a class='button js-show-run-step-button' step_no='2'>
+Check my progress
+</a>
+<p class='lab-assessment__step__score'>
+<span class='js-assessment-step-score-2'>
+</span>
+/ 20
+</p>
+</div>
+</div>
+
+<div class='lab-assessment__step'>
+<p class='lab-assessment__step__title'>
+Configure Availability SLI
+</p>
+<div class='lab-assessment__step__action'>
+<a class='button js-show-run-step-button' step_no='3'>
+Check my progress
+</a>
+<p class='lab-assessment__step__score'>
+<span class='js-assessment-step-score-3'>
+</span>
+/ 10
+</p>
+</div>
+</div>
+
+<div class='lab-assessment__step'>
+<p class='lab-assessment__step__title'>
+Deploy new release
+</p>
+<div class='lab-assessment__step__action'>
+<a class='button js-show-run-step-button' step_no='4'>
+Check my progress
+</a>
+<p class='lab-assessment__step__score'>
+<span class='js-assessment-step-score-4'>
+</span>
+/ 20
+</p>
+</div>
+</div>
+
+<div class='lab-assessment__step'>
+<p class='lab-assessment__step__title'>
+Deploy Change to Address Latency
+</p>
+<div class='lab-assessment__step__action'>
+<a class='button js-show-run-step-button' step_no='5'>
+Check my progress
+</a>
+<p class='lab-assessment__step__score'>
+<span class='js-assessment-step-score-5'>
+</span>
+/ 20
+</p>
+</div>
+</div>
+
+<div class='lab-assessment__step'>
+<p class='lab-assessment__step__title'>
+Deploy Change to Address Error Rate
+</p>
+<div class='lab-assessment__step__action'>
+<a class='button js-show-run-step-button' step_no='6'>
+Check my progress
+</a>
+<p class='lab-assessment__step__score'>
+<span class='js-assessment-step-score-6'>
+</span>
+/ 10
+</p>
+</div>
+</div>
+
+</div>
+<ql-drawer-container class='js-lab-state' data-analytics-payload='{&quot;label&quot;:&quot;Site Reliability Troubleshooting with Cloud Monitoring APM&quot;,&quot;lab_name&quot;:&quot;Site Reliability Troubleshooting with Cloud Monitoring APM&quot;,&quot;classroom_name&quot;:null,&quot;deployment&quot;:&quot;run&quot;}' data-focus-id='4186' data-lab-billing-limit='0.0' data-lab-duration='5400' data-parent='catalog' data-payment-required data-recaptcha-enabled id='lab-container'>
+<ql-drawer id='terminal-drawer' slot='drawer' style='width: calc(100% - 480px)'>
+<iframe allow='clipboard-read' class='terminal' id='embedded-resource'></iframe>
+</ql-drawer>
+<ql-drawer-content class='js-lab-wrapper' id='lab-content' slot='drawer-content'>
+<ql-drawer-container id='lab-content-container'>
+<ql-drawer id='control-panel-drawer' open slot='drawer' width='320'>
+<ql-lab-control-panel class='ql-lab-control-panel__max-height control-panel js-lab-control-panel' connectionFiles='[]' labControlButton='{&quot;disabled&quot;:false,&quot;pending&quot;:false,&quot;running&quot;:false}' labDetails='[]' labTimer='{&quot;ticking&quot;:false,&quot;secondsRemaining&quot;:5400}' studentResources='[]'>
+<script src="https://www.recaptcha.net/recaptcha/api.js?render=6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr"   ></script>
+        <script>
+          // Define function so that we can call it again later if we need to reset it
+          // This executes reCAPTCHA and then calls our callback.
+          function executeRecaptchaForStartLab() {
+            grecaptcha.ready(function() {
+              grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}).then(function(token) {
+                setInputWithRecaptchaResponseTokenForStartLab('g-recaptcha-response-data-start-lab', token)
+              });
+            });
+          };
+          // Invoke immediately
+          executeRecaptchaForStartLab()
+
+          // Async variant so you can await this function from another async function (no need for
+          // an explicit callback function then!)
+          // Returns a Promise that resolves with the response token.
+          async function executeRecaptchaForStartLabAsync() {
+            return new Promise((resolve, reject) => {
+              grecaptcha.ready(async function() {
+                resolve(await grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}))
+              });
+            })
+          };
+
+                    var setInputWithRecaptchaResponseTokenForStartLab = function(id, token) {
+            var element = document.getElementById(id);
+            element.value = token;
+          }
+
+        </script>
+<input type="hidden" name="g-recaptcha-response-data[start_lab]" id="g-recaptcha-response-data-start-lab" data-sitekey="6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr" class="g-recaptcha g-recaptcha-response "/>
+
+<div class='hidden' id='recaptcha-v2-start-lab' slot='recaptcha'>
+<script src="https://www.recaptcha.net/recaptcha/api.js" async defer ></script>
+<div data-sitekey="6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV" data-callback="recaptchaComplete" data-expired-callback="expireV2Token" class="g-recaptcha "></div>
+          <noscript>
+            <div>
+              <div style="width: 302px; height: 422px; position: relative;">
+                <div style="width: 302px; height: 422px; position: absolute;">
+                  <iframe
+                    src="https://www.recaptcha.net/recaptcha/api/fallback?k=6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV"
+                    name="ReCAPTCHA"
+                    style="width: 302px; height: 422px; border-style: none; border: 0; overflow: hidden;">
+                  </iframe>
+                </div>
+              </div>
+              <div style="width: 300px; height: 60px; border-style: none;
+                bottom: 12px; left: 25px; margin: 0px; padding: 0px; right: 25px;
+                background: #f9f9f9; border: 1px solid #c1c1c1; border-radius: 3px;">
+                <textarea id="g-recaptcha-response" name="g-recaptcha-response"
+                  class="g-recaptcha-response"
+                  style="width: 250px; height: 40px; border: 1px solid #c1c1c1;
+                  margin: 10px 25px; padding: 0px; resize: none;">
+                </textarea>
+              </div>
+            </div>
+          </noscript>
+
+</div>
+</ql-lab-control-panel>
+</ql-drawer>
+<ql-drawer-content id='lab-instructions' slot='drawer-content'>
+<div class='alert alert--fake js-alert'>
+<p class='alert__message js-alert-message'></p>
+<a class='alert__close js-alert-close'>
+<i class='fa fa-times'></i>
+</a>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='js-lab-content lab-content__renderable-instructions'>
+<div class='lab-preamble'>
+<h1 class='lab-preamble__title'>
+Site Reliability Troubleshooting with Cloud Monitoring APM
+</h1>
+<div class='lab-preamble__details subtitle-headline-1'>
+<span>1 hour 30 minutes</span>
+<span>7 Credits</span>
+<div class='lab__rating'>
+<a href="/focuses/4186/reviews?parent=catalog"><div class='rateit' data-rateit-readonly='true' data-rateit-value='3.7033'></div>
+
+</a></div>
+</div>
+</div>
+
+<div class='js-markdown-instructions markdown-lab-instructions' id='markdown-lab-instructions'>
+
+
+
+<h2 id="step1">GSP425</h2>
+<p><img alt="Google Cloud Self-Paced Labs" src="https://cdn.qwiklabs.com/GMOHykaqmlTHiqEeQXTySaMXYPHeIvaqa2qHEzw6Occ%3D"></p>
+
+<h2 id="step2">Overview</h2>
+<p>The objective of this lab is to familiarize yourself with the specific capabilities of Cloud Monitoring to monitor GKE cluster infrastructure, Istio, and applications deployed on this infrastructure.</p>
+<h3>What you'll do</h3>
+<ul>
+<li>
+<p>Create a GKE cluster</p>
+</li>
+<li>
+<p>Deploy a microservices application to it</p>
+</li>
+<li>
+<p>Define latency and error SLIs and SLOs for it</p>
+</li>
+<li>
+<p>Configure Cloud Monitoring to monitor your SLIs</p>
+</li>
+<li>
+<p>Deploy a breaking change to the application and use Cloud Monitoring to troubleshoot and resolve the issues that result</p>
+</li>
+<li>
+<p>Validate that your resolution addresses the SLO violation</p>
+</li>
+</ul>
+<h3>What you'll learn</h3>
+<ul>
+<li>
+<p>How to deploy a microservices application on an existing GKE cluster</p>
+</li>
+<li>
+<p>How to select appropriate SLIs/SLOs for an application</p>
+</li>
+<li>
+<p>How to implement SLIs using Cloud Monitoring features</p>
+</li>
+<li>
+<p>How to use Cloud Trace, Cloud Profiler, and Cloud Debugger to identify software issues</p>
+</li>
+</ul>
+<h3>Prerequisites</h3>
+<ul>
+<li>
+<p>Basic knowledge of Kubernetes</p>
+</li>
+<li>
+<p>Basic knowledge of Cloud Monitoring</p>
+</li>
+<li>
+<p>Basic knowledge of troubleshooting process</p>
+</li>
+</ul>
+<h2 id="step3">Environment Setup</h2>
+<h4>Before you click the Start Lab button</h4>
+<p>Read these instructions. Labs are timed and you cannot pause them. The timer, which starts when you click <strong>Start Lab</strong>, shows how long Google Cloud resources will be made available to you.</p>
+<p>This Qwiklabs hands-on lab lets you do the lab activities yourself in a real cloud environment, not in a simulation or demo environment. It does so by giving you new, temporary credentials that you use to sign in and access Google Cloud for the duration of the lab.</p>
+<h4>What you need</h4>
+<p>To complete this lab, you need:</p>
+<ul>
+<li>Access to a standard internet browser (Chrome browser recommended).</li>
+<li>Time to complete the lab.</li>
+</ul>
+<p><strong>Note:</strong> If you already have your own personal Google Cloud account or project, do not use it for this lab.</p>
+<p><strong>Note:</strong> If you are using a Pixelbook, open an Incognito window to run this lab.</p>
+
+<h4>How to start your lab and sign in to the Google Cloud Console</h4>
+<ol>
+<li>
+<p>Click the <strong>Start Lab</strong> button. If you need to pay for the lab, a pop-up opens for you to select your payment method.
+On the left is a panel populated with the temporary credentials that you must use for this lab.</p>
+<p><img alt="Open Google Console" src="https://cdn.qwiklabs.com/%2FtHp4GI5VSDyTtdqi3qDFtevuY014F88%2BFow%2FadnRgE%3D"></p>
+</li>
+<li>
+<p>Copy the username, and then click <strong>Open Google Console</strong>.
+The lab spins up resources, and then opens another tab that shows the <strong>Sign in</strong> page.</p>
+<p><img alt="Sign in" src="https://cdn.qwiklabs.com/VkUIAFY2xX3zoHgmWqYKccRLwFrR4BfARLd5ojmlbhs%3D"></p>
+<p><strong><em>Tip:</em></strong> Open the tabs in separate windows, side-by-side.</p>
+<aside>
+ If you see the <strong>Choose an account</strong> page, click <strong>Use Another Account</strong>.
+<img alt="Choose an account" src="https://cdn.qwiklabs.com/eQ6xPnPn13GjiJP3RWlHWwiMjhooHxTNvzfg1AL2WPw%3D">
+</aside>
+</li>
+<li>
+<p>In the <strong>Sign in</strong> page, paste the username that you copied from the Connection Details panel. Then copy and paste the password.</p>
+<p><strong><em>Important:</em></strong> You must use the credentials from the Connection Details panel. Do not use your Qwiklabs credentials. If you have your own Google Cloud account, do not use it for this lab (avoids incurring charges).</p>
+</li>
+<li>
+<p>Click through the subsequent pages:</p>
+<ul>
+<li>Accept the terms and conditions.</li>
+<li>Do not add recovery options or two-factor authentication (because this is a temporary account).</li>
+<li>Do not sign up for free trials.</li>
+</ul>
+</li>
+</ol>
+<p>After a few moments, the Cloud Console opens in this tab.</p>
+<aside>
+<strong>Note:</strong> You can view the menu with a list of Google Cloud Products and Services by clicking the <strong>Navigation menu</strong> at the top-left.
+<img alt="Cloud Console Menu" src="https://cdn.qwiklabs.com/9vT7xPlxoNP%2FPsK0J8j0ZPFB4HnnpaIJVCDByaBrSHg%3D">
+</aside>
+
+<h3>Activate Cloud Shell</h3>
+<p>Cloud Shell is a virtual machine that is loaded with development tools. It offers a persistent 5GB home directory and runs on the Google Cloud. Cloud Shell provides command-line access to your Google Cloud resources.</p>
+<p>In the Cloud Console, in the top right toolbar, click the <strong>Activate Cloud Shell</strong> button.</p>
+<p><img alt="Cloud Shell icon" src="https://cdn.qwiklabs.com/vdY5e%2Fan9ZGXw5a%2FZMb1agpXhRGozsOadHURcR8thAQ%3D"></p>
+<p>Click <strong>Continue</strong>.</p>
+<p><img alt="cloudshell_continue.png" src="https://cdn.qwiklabs.com/lr3PBRjWIrJ%2BMQnE8kCkOnRQQVgJnWSg4UWk16f0s%2FA%3D"></p>
+<p>It takes a few moments to provision and connect to the environment. When you are connected, you are already authenticated, and the project is set to your <em>PROJECT_ID</em>. For example:</p>
+<p><img alt="Cloud Shell Terminal" src="https://cdn.qwiklabs.com/hmMK0W41Txk%2B20bQyuDP9g60vCdBajIS%2B52iI2f4bYk%3D"></p>
+<p><code>gcloud</code> is the command-line tool for Google Cloud. It comes pre-installed on Cloud Shell and supports tab-completion.</p>
+<p>You can list the active account name with this command:</p>
+<pre><code>gcloud auth list&#x000A;</code></pre>
+<p>(Output)</p>
+<pre><code class="language-output prettyprint">Credentialed accounts:&#x000A; - &lt;myaccount&gt;@&lt;mydomain&gt;.com (active)&#x000A;</code></pre>
+<p>(Example output)</p>
+<pre><code class="language-Output prettyprint">Credentialed accounts:&#x000A; - google1623327_student@qwiklabs.net&#x000A;</code></pre>
+<p>You can list the project ID with this command:</p>
+<pre><code>gcloud config list project&#x000A;</code></pre>
+<p>(Output)</p>
+<pre><code class="language-output prettyprint">[core]&#x000A;project = &lt;project_ID&gt;&#x000A;</code></pre>
+<p>(Example output)</p>
+<pre><code class="language-Output prettyprint">[core]&#x000A;project = qwiklabs-gcp-44776a13dea667a6&#x000A;</code></pre>
+<aside>
+  For full documentation of <code>gcloud</code> see the <a href="https://cloud.google.com/sdk/gcloud" target="_blank">gcloud command-line tool overview</a>.
+
+</aside>
+
+<h2 id="step4">Infrastructure setup</h2>
+<p>In this lab, you connect to a Google Kubernetes Engine cluster and validate that it's been created correctly.</p>
+<p>Set the zone in <code>gcloud</code>:</p>
+<pre><code class="language-bash prettyprint">gcloud config set compute/zone us-west1-b&#x000A;</code></pre>
+<p>Set the project ID:</p>
+<pre><code class="language-bash prettyprint">export PROJECT_ID=$(gcloud info --format='value(config.project)')&#x000A;</code></pre>
+<p>Verify that the cluster named <code>shop-cluster</code> has been created:</p>
+<pre><code class="language-bash prettyprint">gcloud container clusters list&#x000A;</code></pre>
+<p>If your cluster status says PROVISIONING, wait a moment and run the command above again. Repeat until the status is RUNNING.</p>
+<p>While you're waiting, set up your Cloud Monitoring workspace to monitor the application on your cluster.</p>
+<h3>Create a Monitoring workspace</h3>
+<p>Now set up a Monitoring workspace that's tied to your Google Cloud Project. The following steps create a new account that has a free trial of Monitoring.</p>
+<ol>
+<li>
+<p>In the Cloud Console, click <strong>Navigation menu</strong> &gt; <strong>Monitoring</strong>.</p>
+</li>
+<li>
+<p>Wait for your workspace to be provisioned.</p>
+</li>
+</ol>
+<p>When the Monitoring dashboard opens, your workspace is ready.</p>
+<p><img alt="Overview.png" src="https://cdn.qwiklabs.com/FfS7W1mNXshxngUuea%2BFUBXoXedgDHt0YWk1aZKHiIk%3D"></p>
+
+<h3>Check your cluster</h3>
+<p>Go back to Cloud Shell. Once your cluster has RUNNING status, get the cluster credentials:</p>
+<pre><code class="language-bash prettyprint">gcloud container clusters get-credentials shop-cluster --zone us-west1-b&#x000A;</code></pre>
+<p>(Output)</p>
+<pre><code class="language-bash prettyprint">Fetching cluster endpoint and auth data.&#x000A;kubeconfig entry generated for shop-cluster.&#x000A;</code></pre>
+<p>Verify that the nodes have been created:</p>
+<pre><code class="language-bash prettyprint">kubectl get nodes&#x000A;</code></pre>
+<p>Your output should look like this:</p>
+<pre><code class="language-bash prettyprint">NAME                                                STATUS    ROLES     AGE       VERSION&#x000A;gke-shop-cluster-demo-default-pool1-24748028-3nwh   Ready     &lt;none&gt;    4m        v1.14.10-gke.36&#x000A;gke-shop-cluster-demo-default-pool1-24748028-3z1g   Ready     &lt;none&gt;    4m        v1.14.10-gke.36&#x000A;gke-shop-cluster-demo-default-pool1-24748028-4ksd   Ready     &lt;none&gt;    4m        v1.14.10-gke.36&#x000A;gke-shop-cluster-demo-default-pool1-24748028-f2f2   Ready     &lt;none&gt;    4m        v1.14.10-gke.36&#x000A;</code></pre>
+<h2 id="step5">Deploy application</h2>
+<p>In this section, you deploy a microservices application called Hipster Shop to your cluster to create an actual workload to monitor.</p>
+<p>Run the following to clone the repo:</p>
+<pre><code class="language-bash prettyprint">git clone https://github.com/GoogleCloudPlatform/training-data-analyst&#x000A;</code></pre>
+<p>Create a soft link to your working directory:</p>
+<pre><code class="language-bash prettyprint">ln -s ~/training-data-analyst/blogs/microservices-demo-1 ~/microservices-demo-1&#x000A;</code></pre>
+<p>Download and install <code>skaffold</code>:</p>
+<pre><code>curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/v0.36.0/skaffold-linux-amd64 &amp;&amp; chmod +x skaffold &amp;&amp; sudo mv skaffold /usr/local/bin&#x000A;</code></pre>
+<p>Install the app using <code>skaffold</code>:</p>
+<pre><code class="language-bash prettyprint">cd microservices-demo-1&#x000A;skaffold run&#x000A;</code></pre>
+<p>Confirm everything is running correctly:</p>
+<pre><code class="language-bash prettyprint">kubectl get pods&#x000A;</code></pre>
+<p>The output should look similar to the output below.</p>
+<pre><code class="language-bash prettyprint">NAME                                     READY     STATUS    RESTARTS   AGE&#x000A;adservice-55f94cfd9c-4lvml               1/1       Running   0          20m&#x000A;cartservice-6f4946f9b8-6wtff             1/1       Running   2          20m&#x000A;checkoutservice-5688779d8c-l6crl         1/1       Running   0          20m&#x000A;currencyservice-665d6f4569-b4sbm         1/1       Running   0          20m&#x000A;emailservice-684c89bcb8-h48sq            1/1       Running   0          20m&#x000A;frontend-67c8475b7d-vktsn                1/1       Running   0          20m&#x000A;loadgenerator-6d646566db-p422w           1/1       Running   0          20m&#x000A;paymentservice-858d89d64c-hmpkg          1/1       Running   0          20m&#x000A;productcatalogservice-bcd85cb5-d6xp4     1/1       Running   0          20m&#x000A;recommendationservice-685d7d6cd9-pxd9g   1/1       Running   0          20m&#x000A;redis-cart-9b864d47f-c9xc6               1/1       Running   0          20m&#x000A;shippingservice-5948f9fb5c-vndcp         1/1       Running   0          20m&#x000A;</code></pre>
+<p>Re-run the command until all pods are reporting a Running status before you move to the next step.</p>
+<p>Click <em>Check my progress</em> to verify the objective.
+<ql-activity-tracking step="1">
+Deploy application
+</ql-activity-tracking></p>
+<p>Get the <strong>external IP</strong> of the application:</p>
+<pre><code class="language-bash prettyprint">export EXTERNAL_IP=$(kubectl get service frontend-external | awk 'BEGIN { cnt=0; } { cnt+=1; if (cnt &gt; 1) print $4; }')&#x000A;</code></pre>
+<p>Finally, confirm that the app is up and running:</p>
+<pre><code class="language-bash prettyprint">curl -o /dev/null -s -w "%{http_code}\n"  http://$EXTERNAL_IP&#x000A;</code></pre>
+<p><strong>Note:</strong> You may need to run this command a second time if you get a 500 error.</p>
+<p>You should see a 200 as confirmation.</p>
+<p>Download the source and put the code in Cloud Source Repositories:</p>
+<pre><code class="language-bash prettyprint">./setup_csr.sh&#x000A;</code></pre>
+<p>Now that the application has been deployed, set up monitoring for the application.</p>
+<h3>Resources</h3>
+<ul>
+<li>
+<p><a href="https://github.com/GoogleCloudPlatform/microservices-demo" target="_blank">Microservices Demo Application</a></p>
+</li>
+<li>
+<p><a href="http://skaffold.dev" target="_blank">Skaffold</a></p>
+</li>
+</ul>
+<h2 id="step6">Develop Sample SLOs and SLIs</h2>
+<p>Before implementing any monitoring, review the introduction to the chapter on <em>Service Level Objective</em>s from the <a href="https://landing.google.com/sre/books/" target="_blank">Site Reliability Engineering</a> book:</p>
+<p>"It's impossible to manage a service correctly, let alone well, without understanding which behaviors really matter for that service and how to measure and evaluate those behaviors. To this end, we would like to define and deliver a given level of service to our users, whether they use an internal API or a public product.</p>
+<p>"We use intuition, experience, and an understanding of what users want to define <strong>service level indicators (SLIs)</strong>, <strong>objectives (SLOs)</strong>, and <strong>agreements (SLAs)</strong>. These measurements describe basic properties of metrics that matter, what values we want those metrics to have, and how we'll react if we can't provide the expected service. Ultimately, choosing appropriate metrics helps to drive the right action if something goes wrong, and also gives an SRE team confidence that a service is healthy.</p>
+<p>"An SLI is a service level indicator—a carefully defined quantitative measure of some aspect of the level of service that is provided.</p>
+<p>"Most services consider <strong>request latency</strong> — how long it takes to return a response to a request — as a key SLI. Other common SLIs include the <strong>error rate</strong>, often expressed as a fraction of all requests received, and <strong>system throughput</strong>, typically measured in requests per second. Another kind of SLI important to SREs is <strong>availability</strong>, or the fraction of the time that a service is usable. It is often defined in terms of the fraction of well-formed requests that succeed. <strong>Durability</strong> — the likelihood that data is be retained over a long period of time — is equally important for data storage systems. The measurements are often aggregated: i.e., raw data is collected over a measurement window and then turned into a rate, average, or percentile."</p>
+<p>Now that you have established a basic understanding, define the SLIs and SLOs for your application. Given that the application itself serves end user ecommerce traffic, it's going to be very important that user experience remains constant and that performance is good. Monitor SLIs for request latency, error rate, throughput, and availability.</p>
+<h3>Application Architecture</h3>
+<p><img alt="f818a68bd5b98622.png" src="https://cdn.qwiklabs.com/NYo2MRjXDjHGhUiLEoQL9MG8gLMn%2B3wrhz53emKj06g%3D"></p>
+<p>It's impossible to develop SLIs without understanding how the application is built. Details are in the original  <a href="https://github.com/GoogleCloudPlatform/microservices-demo" target="_blank">repository</a>, but for this lab, it suffices to understand that:</p>
+<ul>
+<li>
+<p>Users access the application through the Frontend.</p>
+</li>
+<li>
+<p>Purchases are handled by CheckoutService.</p>
+</li>
+<li>
+<p>CheckoutService depends on CurrencyService to handle conversions.</p>
+</li>
+<li>
+<p>Other services such as RecommendationService, ProductCatalogService, and Adservice are used to provide the frontend with content needed to render the page.</p>
+</li>
+</ul>
+<h3>Service Level Indicators and Objectives</h3>
+<p>The following SLIs and SLOs are selected based on the end-user experience and the theoretical impact to users and business objectives.</p>
+<table>
+<tr>
+<td colspan="1" rowspan="1">
+<p><strong>SLI</strong></p>
+</td>
+<td colspan="1" rowspan="1">
+<p><strong>Metric</strong></p>
+</td>
+<td colspan="1" rowspan="1">
+<p><strong>Description</strong></p>
+</td>
+<td colspan="1" rowspan="1">
+<p><strong>SLO</strong></p>
+</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">
+<p>Request latency</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>Front end latency</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>Measures how long a user is waiting for the page to load. A high latency typically correlates to a negative user experience</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>99% of requests from the previous 60 minute period are services in under 3 seconds</p>
+</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="3">
+<p>Error rate</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>Front end error rate</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>Measures the error rate experienced by users. A high error rate likely indicates an issue. </p>
+</td>
+<td colspan="1" rowspan="1">
+<p>0 Errors in the previous 60 minute period</p>
+</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">
+<p>Checkout error rate</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>Measures the error rate experienced by other services calling the checkout service. A high error rate likely indicates an issue.</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>0 Errors in the previous 60 minute period</p>
+</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">
+<p>Currency Service error rate</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>Measures the error rate experienced by other services calling the currency service. A high error rate likely indicates an issue.</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>0 Errors in the previous 60 minute period</p>
+</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">
+<p>Availability</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>Front end success rate</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>Measures the rate of successful requests as a way to determine the availability of the service. A low success rate likely indicates that users are having a poor experience.</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>99% of requests are successful over the previous 60 minute period</p>
+</td>
+</tr>
+</table>
+<h2 id="step7">Configure Latency SLI</h2>
+<p>Create alerting policies for each of your SLOs. The metrics you are interested in are already being collected.</p>
+<h3>Front End Latency</h3>
+<p>In the Console, still in the Cloud Monitoirng window (<strong>Navigation menu</strong> &gt; <strong>Monitoring</strong>), click <strong>Alerting</strong> from the left menu, then click <strong>Create Policy</strong>.</p>
+<p>Click <strong>Add Condition</strong>. Next, specify the metric and condition to use to trigger the Alerting Policy.</p>
+<aside>
+The condition lets you know when you're experiencing performance issues that are impacting user experience.
+
+As described in the <em>Service Level Indicators and Objectives</em> table above, use the 99th percentile front end latency as the SLI.
+
+</aside>
+<p>Add the following into the <strong>Find resource type and metric</strong> field then select the following from the dropdown menu:</p>
+<pre><code class="language-bash prettyprint">custom.googleapis.com/opencensus/grpc.io/client/roundtrip_latency&#x000A;</code></pre>
+<p>If the metric is not found, wait a minute and then try again.</p>
+<p><img alt="1st_metric.png" src="https://cdn.qwiklabs.com/gLVqGqDVu5fBJOoioUakuu6PUfDTnWl0qpH4LfSTovw%3D"></p>
+<p>In the Resource Type type in <code>Global</code>, then select it.</p>
+<p>Click into the <strong>Filter</strong> field and select <strong>opencensus_task</strong>. Click the first default Value, then click <strong>Apply</strong>.</p>
+<p>Next, set the Aggregator to <strong>99th percentile</strong>.</p>
+<p>Your screen should look like this:</p>
+<p><img alt="stackdriver_latency_policy2.png" src="https://cdn.qwiklabs.com/MRuoV5YYtmdGz%2BhAWFwONbPlkbKs7Igqem6KO%2BiDhOc%3D"></p>
+<p>Next, in the <strong>Configuration</strong> area, set the options as follows:</p>
+<ul>
+<li>Condition triggers if <strong>Any time series violates</strong>
+</li>
+<li>Condition: <strong>is above</strong>
+</li>
+<li>Threshold: <strong>500</strong>
+</li>
+<li>For: <strong>Most recent value</strong>
+</li>
+</ul>
+<p><img alt="stackdriver_latency_alert.png" src="https://cdn.qwiklabs.com/hBWdNPw48H0tBaFsb8eUN7XoYBByFl%2F9Tu8TIOOWK3U%3D"></p>
+<p>Click <strong>Add</strong>.</p>
+<p>Click <strong>Next</strong>. Skip the <code>Who should be notified?</code> step and click <strong>Next</strong>.</p>
+<p>Now, name the alerting policy as <strong>Latency Policy</strong> in the <strong>Alert name</strong> field.</p>
+<p>Click <strong>Save</strong>.</p>
+<p>You've configured Cloud Monitoring for your frontend latency SLI!</p>
+<p>Click <em>Check my progress</em> to verify the objective.
+<ql-activity-tracking step="2">
+Configure Latency SLI
+</ql-activity-tracking></p>
+<h2 id="step8">Configure Availability SLI</h2>
+<p>Next, monitor your service availability by creating another Alerting Policy.</p>
+<h3>Frontend Availability</h3>
+<p>Start by monitoring the error rate for the frontend service, since that’s where user experience is going to be most directly impacted.  As discussed above, you’re going to consider any failures observed to be an SLO violation.  Create an alerting policy that triggers an incident if any failures are observed.</p>
+<p>An easy way to trigger on a particular failure is to use log-based metrics.</p>
+<p>In the Console, select <strong>Navigation menu</strong> &gt; <strong>Logging</strong> &gt; <strong>Logs Explorer</strong>.</p>
+<p>Click on the <strong>OPTIONS</strong> drop down and select <strong>Go back to the Legacy Logs Viewer</strong>.</p>
+<p>Configure the filter as follows:</p>
+<ul>
+<li>
+<p>In Resource type (first dropdown menu) select <strong>Kubernetes Container</strong></p>
+</li>
+<li>
+<p>In Log Level (third dropdown menu) select <strong>ERROR</strong></p>
+</li>
+<li>
+<p>In the filter search bar enter the following filter and hit <strong>enter</strong> button:</p>
+</li>
+</ul>
+<pre><code>label:k8s-pod/app:"currencyservice"&#x000A;</code></pre>
+<p><img alt="log_filter.png" src="https://cdn.qwiklabs.com/bdM6GZfnlgDzMBBB9WR0y51CjKgIBVKlcxUuQp0smfU%3D"></p>
+<ql-infobox><strong>Note:</strong> You won't see any results on the page because the service is running correctly. You will make a change soon to change this result.</ql-infobox>
+<p>Click <strong>Create Metric</strong>.</p>
+<p>Name the metric <code>Error_Rate_SLI</code> and click <strong>Create Metric</strong> to save the log-based metric:</p>
+<p><img alt="log_metric.png" src="https://cdn.qwiklabs.com/%2BwEnM4Qk95LGbx%2Bi6yfpnkAERPZaucZZugvyj1jFPAM%3D"></p>
+<p>In the Console, select <strong>Logging</strong> &gt; <strong>Logs-based Metrics</strong>. See your new metric listed in <strong>User-defined metrics</strong>. Now create an alert for this metric by clicking the 3 dots at the end of the row, then select <strong>Create alert from metric</strong>.</p>
+<p><img alt="stackdriver_log_metric_sli.png" src="https://cdn.qwiklabs.com/l5vPjs9ev9NKWWx3Wtp%2FhjMuUW0CuVG%2BNqavGWcjzFc%3D"></p>
+<p>Notice the <code>Resource type</code> and <code>Metric</code> have already been filled in.</p>
+<ql-infobox>If the <strong>Resource type</strong> does not appear itself, in that case select <strong>Kubernetes Container</strong> as Resource type.</ql-infobox>
+<p>Refresh your browser if the Metric is displaying "invalid".</p>
+<ql-warningbox>
+If you receive a permissions error and are unable to view your metrics resources after refreshing, please ensure that you are signed in to your temporary student account in the Console and that you have signed out of any other Google account accessed in your browser.
+</ql-warningbox>
+<p>Name the condition <code>Error Rate SLI</code>.</p>
+<p>Click the <strong>Show Advanced Options</strong> link and set the following:</p>
+<ul>
+<li>Aligner: <strong>rate</strong>
+</li>
+</ul>
+<p>In Configuration, set your <strong>Threshold</strong> to <strong>0.5</strong> for <strong>1 minute</strong>.</p>
+<p>Then <strong>Save</strong> the condition and click <strong>Next</strong>.</p>
+<p>Skip the <code>Who should be notified?</code> step and click <strong>Next</strong>.</p>
+<p>Now, name the alerting policy as <strong>Error Rate SLI</strong> in the <strong>Alert name</strong> field.</p>
+<p>Click <strong>Save</strong>.</p>
+<p>As expected, there are no failures, and your application is currently meeting its availability SLO!</p>
+<p>Click <em>Check my progress</em> to verify the objective.
+<ql-activity-tracking step="3">
+Configure Availability SLI
+</ql-activity-tracking></p>
+<h2 id="step9">Deploy new release</h2>
+<p>Now that you have configured SLI monitoring, you're ready to measure the impact of application changes on user experience. See what happens when you deploy a new release of the application.</p>
+<p>Next you'll modify the Kubernetes manifests for the services which have new releases, then run skaffold to deploy the application again.</p>
+<h3>Update YAML files</h3>
+<p>If necessary, re-activate Cloud Shell, and then launch the Code Editor in Cloud Shell by clicking <strong>Open Editor</strong>:</p>
+<p><img alt="d91b3d47091e7176.png" src="https://cdn.qwiklabs.com/hZYBOz6ymTpCcrjxYiyPK2gVdwvdXxHVm77O5rBeFfs%3D"></p>
+<p>Open the <strong>microservices-demo-1</strong> folder, then open the <strong>kubernetes-manifests</strong> folder within it.</p>
+<p>Open the <code>kubernetes_manifests/recommendationservice.yaml</code>, on line 31 replace with the following:</p>
+<p>You will be updating these 3 files:</p>
+<ul>
+<li><code>kubernetes_manifests/recommendationservice.yaml</code></li>
+<li><code>kubernetes_manifests/currencyservice.yaml</code></li>
+<li><code>kubernetes_manifests/frontend.yaml</code></li>
+</ul>
+<p>You will be changing the <code>image</code> to <code>rel013019</code>, and adding a line: <code>imagePullPolicy: Always</code>.</p>
+<p>For example, the original version of the <code>recommendationservice.yaml</code> file:</p>
+<p><img alt="be6fd76ca59d64db.png" src="https://cdn.qwiklabs.com/F1zJer0%2B38xl4Jl%2Bkjn76heBtcWLi86wtxkwHyWn8SQ%3D"></p>
+<p>How it should look after making the update:</p>
+<p><img alt="caf0b2c0654e5973.png" src="https://cdn.qwiklabs.com/aoTXKMxnoxXUGW%2BgYE6Ag5TfHggrmv9epBzbU3B6KT4%3D"></p>
+<p>Update the other two files in the same way:</p>
+<ul>
+<li>
+<code>kubernetes_manifests/currencyservice.yaml</code> (line 31)</li>
+<li>
+<code>kubernetes_manifests/frontend.yaml</code> (line 30)</li>
+</ul>
+<p>Save and close each file when you're finished. Now you're ready to deploy the new version!</p>
+<h3>Deploy New Version</h3>
+<p>In Cloud Shell, update the deployment to deploy the new container image:</p>
+<pre><code class="language-bash prettyprint">skaffold run&#x000A;</code></pre>
+<p>Validate that there are new versions of services running:</p>
+<pre><code class="language-bash prettyprint">kubectl get pods&#x000A;</code></pre>
+<p>(Output)</p>
+<pre><code class="language-bash prettyprint">NAME                                     READY     STATUS    RESTARTS   AGE&#x000A;adservice-55f94cfd9c-4lvml               1/1       Running   0          17d&#x000A;cartservice-6f4946f9b8-6wtff             1/1       Running   197        17d&#x000A;checkoutservice-5688779d8c-l6crl         1/1       Running   0          17d&#x000A;currencyservice-665d6f4569-b4sbm         1/1       Running   0          1m&#x000A;emailservice-684c89bcb8-h48sq            1/1       Running   0          17d&#x000A;frontend-5f889fc7bb-wvfvv                1/1       Running   0          1m&#x000A;loadgenerator-6d646566db-p422w           1/1       Running   0          17d&#x000A;paymentservice-858d89d64c-hmpkg          1/1       Running   0          17d&#x000A;productcatalogservice-bcd85cb5-d6xp4     1/1       Running   0          17d&#x000A;recommendationservice-57cb4559f9-bdgj7   1/1       Running   0          1m&#x000A;redis-cart-9b864d47f-c9xc6               1/1       Running   0          17d&#x000A;shippingservice-5948f9fb5c-vndcp         1/1       Running   0          17d&#x000A;</code></pre>
+<p>Click <em>Check my progress</em> to verify the objective.
+<ql-activity-tracking step="4">
+Deploy new release
+</ql-activity-tracking></p>
+<h2 id="step10">Send some data</h2>
+<p>Now that the application is running, go look at what you have deployed.</p>
+<p>In the Console, navigate to <strong>Kubernetes Engine</strong> &gt; <strong>Services &amp; Ingress</strong>. Look for the <code>frontend-external</code> service and click on the <code>External endpoints</code> URL.</p>
+<p>Once on the Hipster Shop website, click on a <strong>Buy</strong> and/or <strong>Add to Cart</strong> for a couple of items to send some traffic. Stay on the website for about 60 seconds to generate enough latency data.</p>
+<h2 id="step11">Latency SLO Violation - Find the Problem</h2>
+<p>In this exercise you use Cloud Monitoring Application Performance Management (APM) tools to identify and resolve an issue causing poor application latency.</p>
+<p>First, see if everything is still OK with the application after deploying the new version.</p>
+<p>Return to the <strong>Cloud Monitoring</strong> window in the Console (<strong>Navigation menu</strong> &gt; <strong>Monitoring</strong>). Click the <strong>autorefresh arrows</strong> in the top ribbon so you will always be looking at the latest information.</p>
+<p>A Latency Policy incident appears shortly if it hasn't already, please wait a few minutes to see it show up.</p>
+<p><img alt="Stackdriver_latency_policy.png" src="https://cdn.qwiklabs.com/xdU7ctiXWm0Yv%2FW8ldRKNBsxn69MGfkZsMGOuyUr8iE%3D"></p>
+<p>To learn more about what's going on, click <code>Alerting</code> in the left menu, and then click the alert in the Incidents section. You may need to click on the <strong>Acknowledge Incident</strong> to see that the alert happened.</p>
+<p>The best way to analyze latency issues is by using Trace. Click on <strong>Navigation menu</strong> &gt; <strong>Trace</strong>.</p>
+<p>The initial overview is useful, but you need to get to the next level of detail. Click <strong>Trace List</strong> on the left menu.</p>
+<p>Click <strong>Auto Reload</strong>. Notice the scatter plot at the top of the page and that, around the time of the alert, there are a large number of outlier requests.</p>
+<p>Wait a minute or two, to gather data, then click on one of the outlier traces to see the specifics about what is going on.</p>
+<p><img alt="6a05ee60a0daa87.png" src="https://cdn.qwiklabs.com/ZQJTzVEsrg0SpmO%2BtTjxjCJWAF8ahvmZYoy%2FqzcAMpU%3D"></p>
+<p>Notice the Span name (which represents the service or function that is being called) is either /cart/ or /cart/checkout/.</p>
+<p>To help understand how this trace compares with similar ones prior to the issue, look at the "Recv./cart" Summary in the lower left for all the cart operations and look for similar traces.</p>
+<p>At the top, set the time period to <strong>1 hour</strong> so that it includes traces that occurred before the issue.</p>
+<p><img alt="64c6982957db838c.png" src="https://cdn.qwiklabs.com/xQGX3Q%2B4iSOhxvp6R58eQlmoy4Zzc3ssulS3ymiFRxo%3D"></p>
+<p>Click on an example trace from before the issue occurred</p>
+<p><img alt="9b446892a7770fd8.png" src="https://cdn.qwiklabs.com/H2VPCEvIhUGweaqHH0nlD68a%2FoOs7r%2FO9y2nFiZTM2M%3D"></p>
+<p>Notice that in this similar trace ListRecommendations was only called once. However, after the most recent deploy, ListRecommendations is being called many times per request, causing significant additional latency.</p>
+<p>You can conclude that the issue with these outliers is caused by multiple calls to ListRecommendations.</p>
+<h2 id="step12">Deploy Change to Address Latency</h2>
+<p>In order to address the latency issue that the last release created, you need to roll out another version that fixes the broken code. Modify the Kubernetes manifests for the services that contained the broken code.</p>
+<p>To deploy a fix, return to the Cloud Shell tab where the <strong>Source Code Editor</strong> should still be open. You'll modify the following files:</p>
+<ul>
+<li><code>kubernetes_manifests/recommendationservice.yaml</code></li>
+<li><code>kubernetes_manifests/frontend.yaml</code></li>
+</ul>
+<p>Modify the image tag <code>rel013019</code> with <code>rel013019fix</code> so the <code>image</code> should look like this:</p>
+<pre><code class="language-bash prettyprint">      containers:&#x000A;      - name: server&#x000A;        image: gcr.io/accl-19-dev/frontend:rel013019fix&#x000A;        imagePullPolicy: Always&#x000A;</code></pre>
+<p><img alt="5602175997ba2cd0.png" src="https://cdn.qwiklabs.com/e6Sr8zxShjB4NnUhmqbj1%2FhVnLtDzOdrInmDsXOlR7s%3D"></p>
+<p><strong>Save</strong> the files.</p>
+<p>Return to the Cloud Shell prompt and redeploy the images with the fixes in them:</p>
+<pre><code class="language-bash prettyprint">skaffold run&#x000A;</code></pre>
+<p>Click <em>Check my progress</em> to verify the objective.
+<ql-activity-tracking step="5">
+Deploy Change to Address Latency
+</ql-activity-tracking></p>
+<h3>Validate Fix</h3>
+<p>Now that you've rolled back the breaking change, verify that your application is back to a healthy state.</p>
+<p>Return to <strong>Metrics Explorer</strong> (<strong>Navigation menu</strong> &gt; <strong>Monitoring</strong> &gt; <strong>Metrics Explorer</strong>).</p>
+<p>In the search field, enter <strong>roundtrip latency</strong> and click on <strong>custom.googleapis.com/opencensus/grpc.io/client/roundtrip_latency</strong>.</p>
+<p><img alt="185dd877b3d55bf.png" src="https://cdn.qwiklabs.com/YIppq7yYrZ7fROEhwKjyR4g49njvVmbh2FC1s0b6wLY%3D"></p>
+<p>Select <strong>Global</strong> as a resource type. Set the <strong>Aggregator</strong> field to <code>99th percentile</code></p>
+<p>Change the chart type to <strong>Line</strong>. You should see a chart that shows an immediate decrease in latency (and if you don't, wait a minute).</p>
+<p><img alt="69ba9bd7c87115f9.png" src="https://cdn.qwiklabs.com/EOZ1U44p5LFiIg7IKxuEDqZ5Y59dWFZepTlZoyyXPM8%3D"></p>
+<p>Now, see if the incidents are resolved. Return to the <strong>Monitoring Overview</strong>.</p>
+<p>You should notice two things - you no longer have an incident, and there are events letting you know that the incident has been resolved. Again, if you don't see an Incident resolved message, wait a couple of minutes.</p>
+<p>Your monitoring was able to correctly identify a change that caused user experience (as measured by latency) to degrade, you were able to identify the root cause, and you've rolled back the breaking change!  In the next section, see how Cloud Monitoring can help you resolve an issue with availability.</p>
+<h2 id="step13">Error Rate SLO Violation - Find the Problem</h2>
+<p>In this exercise you use Cloud Monitoring Application Performance Management tools (APM) to troubleshoot an issue causing ERRORs in your application violating your error budget.</p>
+<p>Click <strong>Alerting</strong> in Monitoring.</p>
+<p>Look for a <strong>Error Rate SLI</strong> incident, and click the <strong>Acknowledge incident</strong> to learn more about what's going on. Incidents can take several minutes to be confirmed and listed as an incident. If an incident has not yet arrived, you can skip the Incident step below.</p>
+<p>You can see that the <strong>currencyservice</strong> pod is logging significantly more errors than it was previously.</p>
+<p><strong>Acknowledge</strong> the incident so that no further notification escalation takes place.</p>
+<p>For an alert like this there are many places to start, but the easiest is Cloud Error Reporting. Select <strong>Navigation menu</strong> &gt; <strong>Error Reporting</strong>.</p>
+<p>Notice the Open Error Reporting incidents with a recent spike in occurrences. Click on the <strong>Error: Conversion is Zero</strong> to learn more about the error in question.</p>
+<p><img alt="error_reporting1.png.png" src="https://cdn.qwiklabs.com/PM8iAQwC7fytDNGv2ECHdtPWdjJgEV51PsHRIxu9vY4%3D"></p>
+<p>Look at the <code>Stack Trace sample</code> on the right. Here you can see what specific calls were related to the error.</p>
+<p><img alt="error_reporting3.png" src="https://cdn.qwiklabs.com/L6F3FGypWCzuuY0wC%2BUewegMjJ86ESPDgziWmQAGVtk%3D"></p>
+<p>Click on the lowest call showing here: <strong>/usr/src/app/server/js:131</strong></p>
+<p>This loads you into Cloud Debugger. In the top bar verify the <code>currencyservice</code> is selected.</p>
+<p><img alt="dcb90f0fce431ec.png" src="https://cdn.qwiklabs.com/9M%2BD7mB%2Bg2MedH%2B0E7iLZHwVew1Rk4qUWeGWHq8wcIM%3D"></p>
+<p>Next, select the source code that is running from <strong>Cloud Source Repositories</strong></p>
+<p><img alt="97ba51694adc967b.png" src="https://cdn.qwiklabs.com/EaOhOK3AZYY%2B3MSSkP9UCsm5Ns%2FF57bmLU%2FNpSBP6aI%3D"></p>
+<p>Select your source with:</p>
+<ul>
+<li>
+<strong>Repository:</strong> apm-qwiklabs-demo</li>
+<li>
+<strong>Tagged version or branch:</strong> APM-Troubleshooting-Demo-2</li>
+</ul>
+<p>Then click <strong>Select Source</strong>.</p>
+<p>In the left hand menu browse to <code>/src/currencyservice/server.js</code>.</p>
+<p><img alt="267a2773a8fbce8.png" src="https://cdn.qwiklabs.com/l0Mw%2BsaJ3cYHT2lkGM%2BJHRih6ehTzRp6tXlHK19FNvc%3D"></p>
+<p>Scroll down to around line 155 which is the function where the exception was thrown. You can see the logline <strong>Conversion is Zero</strong> that was referenced in error reporting.</p>
+<p><img alt="6bc6f0c7f2f436e1.png" src="https://cdn.qwiklabs.com/ogdwAif0tx%2BpUuYyxwCUO4thqdhF71SrHaM64npBVLM%3D"> <img alt="fff6e7e964cf3ac6.png" src="https://cdn.qwiklabs.com/mapFAd1G9zG3wfX%2BAtv%2BpBJ0lPs0bDmbBcIU9ZPmswk%3D"></p>
+<p>From the above code snippet you see this error is logged when <code>result.units</code> <code>&lt; 0</code>. To troubleshoot this issue you'll use Snapshots to inspect the variables as the application progresses.</p>
+<p>Make sure you have selected <strong>Snapshot</strong> in the top right:</p>
+<p><img alt="97347c0fd561f8a3.png" src="https://cdn.qwiklabs.com/ZS9ugTt%2BvJWd0oZ5BZeqo%2B6eikt217P8EEbutFGUQso%3D"></p>
+<p>Then click on the line number (155) you want to snapshot, then select <strong>Create snapshot</strong>:</p>
+<p><img alt="774be2495268d15d.png" src="https://cdn.qwiklabs.com/FDN%2BGH9MQRInb0LMlUbrFnq7pj3fltXiMExN9jwOBNs%3D"></p>
+<p>For this exercise take snapshots at line 155, 141, and 149. Add additional snapshot points wherever you feel appropriate. The system takes a variable snapshot the next time that code is executed. While the application is waiting for the code to be executed next you can see a "Waiting for snapshot to hit...." notice.</p>
+<p>When the snapshot is complete, the right hand pane displays the variables for that given snapshot.</p>
+<p><img alt="74a796c219d2ad97.png" src="https://cdn.qwiklabs.com/k%2FEuNZmYh6u3SO2JzzpQLrAtKWvzGd0OwcnfpMOBKMg%3D"></p>
+<p>Notice the Variable and Call Stack information. This information can provide extremely deep understanding of the path you code is taking including the variables and structures that exist as it takes that path, all without restarting the application or changing any code.</p>
+<p>Click <strong>result</strong> to inspect all 3 snapshots finishing on line 155. Remember the error is triggered when <code>result.units</code> is NOT &gt; 0. Inspecting the variables you can see that <code>result.units = NaN</code> (meaning ‘not a number'). This is the issue that is causing the error.</p>
+<p><img alt="cf9717dbcf09659a.png" src="https://cdn.qwiklabs.com/NDRrhVbUN22y2Rr1OCCb38q3giI20oJ%2FNb3CBpCdSjw%3D"></p>
+<p>At this point you can conclude that the error is caused by a bug in the convert (or child) functions which sets the <code>result.units</code> to <code>0</code> resulting in a 0.00 price tag for the item being converted. Your troubleshooting along with the snapshot information and logs is a solid diagnosis of the issue.</p>
+<p>So what is the bug that has caused this problem? From the code, <code>result.units</code> is set by the line 144 from euros, which was set in line 137 by operating on <code>from.units</code></p>
+<p><img alt="bef885a4cb6d54f7.png" src="https://cdn.qwiklabs.com/BTmylaJpMc7Djtk8wXIrOHaTkaDaB%2BBERl2p7zh8xBY%3D"></p>
+<p>Inspecting the snapshots <code>euros.units</code> is also <code>NaN</code>, however, <code>from.units</code> is a valid number. Thus the issue happened when converting <code>from.units</code> to euros.</p>
+<p><img alt="1cbc42017f0e4e76.png" src="https://cdn.qwiklabs.com/fq%2FCfblgUKVisU3UnHAlEamKSbABMrYAaY85UdTRydk%3D"></p>
+<p>You can conclude that the root cause is a bug in how <code>from.units</code> is converted into <code>euros.units</code> on line 137 <code>8</code> is passed into <code>Data[]</code> which is actually a key value mapping of currency units (like EUR) into exchange rates. The corrected line 138 would use <code>from.to_currency</code> (aka USD) instead of <code>from.units</code> (aka 8).</p>
+<p><img alt="e79ad235feef0dcf.png" src="https://cdn.qwiklabs.com/XaieKVHTltMlamxM2K2fY3GxDUVuP%2F6ZWWFxUePpLXI%3D"></p>
+<p>At this point you have determined the cause of the bug and can make the appropriate change. Based on the timing of the alert, this could have been caused by the latest deployment.</p>
+<p>See if the previous branch "Master" had this code error on line 137.</p>
+<p>Go back to the Console and inspect the code using Cloud <strong>Source Repositories</strong> (in the console menu under Tools).</p>
+<p>Open the <strong>apm-qwiklabs-demo</strong> repository and select the <strong>master</strong> branch.</p>
+<p>Browse on the left hand side to <strong>src</strong> &gt; <strong>currencyservice</strong> &gt; <strong>server.js</strong>. Notice on line 137 the proper dividend: <code>data[from.currency_code]</code> is used.</p>
+<p><img alt="13375108606a76d7.png" src="https://cdn.qwiklabs.com/sUa8V3WgufkeQT6KR69jqXf8gC9bNetgbNYAPlP%2F1d0%3D"></p>
+<p>You have confirmation this bug was introduced in the latest push. To mitigate this problem you need to roll back to the previous version.</p>
+<h2 id="step14">Deploy Change to Address Error Rate</h2>
+<p>In order to fix this issue, you'll need to deploy a fix to your application.  To do that, you'll need to modify the Kubernetes manifest for the service that contained the broken code.</p>
+<h3>Deploy Fix</h3>
+<p>Return to <strong>Cloud Shell</strong> and in the <strong>Source Code Editor</strong> open the <strong>currencyservice.yaml</strong> file in the <strong>kubernetes_manifests</strong> folder.</p>
+<p><img alt="78698b11c80697f.png" src="https://cdn.qwiklabs.com/6q7HreHq0%2FMF4qfqXmHiNWEPEESa3gDbiVOkOylq4Qg%3D"></p>
+<p>Replace the image tag <code>rel013019</code> with <code>rel013019fix</code> so the <code>image</code> should look like this:</p>
+<pre><code class="language-bash prettyprint">      containers:&#x000A;      - name: server&#x000A;        image: gcr.io/accl-19-dev/currencyservice:rel013019fix&#x000A;        imagePullPolicy: Always&#x000A;</code></pre>
+<p><strong>Close</strong> the file to save it and <strong>return</strong> to the Cloud Shell prompt.</p>
+<p>Redeploy the image with the fix in it:</p>
+<pre><code class="language-bash prettyprint">skaffold run&#x000A;</code></pre>
+<p>Click <em>Check my progress</em> to verify the objective.
+<ql-activity-tracking step="6">
+Deploy Change to Address Error Rate
+</ql-activity-tracking></p>
+<h3>Validate Fix</h3>
+<p>Now that you've rolled back the breaking change, verify that the application is back to a healthy state.</p>
+<p>As before, start by verifying that your incident is resolved.  Go to the <strong>Alerting</strong> window in the Console and verify that the error rate incident is resolved.</p>
+<p>Next, return to <strong>Error Reporting</strong> and click <strong>Auto Reload</strong>. Open the error previously observed, and verify that it is no longer occurring (the timeline should show no further occurrences since the last deployment):</p>
+<p><img alt="error_reporting.png" src="https://cdn.qwiklabs.com/upQrgC4g8%2Fh075tdKOp6rJ0KK%2F6Nh2rDnZICarLzuMk%3D"></p>
+<p>Congratulations - your monitoring was able to correctly identify a change that caused user experience (as measured by application errors) to degrade, you were able to identify the root cause, and you've rolled back the breaking change!</p>
+<p>Move on to the next section to learn about how you can optimize resource utilization using Cloud Monitoring.</p>
+<h2 id="step15">Application optimization with Cloud Monitoring APM</h2>
+<p>In this exercise use Cloud Monitoring Application Performance Management tools (APM) to identify opportunities for improvement that helps your application run faster and use less compute resources.</p>
+<p>In this scenario, the Director of Cloud Operations is disappointed with the recent rise in compute costs. Specifically, the <strong>currencyservice</strong> service is using more CPU than expected based on the usage of the system.</p>
+<p>Your team has been tasked with finding optimization opportunities. Use APM tools to analyze the service, and ensure your team's efforts are focused on the right areas of the application.</p>
+<p>From the Console, open  <strong>Profiler</strong> from the left hand menu.</p>
+<p><img alt="1607c72d45a41947.png" src="https://cdn.qwiklabs.com/Qif%2B5Hn6VWW9DAV7vuErMACDWO5mKfpqyEhLNTUS%2FHw%3D"></p>
+<p>Change the Timespan in the upper right to 30 minutes. If there is no data, wait a minute or 2 for the data to populate.</p>
+<p><strong>NOTE:</strong> Profiler takes a random sample of calls to build an aggregate call stack. If you don't see the data you expect, it's because not enough time has elapsed during this lab, and you completed it faster than expected. Feel free to use the screenshots below during the excercise.</p>
+<p>In the filter options select the <strong>frontend</strong> service, the <strong>CPU time</strong> Profile type.</p>
+<p><img alt="profiler.png" src="https://cdn.qwiklabs.com/LyXkORgSj9biwIiO1gP4auLf8OWUcpNJQh%2Bu3oEKJy4%3D"></p>
+<p>Profiler takes random sample profiles of the system and combines the data to show you what functions are using the most resources. The flame graph below shows the function calls grouped by their use of the resource (in this case CPU) where the X-axis is the amount of CPU and the Y-axis shows parent child relationships.</p>
+<p><img alt="profiler1.png" src="https://cdn.qwiklabs.com/OCBFVc4vEm6tGaP0YngaWumK5ZKSi%2FQ89U%2FAMLMx8aM%3D">In this case the majority of the CPU is used by the ServeHTTP call on the left hand side. Click on this call to drill into the cause.</p>
+<p><img alt="profiler2.png" src="https://cdn.qwiklabs.com/fsb34xta9X4R5bokB1UYE37sTx2ox%2FqdqtQwTldhlrM%3D"></p>
+<p>The expanded view shows almost half of this is caused by <strong>viewCartHandler</strong>, which in turn is mostly caused by <strong>getRecommendations</strong>.</p>
+<p>The opportunity here is in the <strong>getRecommendations</strong> and in turn <strong>getProduct</strong>. Thinking back to your earlier exercise, remember that the recommendation service and getProduct were being called often in a loop due to an error in retry logic. The resolution for that issue will likely decrease compute cost by as much as 20%.</p>
+<h2 id="step16">Congratulations!</h2>
+<p>You learned how to identify and set SLIs and SLOs, configure monitoring to match your SLIs and how to troubleshoot real-world application issues using our APM toolset.</p>
+<p><img alt="CloudOpsGKE_125x135.png" src="https://cdn.qwiklabs.com/i1nQgb0f5wLqurSs4g8OHbWPtS%2BK3SfhGxFr%2FY0OeB0%3D">
+<img alt="Cloud_Architecture.png" src="https://cdn.qwiklabs.com/QNBqfg1D%2FzCw3KdiioKbnB1YWX9jpAs21holGhwny%2FY%3D">
+<img alt="DevOpsTransparent_125.png" src="https://cdn.qwiklabs.com/Bps%2BnktWjZhTqr%2F8%2FRFUEB2uCuqNUM%2Fkz8a%2BMEwKWE4%3D"></p>
+<h3>Finish Your Quest</h3>
+<p>This self-paced lab is part of the Qwiklabs <a href="https://google.qwiklabs.com/quests/133" target="_blank">Google Cloud's Operations Suite on GKE</a>, <a href="https://google.qwiklabs.com/quests/24" target="_blank">Cloud Architecture</a>, and <a href="https://google.qwiklabs.com/quests/96" target="_blank">DevOps Essentials</a> Quests. A Quest is a series of related labs that form a learning path.  Completing this Quest earns you the badge above, to recognize your achievement. You can make your badge (or badges) public and link to them in your online resume or social media account. Enroll in a Quest and get immediate completion credit if you've taken this lab.  <a href="https://google.qwiklabs.com/catalog" target="_blank">See other available Qwiklabs Quests</a>.</p>
+<h3>Take Your Next Lab</h3>
+<p>Continue your Quest with  <a href="https://google.qwiklabs.com/catalog_lab/940" target="_blank">Deployment Manager - Full Production</a>, or check out these suggestions:</p>
+<ul>
+<li>
+<p><a href="https://google.qwiklabs.com/catalog_lab/1110" target="_blank">Monitoring and Logging for Cloud Functions</a></p>
+</li>
+<li>
+<p><a href="https://google.qwiklabs.com/catalog_lab/2586" target="_blank">Cloud Logging on Kubernetes Engine</a></p>
+</li>
+</ul>
+<h3>Next Steps / Learn More</h3>
+<ul>
+<li>
+<p>Learn more in one of our Qwiklabs on Cloud Monitoring starting with  <a href="https://google.qwiklabs.com/catalog_lab/2572" target="_blank">Cloud Monitoring: Qwik Start</a>.</p>
+</li>
+<li>
+<p>Here are links to the  <a href="https://cloud.google.com/stackdriver/docs/" target="_blank">full documentation</a>:</p>
+</li>
+<li>
+<p>Cloud Trace:  <a href="https://cloud.google.com/trace/docs/" target="_blank">https://cloud.google.com/trace/docs/</a></p>
+</li>
+<li>
+<p>Cloud Logging:  <a href="https://cloud.google.com/logging/docs/" target="_blank">https://cloud.google.com/logging/docs/</a></p>
+</li>
+<li>
+<p>Cloud Error Reporting:  <a href="https://cloud.google.com/error-reporting/docs/" target="_blank">https://cloud.google.com/error-reporting/docs/</a></p>
+</li>
+<li>
+<p>Cloud Debugger:  <a href="https://cloud.google.com/debugger/docs/" target="_blank">https://cloud.google.com/debugger/docs/</a></p>
+</li>
+<li>
+<p>Learn about the origin of logpoints in this blog post:  <a href="https://cloudplatform.googleblog.com/2016/06/Stackdriver-Debugger-add-application-logs-on-the-fly-with-no-restarts.html" target="_blank">Add Application Logs to an application with no restarts</a></p>
+</li>
+</ul>
+<h3>Resources</h3>
+<ul>
+<li><a href="https://cloud.google.com/monitoring/kubernetes-engine/customizing" target="_blank">Customizing Kubernetes Monitoring</a></li>
+<li><a href="https://cloud.google.com/kubernetes-engine/docs/tutorials/installing-istio" target="_blank">Installing Istio on GKE</a></li>
+<li><a href="https://cloud.google.com/monitoring/workspaces/" target="_blank">Cloud Monitoring Workspaces</a></li>
+<li><a href="https://cloud.google.com/kubernetes-monitoring/" target="_blank">Kubernetes Engine Monitoring</a></li>
+<li><a href="https://landing.google.com/sre/sre-book/toc/index.html" target="_blank">The Google SRE book</a></li>
+<li><a href="https://landing.google.com/sre/sre-book/chapters/service-level-objectives/" target="_blank">Service Level Objectives</a></li>
+</ul>
+<h3>Google Cloud Training &amp; Certification</h3>
+<p>...helps you make the most of Google Cloud technologies. <a href="https://cloud.google.com/training/courses" target="_blank">Our classes</a> include technical skills and best practices to help you get up to speed quickly and continue your learning journey. We offer fundamental to advanced level training, with on-demand, live, and virtual options to suit your busy schedule. <a href="https://cloud.google.com/certification/" target="_blank">Certifications</a> help you validate and prove your skill and expertise in Google Cloud technologies.</p>
+
+<h5>Manual Last Updated May 06, 2021</h5>
+<h5>Lab Last Tested May 06, 2021</h5>
+<p>Copyright 2021 Google LLC All rights reserved. Google and the Google logo are trademarks of Google LLC. All other company and product names may be trademarks of the respective companies with which they are associated.</p>
+
+
+
+</div>
+</div>
+
+
+<div class='hidden js-end-lab-button-container lab-content__end-lab-button'>
+<ql-lab-control-button class='js-end-lab-button' running></ql-lab-control-button>
+</div>
+<!-- / TODO: Move recommendations into the end lab modal -->
+<div class='lab-content__renderable-instructions'>
+<div class='lab-content__recommendation'>
+<!-- # TODO: Change classes so that this doesn't stack vertically -->
+<section class='upcoming-cards'>
+<h2 class='ql-headline-4'>Continue questing</h2>
+<div class='content-card-grid'>
+<div class='card-content-wrapper js-content-card' data-id='1583' data-level='Advanced' data-name='Site Reliability Troubleshooting with Cloud Monitoring APM' data-type='Lab'>
+<a class="card card--content elevation-0 content-lab" href="/focuses/4186?parent=catalog"><div class='card__image'>
+<div class='card__image__inner' style='background-image: url(https://cdn.qwiklabs.com/assets/fractal1-90735da7b9906552121e230998c46ac7e2e5f943f2c909a6da76f50d7e815976.jpg)'></div>
+</div>
+<div class='card__body'>
+<div class='overline card--content__type'>
+Lab
+</div>
+<h3 class='card--content__title'>
+Site Reliability Troubleshooting with Cloud Monitori...
+</h3>
+<div class='card--content__description body-1'>
+<p>
+The objective of this lab is to familiarize yourself with the specific capabilities of Cloud Monitoring to monitor GKE cluster infrastructure, Istio, and applications deployed on this infrastructure.
+</p>
+</div>
+</div>
+<div class='card__footer'>
+<div class='card__footer__left'>
+<span>Advanced</span>
+</div>
+<div class='card__footer__right'>
+<div class='rateit' data-rateit-readonly='true' data-rateit-value='3.7033'></div>
+</div>
+</div>
+</a></div>
+
+</div>
+</section>
+
+</div>
+
+</div>
+</ql-drawer-content>
+<ql-drawer end id='outline-drawer' open slot='drawer' width='320'>
+<div class='js-lab-content-outline lab-content__outline'>
+<a href='#step1'>GSP425</a><a href='#step2'>Overview</a><a href='#step3'>Environment Setup</a><a href='#step4'>Infrastructure setup</a><a href='#step5'>Deploy application</a><a href='#step6'>Develop Sample SLOs and SLIs</a><a href='#step7'>Configure Latency SLI</a><a href='#step8'>Configure Availability SLI</a><a href='#step9'>Deploy new release</a><a href='#step10'>Send some data</a><a href='#step11'>Latency SLO Violation - Find the Problem</a><a href='#step12'>Deploy Change to Address Latency</a><a href='#step13'>Error Rate SLO Violation - Find the Problem</a><a href='#step14'>Deploy Change to Address Error Rate</a><a href='#step15'>Application optimization with Cloud Monitoring APM</a><a href='#step16'>Congratulations!</a>
+</div>
+</ql-drawer>
+</ql-drawer-container>
+</ql-drawer-content>
+</ql-drawer-container>
+<div class='lab-introduction js-lab-introduction is-hidden'>
+<div class='lab-introduction__inner'>
+<h1 class='headline-1'>Welcome to Your First Lab!</h1>
+<ql-icon-button class='js-skip-button'>close</ql-icon-button>
+<div class='lab-introduction__video'>
+<iframe allow='autoplay; encrypted-media' allowfullscreen frameborder='0' id='lab-introduction' src='https://www.youtube.com/embed/yF7EDXKTmoQ?enablejsapi=1&amp;rel=0&amp;showinfo=0'></iframe>
+</div>
+<a class='js-skip-button button button--outline'>Skip this video</a>
+</div>
+</div>
+
+
+
+</div>
+</main>
+
+
+<div class='modal fade' id='lab-details-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<div class='modal-body'>
+<p class='l-mbm'>
+The objective of this lab is to familiarize yourself with the specific capabilities of Cloud Monitoring to monitor GKE cluster infrastructure, Istio, and applications deployed on this infrastructure.
+</p>
+<p>
+This lab is included in these quests:
+<a href="/quests/24">Cloud Architecture</a>, <a href="/quests/121">Deploy and Manage Cloud Environments with Google Cloud</a>, <a href="/quests/96">DevOps Essentials</a>, <a href="/quests/141">Implement DevOps in Google Cloud</a>, <a href="/quests/35">Google Cloud&#39;s Operations Suite</a>, <a href="/quests/133">Google Cloud&#39;s Operations Suite on GKE</a>.
+If you complete this lab you&#39;ll receive credit for it when you enroll in one of these quests.
+</p>
+<p class='small-label l-mbs'>
+<strong>
+Duration:
+</strong>
+4m setup
+&middot;
+90m access
+&middot;
+90m completion
+</p>
+<p class='small-label l-mbs'>
+<span><strong>Levels: </strong>advanced</span>
+</p>
+<p class='small-label'>
+<strong>
+Permalink:
+</strong>
+<a href="https://www.qwiklabs.com/catalog_lab/1583">https://www.qwiklabs.com/catalog_lab/1583</a>
+</p>
+</div>
+<div class='modal-actions'>
+<a class='button button--text' data-dismiss='modal'>
+Got It
+</a>
+</div>
+
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='modal fade' id='lab-review-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<form class="simple_form js-lab-review-form" id="new_lab_review" action="/lab_reviews" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><div class='modal-body'>
+<p class='label'>
+How satisfied are you with this lab?*
+</p>
+<div class='rateit js-rateit' data-rateit-max='5' data-rateit-min='0' data-rateit-resetable='false' data-rateit-step='1' data-rateit-value='0'></div>
+<div class='l-mtm'>
+
+<div class="control-group hidden lab_review_user_id"><div class="controls"><input class="hidden" type="hidden" value="3894861" name="lab_review[user_id]" id="lab_review_user_id" /></div></div>
+<div class="control-group hidden lab_review_classroom_id"><div class="controls"><input class="hidden" type="hidden" name="lab_review[classroom_id]" id="lab_review_classroom_id" /></div></div>
+<div class="control-group hidden lab_review_lab_id"><div class="controls"><input class="hidden" type="hidden" value="1583" name="lab_review[lab_id]" id="lab_review_lab_id" /></div></div>
+<div class="control-group hidden lab_review_focus_id"><div class="controls"><input class="hidden" type="hidden" name="lab_review[focus_id]" id="lab_review_focus_id" /></div></div>
+<div class="control-group hidden lab_review_rating"><div class="controls"><input class="hidden js-rating-input" type="hidden" name="lab_review[rating]" id="lab_review_rating" /></div></div>
+<div class="control-group text optional lab_review_comment"><label class="text optional control-label" for="lab_review_comment">Comment</label><div class="controls"><textarea class="text optional" name="lab_review[comment]" id="lab_review_comment">
+</textarea></div></div>
+</div>
+</div>
+<div class='modal-actions'>
+<a class='button button--text' data-dismiss='modal'>
+Cancel
+</a>
+<input type="submit" name="commit" value="Submit" disabled="disabled" id="submit" data-disabled="false" class="button" data-disable-with="Submit" />
+</div>
+</form>
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+<div class='modal fade' id='lab-access-modal'>
+<div class='modal-container'>
+<div class='mdl-shadow--24dp modal-content'>
+<a class='lab-access-modal-close' data-analytics-action='dismissed_lab_payment_modal' data-dismiss='modal'>
+<i class='material-icons'>close</i>
+</a>
+<form class="js-lab-access-form" action="/lab_onetime_coupons/activate?parent=catalog" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="&#x2713;" />
+<div class='modal-body'>
+<div class='lab-access-modal'>
+<input type="hidden" name="id" id="id" value="4186" />
+<input type="hidden" name="user_id" id="user_id" value="3894861" />
+<input type="hidden" name="launch_with_credits" id="launch_with_credits" value="0" class="js-launch-with-credits-input" />
+<input type="hidden" name="launch_with_subs" id="launch_with_subs" value="0" class="js-launch-with-subscription-input" />
+<input type="hidden" name="launch_with_access_code" id="launch_with_access_code" value="0" class="js-launch-with-access-code" />
+<div class='lab-access-modal__method'>
+<p>
+This lab costs
+7 Credits.
+</p>
+<p>
+1874 Credits
+available
+</p>
+<a class='button js-launch-with-credits-button js-lab-access-modal-button' data-analytics-action='clicked_launch_with_credits_button'>
+Launch with
+7 Credits
+</a>
+</div>
+<div class='lab-access-modal__method'>
+<p>
+Enter Lab Access Code:
+</p>
+<div class='lab-access-modal__code js-access-code'>
+<input type="text" name="uuid_1" id="uuid_1" value="" maxlength="4" placeholder="1234" class="js-access-code-input" />
+<input type="text" name="uuid_2" id="uuid_2" value="" maxlength="4" placeholder="1234" class="js-access-code-input" />
+<input type="text" name="uuid_3" id="uuid_3" value="" maxlength="4" placeholder="1234" class="js-access-code-input" />
+<input type="text" name="uuid_4" id="uuid_4" value="" maxlength="4" placeholder="1234" class="js-access-code-input" />
+</div>
+<a class='button js-launch-with-access-code-button js-lab-access-modal-button' data-analytics-action='clicked_launch_with_access_code_button'>
+Launch with Access Code
+</a>
+</div>
+</div>
+</div>
+</form>
+
+
+
+</div>
+</div>
+<iframe class='l-ie-iframe-fix'></iframe>
+</div>
+
+
+<script>
+  $( function() {
+    ql.initMaterialInputs();
+    initChosen();
+    initSearch();
+    initTabs();
+    ql.list.init();
+    ql.favoriting.init();
+    ql.header.myAccount.init();
+    initTooltips();
+    ql.autocomplete.init();
+    ql.modals.init();
+    ql.toggleButtons.init();
+    ql.analytics.init();
+    ql.favoriting.init();
+  ql.labControlPanel.addRecaptchaErrorHandler();
+  initLabContent();
+  ql.labOutline.links.init();
+  initLabReviewModal();
+  initLabAccessModal();
+  ql.labAssessment.init();
+  ql.labIntroduction.init( true );
+  ql.labData.init();
+  initLabTranslations( {"are_you_sure":"All done? If you end this lab, you will lose all your work. You may not be able to restart the lab if there is a quota limit. Are you sure you want to end this lab?\n","in_progress":"*In Progress*","ending":"*Ending*","starting":"*Starting, please wait*","end_concurrent_labs":"Sorry, you can only run one lab at a time. To start this lab, please confirm that you want all of your existing labs to end.\n","copied":"Copied","no_resource":"Error retrieving resource.","no_support":"No Support","mac_press":"Press ⌘-C to copy","thanks_review":"Thanks for reviewing this lab.","windows_press":"Press Ctrl-C to copy","days":"days"} );
+  ql.labRun.init();
+  ql.initHeader();
+  ql.navigation.init();
+  ql.navPanel.init();
+  ql.navigation.init();
+  
+  });
+</script>
+
+</body>
+</html>
+
